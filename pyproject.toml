@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "project-reg"
+version = "0.1.0"
+description = ""
+authors = ["DUDKA <andrejmedvedev2713@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = {extras = ["all"], version = "^0.115.2"}
+asyncio = "^3.4.3"
+sqlalchemy = "^2.0.36"
+alembic = "^1.13.3"
+fastapi-users = {extras = ["sqlalchemy"], version = "^13.0.0"}
+asyncpg = "^0.30.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
