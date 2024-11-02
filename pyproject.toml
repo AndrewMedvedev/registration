@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "auth"
+version = "0.1.0"
+description = ""
+authors = ["DUDKA <andrejmedvedev2713@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = {extras = ["all"], version = "^0.115.3"}
+asyncpg = "^0.30.0"
+sqlalchemy = "^2.0.36"
+asyncio = "^3.4.3"
+alembic = "^1.13.3"
+pydantic-settings = "^2.6.0"
+pyvalid = "^1.0.4"
+email-validator = "^2.2.0"
+phonenumbers = "^8.13.48"
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+bcrypt = "4.0.1"
+fastapi-jwt-auth = "^0.5.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
