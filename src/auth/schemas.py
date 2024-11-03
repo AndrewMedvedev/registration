@@ -1,14 +1,15 @@
 from pydantic import BaseModel, Field, field_validator
 from email_validator import validate_email
 import phonenumbers
-from sqlalchemy import select 
+import asyncpg
+from sqlalchemy import select, insert
+from sqlalchemy.exc import SQLAlchemyError
 from src.database import async_session_maker
-from sqlalchemy import insert
 
 
 
 
-class Applicant(BaseModel):
+class ApplicantModel(BaseModel):
     phone_number: str = Field(default=..., description="Номер телефона в международном формате, начинающийся с '+'")
     first_name: str = Field(default=..., min_length=1, max_length=50, description="Имя, от 1 до 50 символов")
     last_name: str = Field(default=..., min_length=1, max_length=50, description="Фамилия, от 1 до 50 символов")
@@ -39,7 +40,7 @@ class Applicant(BaseModel):
         
         
         
-class Student(BaseModel):
+class StudentModel(BaseModel):
     phone_number: str = Field(default=..., description="Номер телефона в международном формате, начинающийся с '+'")
     first_name: str = Field(default=..., min_length=1, max_length=50, description="Имя, от 1 до 50 символов")
     last_name: str = Field(default=..., min_length=1, max_length=50, description="Фамилия, от 1 до 50 символов")
@@ -71,7 +72,7 @@ class Student(BaseModel):
         
         
         
-class Schoolboy(BaseModel):
+class SchoolboyModel(BaseModel):
     phone_number: str = Field(default=..., description="Номер телефона в международном формате, начинающийся с '+'")
     first_name: str = Field(default=..., min_length=1, max_length=50, description="Имя, от 1 до 50 символов")
     last_name: str = Field(default=..., min_length=1, max_length=50, description="Фамилия, от 1 до 50 символов")
@@ -104,8 +105,8 @@ class Schoolboy(BaseModel):
         
         
         
-class User(BaseModel):
+class UserModel(BaseModel):
     email:  str = Field(default=...,min_length=5, max_length=100, description="Электронная почта ")
-    password: str = Field(default=...,description="Пароль")
+    hash_password: str = Field(default=...,description="Пароль")
     
     

@@ -16,19 +16,12 @@ error = HTTPException(
 )
 
 
+def get_password_hash(password: str) -> str:
+    return pwd_context.hash(password)
 
 
-class Hashpass:   
-    
-    
-    @classmethod
-    def get_password_hash(password: str) -> str:
-        return pwd_context.hash(password)
-
-
-    @classmethod
-    def verify_password(plain_password: str, hashed_password: str) -> bool:
-        return pwd_context.verify(plain_password, hashed_password)
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(plain_password, hashed_password)
 
 
 def create_access(data: dict):

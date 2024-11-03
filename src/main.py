@@ -1,7 +1,10 @@
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Response , Request
 from fastapi.responses import JSONResponse
-from src.auth.schemas import Applicant, Schoolboy, Student, User
-from src.auth.controls import create_refresh ,create_access
+from src.auth.schemas import ApplicantModel, SchoolboyModel, StudentModel, UserModel
+from src.auth.controls import create_refresh ,create_access , verify_password, get_password_hash ,verified_user ,update_token
+from src.services.orm import ORMService
+from src.auth.models import Applicant , Student, Schoolboy
+
 
 
 app = FastAPI(
@@ -10,36 +13,80 @@ app = FastAPI(
 
 
 @app.post('/registration/applicant')
-async def registration_applicant(user: Applicant ):
+async def registration_applicant(user: ApplicantModel,response: Response):
     if user.validate_phone_number(user.phone_number) and user.validate_email(user.email):
-        data = {'user_name': user.email}
-        access_tkn = create_access(data)
-        refresh_tkn = create_refresh(data)
+        user_model = Applicant(
+            phone_number=user.phone_number,
+            first_name=user.first_name,
+            last_name=user.last_name,
+            first_name_fa=user.first_name_fa,
+            email=user.email,
+            snils=user.snils,
+            hash_password=get_password_hash(user.hash_password)
+        )
+        await ORMService().add_user(user_model)
+        tkn = {'user_name': user.email}
+        access_tkn = create_access(tkn)
+        refresh_tkn = create_refresh(tkn)
+        response.set_cookie(key="access", value=access_tkn, httponly=True)
         return {"access": access_tkn , "refresh": refresh_tkn}
         
 
 @app.post('/registration/student')
-async def registration_student(user: Student):
+async def registration_student(user: StudentModel,response: Response):
     if user.validate_phone_number(user.phone_number) and user.validate_email(user.email):
-        data = {'user_name': user.email}
-        access_tkn = create_access(data)
-        refresh_tkn = create_refresh(data)
+        user_model = Student(
+            phone_number=user.phone_number,
+            first_name=user.first_name,
+            last_name=user.last_name,
+            first_name_fa=user.first_name_fa,
+            email=user.email,
+            faculty=user.faculty,
+            group=user.group,
+            hash_password=get_password_hash(user.hash_password)
+        )
+        await ORMService().add_user(user_model)
+        tkn = {'user_name': user.email}
+        access_tkn = create_access(tkn)
+        refresh_tkn = create_refresh(tkn)
+        response.set_cookie(key="access", value=access_tkn, httponly=True)
         return {"access": access_tkn , "refresh": refresh_tkn}
 
 
 @app.post('/registration/schoolboy')
-async def registration_schoolboy(user: Schoolboy):
+async def registration_schoolboy(user: SchoolboyModel, response: Response):
     if user.validate_phone_number(user.phone_number) and user.validate_email(user.email):
-        data = {'user_name': user.email}
-        access_tkn = create_access(data)
-        refresh_tkn = create_refresh(data)
+        user_model = Schoolboy(
+            phone_number=user.phone_number,
+            first_name=user.first_name,
+            last_name=user.last_name,
+            first_name_fa=user.first_name_fa,
+            email=user.email,
+            number_school=user.number_school,
+            group=user.group,
+            class_school=user.class_school,
+            hash_password=get_password_hash(user.hash_password)
+        )
+        await ORMService().add_user(user_model)
+        tkn = {'user_name': user.email}
+        access_tkn = create_access(tkn)
+        refresh_tkn = create_refresh(tkn)
+        response.set_cookie(key="access", value=access_tkn, httponly=True)
         return {"access": access_tkn , "refresh": refresh_tkn}
 
 
-# @app.post('/login')    
-# async def login(user: User):
-    
-
+@app.post('/login')    
+async def login(user: UserModel,request: Request,response: Response):
+    stmt = await ORMService().get_user(email=user.email,hash_password=user.hash_password)
+    token = request.cookies.get('access')
+    if (stmt["email"] == user.email) and verify_password(user.password, stmt["password"]):
+        if bool(verified_user(user,token)):
+            return {"message":"Вы Авторизованны"}
+        else:
+            new_token = update_token(user,token)
+            return response.set_cookie(key="access", value=new_token['access_token'], httponly=True)
+    else:     
+        {"message":"Неверные данные"}
 
 
 @app.post('/logout')
