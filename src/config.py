@@ -4,9 +4,12 @@ from dotenv import find_dotenv, dotenv_values
 from typing import List
 from datetime import timedelta
 
+
 env_path = find_dotenv()
 
+
 config = dotenv_values(env_path)
+
 
 class Settings:
     DB_HOST: str = config["DB_HOST"]
@@ -17,7 +20,6 @@ class Settings:
     SECRET_KEY: str = config["SECRET_KEY"]
     ALGORITHM: str = config["ALGORITHM"]
     
-
 
 settings = Settings()
 

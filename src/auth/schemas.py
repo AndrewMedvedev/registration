@@ -7,8 +7,6 @@ from sqlalchemy.exc import SQLAlchemyError
 from src.database import async_session_maker
 
 
-
-
 class ApplicantModel(BaseModel):
     phone_number: str = Field(default=..., description="Номер телефона в международном формате, начинающийся с '+'")
     first_name: str = Field(default=..., min_length=1, max_length=50, description="Имя, от 1 до 50 символов")
@@ -37,9 +35,7 @@ class ApplicantModel(BaseModel):
         else:
             raise ValueError('email не соответствует формату')
         
-        
-        
-        
+          
 class StudentModel(BaseModel):
     phone_number: str = Field(default=..., description="Номер телефона в международном формате, начинающийся с '+'")
     first_name: str = Field(default=..., min_length=1, max_length=50, description="Имя, от 1 до 50 символов")
@@ -68,8 +64,6 @@ class StudentModel(BaseModel):
             return value
         else:
             raise ValueError('email не соответствует формату')
-        
-        
         
         
 class SchoolboyModel(BaseModel):
@@ -102,9 +96,7 @@ class SchoolboyModel(BaseModel):
         else:
             raise ValueError('email не соответствует формату')
         
-        
-        
-        
+          
 class UserModel(BaseModel):
     email:  str = Field(default=...,min_length=5, max_length=100, description="Электронная почта ")
     hash_password: str = Field(default=...,description="Пароль")

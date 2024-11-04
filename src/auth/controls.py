@@ -8,6 +8,7 @@ import datetime
 from datetime import datetime , timedelta
 from fastapi import Response
 
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth_scheme = OAuth2PasswordBearer(tokenUrl='/token')
 error = HTTPException(

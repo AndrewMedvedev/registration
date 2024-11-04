@@ -10,11 +10,11 @@ from sqlalchemy.ext.asyncio import (
 from src.config import get_db_url
 
 
-
 class DatabaseSessionService:
     def __init__(self) -> None:
         self._engine: Optional[AsyncEngine] = None
         self._sessionmaker: Optional[async_sessionmaker[AsyncSession]] = None
+
 
     def init(self) -> None:
         self._engine = create_async_engine(
@@ -27,12 +27,14 @@ class DatabaseSessionService:
             expire_on_commit=False
         )
 
+
     async def close(self) -> None:
         if self._engine is None:
             return
         await self._engine.dispose()
         self._engine = None
         self._sessionmaker = None
+
 
     @contextlib.asynccontextmanager
     async def session(self):
@@ -42,6 +44,7 @@ class DatabaseSessionService:
             except Exception as _ex:
                 await session.rollback()
                 raise _ex
+
 
     @contextlib.asynccontextmanager
     async def connect(self) -> AsyncIterator[AsyncConnection]:

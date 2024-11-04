@@ -3,8 +3,6 @@ from sqlalchemy.orm import relationship, Mapped, mapped_column
 from src.database import Base, str_uniq, int_pk, str_null_true , str_nullable
 
 
-
-
 class Applicant(Base):
     id: Mapped[int_pk]
     phone_number: Mapped[str_uniq]
@@ -24,8 +22,6 @@ class Applicant(Base):
 
     def __repr__(self):
         return str(self)
-
-
 
 
 class Student(Base):
@@ -48,7 +44,6 @@ class Student(Base):
 
     def __repr__(self):
         return str(self)
-    
     
     
 class Schoolboy(Base):

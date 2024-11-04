@@ -6,7 +6,6 @@ from src.services.orm import ORMService
 from src.auth.models import Applicant , Student, Schoolboy
 
 
-
 app = FastAPI(
     title="Регистрация"
 )
@@ -75,18 +74,52 @@ async def registration_schoolboy(user: SchoolboyModel, response: Response):
         return {"access": access_tkn , "refresh": refresh_tkn}
 
 
-@app.post('/login')    
+@app.post('/login/applicant')    
 async def login(user: UserModel,request: Request,response: Response):
-    stmt = await ORMService().get_user(email=user.email,hash_password=user.hash_password)
+    stmt = await ORMService().get_user_applicant(email=user.email,hash_password=user.hash_password)
     token = request.cookies.get('access')
-    if (stmt["email"] == user.email) and verify_password(user.password, stmt["password"]):
-        if bool(verified_user(user,token)):
+    if (stmt.email == user.email) and verify_password(user.hash_password, stmt.hash_password):
+        if not token:
+            tkn = update_token(user,token)
+            response.set_cookie(key="access", value=tkn, httponly=True)
             return {"message":"Вы Авторизованны"}
         else:
-            new_token = update_token(user,token)
-            return response.set_cookie(key="access", value=new_token['access_token'], httponly=True)
-    else:     
-        {"message":"Неверные данные"}
+            if verified_user(user,token):
+                return {"message":"Вы Авторизованны"}
+    else:
+        return {"message":"Неверные данные"}
+
+
+@app.post('/login/student')    
+async def login(user: UserModel,request: Request,response: Response):
+    stmt = await ORMService().get_user_student(email=user.email,hash_password=user.hash_password)
+    token = request.cookies.get('access')
+    if (stmt.email == user.email) and verify_password(user.hash_password, stmt.hash_password):
+        if not token:
+            tkn = update_token(user,token)
+            response.set_cookie(key="access", value=tkn, httponly=True)
+            return {"message":"Вы Авторизованны"}
+        else:
+            if verified_user(user,token):
+                return {"message":"Вы Авторизованны"}
+    else:
+        return {"message":"Неверные данные"}
+
+
+@app.post('/login/schoolboy')    
+async def login(user: UserModel,request: Request,response: Response):
+    stmt = await ORMService().get_user_schoolboy(email=user.email,hash_password=user.hash_password)
+    token = request.cookies.get('access')
+    if (stmt.email == user.email) and verify_password(user.hash_password, stmt.hash_password):
+        if not token:
+            tkn = update_token(user,token)
+            response.set_cookie(key="access", value=tkn, httponly=True)
+            return {"message":"Вы Авторизованны"}
+        else:
+            if verified_user(user,token):
+                return {"message":"Вы Авторизованны"}
+    else:
+        return {"message":"Неверные данные"}
 
 
 @app.post('/logout')
@@ -96,4 +129,4 @@ async def logout(response: Response):
     
     
     
-    
+
