@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response , Request
+from fastapi import FastAPI, Response , Request , HTTPException, status
 from fastapi.responses import JSONResponse
 from src.auth.schemas import ApplicantModel, SchoolboyModel, StudentModel, UserModel
 from src.auth.controls import create_refresh ,create_access , verify_password, get_password_hash ,verified_user ,update_token
@@ -29,7 +29,12 @@ async def registration_applicant(user: ApplicantModel,response: Response):
         refresh_tkn = create_refresh(tkn)
         response.set_cookie(key="access", value=access_tkn, httponly=True)
         return {"access": access_tkn , "refresh": refresh_tkn}
-        
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Неправильно введены данные"
+            )
+
 
 @app.post('/registration/student')
 async def registration_student(user: StudentModel,response: Response):
@@ -50,6 +55,11 @@ async def registration_student(user: StudentModel,response: Response):
         refresh_tkn = create_refresh(tkn)
         response.set_cookie(key="access", value=access_tkn, httponly=True)
         return {"access": access_tkn , "refresh": refresh_tkn}
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Неправильно введены данные"
+            )
 
 
 @app.post('/registration/schoolboy')
@@ -72,7 +82,12 @@ async def registration_schoolboy(user: SchoolboyModel, response: Response):
         refresh_tkn = create_refresh(tkn)
         response.set_cookie(key="access", value=access_tkn, httponly=True)
         return {"access": access_tkn , "refresh": refresh_tkn}
-
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Неправильно введены данные"
+            )
+        
 
 @app.post('/login/applicant')    
 async def login(user: UserModel,request: Request,response: Response):
@@ -82,12 +97,21 @@ async def login(user: UserModel,request: Request,response: Response):
         if not token:
             tkn = update_token(user,token)
             response.set_cookie(key="access", value=tkn, httponly=True)
-            return {"message":"Вы Авторизованны"}
+            raise HTTPException(
+                status_code=status.HTTP_200_OK,
+                detail="Вы Авторизованны"
+                )
         else:
             if verified_user(user,token):
-                return {"message":"Вы Авторизованны"}
+                raise HTTPException(
+                status_code=status.HTTP_200_OK,
+                detail="Вы Авторизованны"
+                )
     else:
-        return {"message":"Неверные данные"}
+        raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail='Вы не прошли Авторизацию'
+        )
 
 
 @app.post('/login/student')    
@@ -98,12 +122,21 @@ async def login(user: UserModel,request: Request,response: Response):
         if not token:
             tkn = update_token(user,token)
             response.set_cookie(key="access", value=tkn, httponly=True)
-            return {"message":"Вы Авторизованны"}
+            raise HTTPException(
+                status_code=status.HTTP_200_OK,
+                detail="Вы Авторизованны"
+                )
         else:
             if verified_user(user,token):
-                return {"message":"Вы Авторизованны"}
+                raise HTTPException(
+                status_code=status.HTTP_200_OK,
+                detail="Вы Авторизованны"
+                )
     else:
-        return {"message":"Неверные данные"}
+        raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail='Вы не прошли Авторизацию'
+        )
 
 
 @app.post('/login/schoolboy')    
@@ -114,19 +147,29 @@ async def login(user: UserModel,request: Request,response: Response):
         if not token:
             tkn = update_token(user,token)
             response.set_cookie(key="access", value=tkn, httponly=True)
-            return {"message":"Вы Авторизованны"}
+            raise HTTPException(
+                status_code=status.HTTP_200_OK,
+                detail="Вы Авторизованны"
+                )
         else:
             if verified_user(user,token):
-                return {"message":"Вы Авторизованны"}
+                raise HTTPException(
+                status_code=status.HTTP_200_OK,
+                detail="Вы Авторизованны"
+                )
     else:
-        return {"message":"Неверные данные"}
+        raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail='Вы не прошли Авторизацию'
+        )
 
 
 @app.post('/logout')
 async def logout(response: Response):
     response.delete_cookie(key="access")
-    return {'message': 'Пользователь успешно вышел из системы'}
+    raise HTTPException(
+                status_code=status.HTTP_200_OK,
+                )
     
     
     
-

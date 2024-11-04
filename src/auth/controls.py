@@ -11,10 +11,7 @@ from fastapi import Response
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth_scheme = OAuth2PasswordBearer(tokenUrl='/token')
-error = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED,
-    detail='Вы не прошли авторизацию'
-)
+
 
 
 def get_password_hash(password: str) -> str:
@@ -45,13 +42,22 @@ async def update_token(user ,token: str = Depends(oauth_scheme)) -> dict:
         data = jwt.decode(token, setting.SECRET_KEY, setting.ALGORITHM)
 
         if 'user_name' not in data and 'mode' not in data:
-            raise error
+            raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail='Вы не прошли авторизацию'
+        )
         if data['mode'] != 'refresh_token':
-            raise error
+            raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail='Вы не прошли авторизацию'
+        )
 
         user = await user.filter(email=data['user_name']).first()
         if not user or token != user.refresh_token:
-            raise error
+            raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail='Вы не прошли авторизацию'
+        )
 
         data = {'user_name': user.email}
         refresh_tkn = create_refresh(data)
@@ -64,7 +70,10 @@ async def update_token(user ,token: str = Depends(oauth_scheme)) -> dict:
             'type': 'bearer'
         }
     except JWTError:
-        raise error
+        raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail='Вы не прошли авторизацию'
+        )
 
 
 async def verified_user(user ,token: str = Depends(oauth_scheme)):
@@ -73,17 +82,29 @@ async def verified_user(user ,token: str = Depends(oauth_scheme)):
         data = jwt.decode(token, setting.SECRET_KEY, setting.ALGORITHM)
 
         if 'user_name' not in data and 'mode' not in data:
-            raise error
+            raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail='Вы не прошли авторизацию'
+        )
         if data['mode'] != 'access_token':
-            raise error
+            raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail='Вы не прошли авторизацию'
+        )
 
         user = await user.filter(email=data['user_name']).first()
         if not user:
-            raise error
+            raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail='Вы не прошли авторизацию'
+        )
 
         return user
     except JWTError:
-        raise error
+        raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail='Вы не прошли авторизацию'
+        )
 
 
 

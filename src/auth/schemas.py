@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field, field_validator
 from email_validator import validate_email
 import phonenumbers
-import asyncpg
+from fastapi import HTTPException , status
 from sqlalchemy import select, insert
 from sqlalchemy.exc import SQLAlchemyError
 from src.database import async_session_maker
@@ -24,7 +24,11 @@ class ApplicantModel(BaseModel):
         if phonenumbers.is_valid_number(parsed_number):
             return values
         else:
-            raise ValueError('Номер телефона должен начинаться с "+" и содержать от 1 до 15 цифр')
+            raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Номер телефона должен начинаться с "+" и содержать от 1 до 15 цифр"
+            )
+
 
 
     @field_validator("email")
@@ -33,7 +37,10 @@ class ApplicantModel(BaseModel):
         if validate_email(value):
             return value
         else:
-            raise ValueError('email не соответствует формату')
+            raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="email не соответствует формату"
+            )
         
           
 class StudentModel(BaseModel):
@@ -54,7 +61,10 @@ class StudentModel(BaseModel):
         if phonenumbers.is_valid_number(parsed_number):
             return values
         else:
-            raise ValueError('Номер телефона должен начинаться с "+" и содержать от 1 до 15 цифр')
+            raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Номер телефона должен начинаться с "+" и содержать от 1 до 15 цифр"
+            )
 
 
     @field_validator("email")
@@ -63,7 +73,12 @@ class StudentModel(BaseModel):
         if validate_email(value):
             return value
         else:
-            raise ValueError('email не соответствует формату')
+            raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="email не соответствует формату"
+            )
+        
+
         
         
 class SchoolboyModel(BaseModel):
@@ -85,8 +100,10 @@ class SchoolboyModel(BaseModel):
         if phonenumbers.is_valid_number(parsed_number):
             return values
         else:
-            raise ValueError('Номер телефона должен начинаться с "+" и содержать от 1 до 15 цифр')
-
+            raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Номер телефона должен начинаться с "+" и содержать от 1 до 15 цифр"
+            )
 
     @field_validator("email")
     @classmethod
@@ -94,7 +111,10 @@ class SchoolboyModel(BaseModel):
         if validate_email(value):
             return value
         else:
-            raise ValueError('email не соответствует формату')
+            raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="email не соответствует формату"
+            )
         
           
 class UserModel(BaseModel):
