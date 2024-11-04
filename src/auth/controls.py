@@ -43,22 +43,18 @@ async def update_token(user ,token: str = Depends(oauth_scheme)) -> dict:
 
         if 'user_name' not in data and 'mode' not in data:
             raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail='Вы не прошли авторизацию'
+        status_code=status.HTTP_400_BAD_REQUEST
         )
         if data['mode'] != 'refresh_token':
             raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail='Вы не прошли авторизацию'
+        status_code=status.HTTP_400_BAD_REQUEST
         )
 
         user = await user.filter(email=data['user_name']).first()
         if not user or token != user.refresh_token:
             raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail='Вы не прошли авторизацию'
+        status_code=status.HTTP_400_BAD_REQUEST
         )
-
         data = {'user_name': user.email}
         refresh_tkn = create_refresh(data)
         await user.filter(email=user.email).update(**{'refresh_token': refresh_tkn})
@@ -71,8 +67,7 @@ async def update_token(user ,token: str = Depends(oauth_scheme)) -> dict:
         }
     except JWTError:
         raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail='Вы не прошли авторизацию'
+        status_code=status.HTTP_400_BAD_REQUEST
         )
 
 
@@ -83,27 +78,23 @@ async def verified_user(user ,token: str = Depends(oauth_scheme)):
 
         if 'user_name' not in data and 'mode' not in data:
             raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail='Вы не прошли авторизацию'
+        status_code=status.HTTP_400_BAD_REQUEST
         )
         if data['mode'] != 'access_token':
             raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail='Вы не прошли авторизацию'
+        status_code=status.HTTP_400_BAD_REQUEST
         )
 
         user = await user.filter(email=data['user_name']).first()
         if not user:
             raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail='Вы не прошли авторизацию'
+        status_code=status.HTTP_400_BAD_REQUEST
         )
 
         return user
     except JWTError:
         raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail='Вы не прошли авторизацию'
+        status_code=status.HTTP_400_BAD_REQUEST
         )
 
 

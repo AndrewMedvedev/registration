@@ -164,7 +164,7 @@ async def login(user: UserModel,request: Request,response: Response):
         )
 
 
-@app.post('/logout')
+@app.get('/logout')
 async def logout(response: Response):
     response.delete_cookie(key="access")
     raise HTTPException(
