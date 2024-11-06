@@ -36,7 +36,7 @@ def create_refresh(data: dict):
     return jwt.encode(data,setting.SECRET_KEY,setting.ALGORITHM)
 
 
-async def update_token(user ,token: str = Depends(oauth_scheme)) -> dict:
+async def update_token(user,token: str = Depends(oauth_scheme)) -> dict:
 
     try:
         data = jwt.decode(token, setting.SECRET_KEY, setting.ALGORITHM)
@@ -71,7 +71,7 @@ async def update_token(user ,token: str = Depends(oauth_scheme)) -> dict:
         )
 
 
-async def verified_user(user ,token: str = Depends(oauth_scheme)):
+async def verified_user(user,token: str = Depends(oauth_scheme)):
 
     try:
         data = jwt.decode(token, setting.SECRET_KEY, setting.ALGORITHM)

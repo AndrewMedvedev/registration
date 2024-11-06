@@ -88,7 +88,6 @@ class SchoolboyModel(BaseModel):
     first_name_fa : str = Field(default=..., min_length=1, max_length=50, description="Отчество, от 1 до 50 символов")
     email: str = Field(default=...,min_length=5, max_length=100, description="Электронная почта ")
     number_school : str = Field(default=...,description="Номер школы")
-    group : str = Field(default=...,description="Номер группы")
     class_school : str = Field(default=...,description="Класс")
     hash_password : str = Field(default=...,description="Пароль")
     

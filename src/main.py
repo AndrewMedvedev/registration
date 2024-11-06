@@ -72,7 +72,6 @@ async def registration_schoolboy(user: SchoolboyModel, response: Response):
             first_name_fa=user.first_name_fa,
             email=user.email,
             number_school=user.number_school,
-            group=user.group,
             class_school=user.class_school,
             hash_password=get_password_hash(user.hash_password)
         )
@@ -95,14 +94,14 @@ async def login(user: UserModel,request: Request,response: Response):
     token = request.cookies.get('access')
     if (stmt.email == user.email) and verify_password(user.hash_password, stmt.hash_password):
         if not token:
-            tkn = update_token(user,token)
+            tkn = update_token(user)
             response.set_cookie(key="access", value=tkn, httponly=True)
             raise HTTPException(
                 status_code=status.HTTP_200_OK,
                 detail="Вы Авторизованны"
                 )
         else:
-            if verified_user(user,token):
+            if verified_user(user):
                 raise HTTPException(
                 status_code=status.HTTP_200_OK,
                 detail="Вы Авторизованны"
@@ -120,7 +119,7 @@ async def login(user: UserModel,request: Request,response: Response):
     token = request.cookies.get('access')
     if (stmt.email == user.email) and verify_password(user.hash_password, stmt.hash_password):
         if not token:
-            tkn = update_token(user,token)
+            tkn = update_token(user)
             response.set_cookie(key="access", value=tkn, httponly=True)
             raise HTTPException(
                 status_code=status.HTTP_200_OK,
@@ -145,14 +144,14 @@ async def login(user: UserModel,request: Request,response: Response):
     token = request.cookies.get('access')
     if (stmt.email == user.email) and verify_password(user.hash_password, stmt.hash_password):
         if not token:
-            tkn = update_token(user,token)
+            tkn = update_token(user)
             response.set_cookie(key="access", value=tkn, httponly=True)
             raise HTTPException(
                 status_code=status.HTTP_200_OK,
                 detail="Вы Авторизованны"
                 )
         else:
-            if verified_user(user,token):
+            if verified_user():
                 raise HTTPException(
                 status_code=status.HTTP_200_OK,
                 detail="Вы Авторизованны"
@@ -164,7 +163,7 @@ async def login(user: UserModel,request: Request,response: Response):
         )
 
 
-@app.get('/logout')
+@app.post('/logout')
 async def logout(response: Response):
     response.delete_cookie(key="access")
     raise HTTPException(
