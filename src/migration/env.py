@@ -15,7 +15,7 @@ from os.path import dirname, abspath
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
 
 from src.database import DATABASE_URL, Base
-from src.auth.models import Student , Applicant , Schoolboy
+from src.auth.models import User
 
 config = context.config
 config.set_main_option("sqlalchemy.url", DATABASE_URL)
@@ -23,6 +23,7 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 target_metadata = Base.metadata
+
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
