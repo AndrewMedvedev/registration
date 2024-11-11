@@ -122,6 +122,10 @@ async def login(user: GetUser,request: Request) -> Response:
                 })
         response.set_cookie(key='refresh',value=refresh)
         return response
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED
+        )
 
 
 @app.post('/logout')
