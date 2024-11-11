@@ -1,8 +1,8 @@
 """Initial revision
 
-Revision ID: c86f8b6bd9a8
+Revision ID: 9a0232598d7a
 Revises: 
-Create Date: 2024-11-08 22:39:41.919878
+Create Date: 2024-11-11 21:52:22.782413
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'c86f8b6bd9a8'
+revision: str = '9a0232598d7a'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -25,18 +25,17 @@ def upgrade() -> None:
     sa.Column('phone_number', sa.String(), nullable=False),
     sa.Column('first_name', sa.String(), nullable=False),
     sa.Column('last_name', sa.String(), nullable=False),
-    sa.Column('first_name_fa', sa.String(), nullable=False),
+    sa.Column('first_name_fa', sa.String(), nullable=True),
     sa.Column('email', sa.String(), nullable=False),
     sa.Column('hash_password', sa.String(), nullable=False),
-    sa.Column('snils', sa.String(), nullable=False),
-    sa.Column('faculty', sa.String(), nullable=False),
-    sa.Column('number_school', sa.String(), nullable=False),
-    sa.Column('class_school', sa.String(), nullable=False),
-    sa.Column('group', sa.String(), nullable=False),
+    sa.Column('snils', sa.String(), nullable=True),
+    sa.Column('faculty', sa.String(), nullable=True),
+    sa.Column('number_school', sa.String(), nullable=True),
+    sa.Column('class_school', sa.String(), nullable=True),
+    sa.Column('group', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
-    sa.UniqueConstraint('phone_number'),
-    sa.UniqueConstraint('snils')
+    sa.UniqueConstraint('phone_number')
     )
     # ### end Alembic commands ###
 

@@ -1,6 +1,6 @@
 from sqlalchemy import ForeignKey, text, Text
 from sqlalchemy.orm import relationship, Mapped, mapped_column
-from src.database import Base, str_uniq, int_pk, str_null_true , str_nullable
+from src.database import Base, str_uniq, int_pk, str_null_true , str_nullable , str_def
    
 
 class User(Base):
@@ -8,14 +8,14 @@ class User(Base):
     phone_number: Mapped[str_uniq]
     first_name: Mapped[str_nullable]
     last_name: Mapped[str_nullable]
-    first_name_fa : Mapped[str]
+    first_name_fa : Mapped[str_null_true]
     email: Mapped[str_uniq]
     hash_password : Mapped[str_nullable]
-    snils : Mapped[str_uniq]
-    faculty : Mapped[str_nullable]
-    number_school: Mapped[str_nullable]
-    class_school : Mapped[str_nullable]
-    group : Mapped[str_nullable]
+    snils : Mapped[str_null_true]
+    faculty : Mapped[str_null_true]
+    number_school: Mapped[str_null_true]
+    class_school : Mapped[str_null_true]
+    group : Mapped[str_null_true]
 
     
     

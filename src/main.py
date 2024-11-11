@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Response , Request , HTTPException, status , Depends 
 from fastapi.responses import JSONResponse , RedirectResponse
-from src.auth.schemas import UserModel , GetUser , ApplicantModel , SchoolboyModel , StudentModel
+from src.auth.schemas import UserModel , GetUser 
 from src.auth.controls import JWTControl , HashPass
 from src.services.orm import ORMService
 from src.auth.models import User
@@ -10,87 +10,21 @@ app = FastAPI(
 )
 
 
-@app.post('/registration/applicant')
-async def registration_applicant(user: ApplicantModel,request: Request) -> Response:
+@app.post('/registration')
+async def registration(user: UserModel,_: Request) -> Response:
     if user.validate_phone_number(user.phone_number) and user.validate_email(user.email):
         user_model = User(
             phone_number=user.phone_number,
+            email=user.email,
+            hash_password=HashPass.get_password_hash(user.hash_password),
             first_name=user.first_name,
             last_name=user.last_name,
             first_name_fa=user.first_name_fa,
-            email=user.email,
             snils=user.snils,
-            hash_password=HashPass.get_password_hash(user.hash_password),
-            faculty="None",
-            number_school="None",
-            class_school="None",
-            group="None"
-        )
-        token_control = JWTControl()
-        await ORMService().add_user(user_model)
-        data = {'user_name': user.email}
-        access = await token_control.create_access(data)
-        refresh = await token_control.create_refresh(data)
-        response = JSONResponse({
-                'access':access
-                })
-        response.set_cookie(key='refresh',value=refresh)
-        return response
-    else:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Неправильно введены данные"
-            )
-
-
-@app.post('/registration/student')
-async def registration_student(user: StudentModel,request: Request) -> Response:
-    if user.validate_phone_number(user.phone_number) and user.validate_email(user.email):
-        user_model = User(
-            phone_number=user.phone_number,
-            first_name=user.first_name,
-            last_name=user.last_name,
-            first_name_fa=user.first_name_fa,
-            email=user.email,
             faculty=user.faculty,
-            group=user.group,
-            hash_password=HashPass.get_password_hash(user.hash_password),
-            number_school="None",
-            class_school="None",
-            snils="None"
-        )
-        token_control = JWTControl()
-        await ORMService().add_user(user_model)
-        data = {'user_name': user.email}
-        access = await token_control.create_access(data)
-        refresh = await token_control.create_refresh(data)
-        response = JSONResponse({
-                'access':access
-                })
-        response.set_cookie(key='refresh',value=refresh)
-        return response
-    else:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Неправильно введены данные"
-            )
-
-
-@app.post('/registration/schoolboy')
-async def registration_schoolboy(user: SchoolboyModel,request: Request) -> Response:
-    if user.validate_phone_number(user.phone_number) and user.validate_email(user.email):
-        user_model = User(
-            phone_number=user.phone_number,
-            first_name=user.first_name,
-            last_name=user.last_name,
-            first_name_fa=user.first_name_fa,
-            email=user.email,
             number_school=user.number_school,
             class_school=user.class_school,
-            hash_password=HashPass.get_password_hash(user.hash_password),
-            faculty="None",
-            group="None",
-            snils="None"
+            group=user.group,
         )
         token_control = JWTControl()
         await ORMService().add_user(user_model)
@@ -107,7 +41,7 @@ async def registration_schoolboy(user: SchoolboyModel,request: Request) -> Respo
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Неправильно введены данные"
             )
-        
+
 
 @app.post('/login')    
 async def login(user: GetUser,request: Request) -> Response:
