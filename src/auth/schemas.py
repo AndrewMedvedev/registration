@@ -2,9 +2,7 @@ from pydantic import BaseModel, Field, field_validator
 from email_validator import validate_email
 import phonenumbers
 from fastapi import HTTPException , status
-from sqlalchemy import select, insert
-from sqlalchemy.exc import SQLAlchemyError
-from src.database import async_session_maker
+
 
 
 class UserModel(BaseModel):

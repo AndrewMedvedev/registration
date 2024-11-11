@@ -1,6 +1,5 @@
 from passlib.context import CryptContext
-from fastapi import Depends, HTTPException, status , Request, Response
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import HTTPException, status , Request, Response
 from jose import jwt
 from jose.exceptions import JWTError
 from src.config import Settings as setting
