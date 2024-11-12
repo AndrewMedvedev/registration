@@ -17,10 +17,10 @@ class ORMService(DatabaseSessionService):
         return {"message": 200}
 
 
-    async def get_user(self,email: str ,hash_password: str) -> UserModel | None:
+    async def get_user(self,model,email: str ,hash_password: str,):
         async with self.session() as session:
             user = await session.execute(
-                select(UserModel).where(UserModel.email == email and UserModel.hash_password == hash_password)
+                select(model).where(model.email == email and model.hash_password == hash_password)
             )
             try:
                 return user.scalars().one()

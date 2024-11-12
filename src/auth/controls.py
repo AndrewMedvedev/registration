@@ -5,7 +5,7 @@ from jose.exceptions import JWTError
 from src.config import Settings as setting
 import datetime  
 from datetime import datetime , timedelta
-from src.auth.schemas import GetUser , UserModel , ApplicantModel , SchoolboyModel , StudentModel
+from src.auth.schemas import GetUser , UserModel , ApplicanModel , SchoolboyModel , StudentModel
 from src.auth.models import Applican , Schoolboy , Student
 
 
@@ -15,10 +15,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 class HashPass:
     
-    def __init__(self):
-        pass
-
-
+    
     @staticmethod
     def get_password_hash(password: str) -> str:
         return pwd_context.hash(password)
@@ -30,9 +27,6 @@ class HashPass:
 
 
 class JWTControl:
-    
-    def __init__(self):
-        pass
 
 
     @staticmethod
@@ -52,9 +46,6 @@ class JWTControl:
     
     
 class ValidateJWT:
-    
-    def __init__(self):
-        pass
     
     
     async def validate_access(request:Request):
@@ -105,9 +96,6 @@ class ValidateJWT:
 
 class DatabaseControl:
     
-    def __init__(self):
-        pass
-
 
     @staticmethod
     async def validate_db(user: UserModel):
@@ -150,12 +138,16 @@ class DatabaseControl:
         
 class LoginControl:
     
-    def __init__(self):
-        pass
-    
     
     @staticmethod
     async def validate_login(user: GetUser):
+        if user.who == "Абитуриент":
+            return Applican
+        elif user.who == "Студент":
+            return Student
+        elif user.who == "Школьнки":
+            return Schoolboy
+        
         
         
             

@@ -48,9 +48,9 @@ class UserModel(BaseModel):
 class GetUser(BaseModel):
     email:  str = Field(default=...,min_length=5, max_length=100, description="Электронная почта ")
     hash_password: str = Field(default=...,description="Пароль")
+    who: str = Field(default=...)
     
-    
-class ApplicantModel(BaseModel):
+class ApplicanModel(BaseModel):
     phone_number: str = Field(default=..., description="Номер телефона в международном формате, начинающийся с '+'")
     first_name: str = Field(default=..., min_length=1, max_length=50, description="Имя, от 1 до 50 символов")
     last_name: str = Field(default=..., min_length=1, max_length=50, description="Фамилия, от 1 до 50 символов")
