@@ -5,15 +5,19 @@ from jose.exceptions import JWTError
 from src.config import Settings as setting
 import datetime  
 from datetime import datetime , timedelta
-from src.auth.schemas import GetUser
+from src.auth.schemas import GetUser , UserModel , ApplicantModel , SchoolboyModel , StudentModel
+from src.auth.models import Applican , Schoolboy , Student
+
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class HashPass:
+    
     def __init__(self):
         pass
+
 
     @staticmethod
     def get_password_hash(password: str) -> str:
@@ -26,6 +30,7 @@ class HashPass:
 
 
 class JWTControl:
+    
     def __init__(self):
         pass
 
@@ -96,6 +101,62 @@ class ValidateJWT:
             raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             )
+
+
+class DatabaseControl:
+    
+    def __init__(self):
+        pass
+
+
+    @staticmethod
+    async def validate_db(user: UserModel):
+        if user.snils != "string":
+            user_model = Applican(
+                phone_number=user.phone_number,
+                first_name=user.first_name,
+                last_name=user.last_name,
+                first_name_fa=user.first_name_fa,
+                email=user.email,
+                snils=user.snils,
+                hash_password=HashPass.get_password_hash(user.hash_password)
+            )
+            return user_model
+        elif user.faculty != "string":
+            user_model = Student(
+                phone_number=user.phone_number,
+                first_name=user.first_name,
+                last_name=user.last_name,
+                first_name_fa=user.first_name_fa,
+                email=user.email,
+                faculty=user.faculty,
+                group=user.group,
+                hash_password=HashPass.get_password_hash(user.hash_password)
+            )
+            return user_model
+        elif user.class_school != "string":
+            user_model = Schoolboy(
+                phone_number=user.phone_number,
+                first_name=user.first_name,
+                last_name=user.last_name,
+                first_name_fa=user.first_name_fa,
+                email=user.email,
+                number_school=user.number_school,
+                class_school=user.class_school,
+                hash_password=HashPass.get_password_hash(user.hash_password)
+            )
+            return user_model
+        
+        
+class LoginControl:
+    
+    def __init__(self):
+        pass
+    
+    
+    @staticmethod
+    async def validate_login(user: GetUser):
+        
         
             
 

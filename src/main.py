@@ -1,9 +1,9 @@
 from fastapi import FastAPI, Response , Request , HTTPException, status , Depends 
 from fastapi.responses import JSONResponse , RedirectResponse
 from src.auth.schemas import UserModel , GetUser 
-from src.auth.controls import JWTControl , HashPass
+from src.auth.controls import JWTControl , HashPass , DatabaseControl
 from src.services.orm import ORMService
-from src.auth.models import User
+
 
 app = FastAPI(
     title="Регистрация"
@@ -13,19 +13,8 @@ app = FastAPI(
 @app.post('/registration')
 async def registration(user: UserModel,_: Request) -> Response:
     if user.validate_phone_number(user.phone_number) and user.validate_email(user.email):
-        user_model = User(
-            phone_number=user.phone_number,
-            email=user.email,
-            hash_password=HashPass.get_password_hash(user.hash_password),
-            first_name=user.first_name,
-            last_name=user.last_name,
-            first_name_fa=user.first_name_fa,
-            snils=user.snils,
-            faculty=user.faculty,
-            number_school=user.number_school,
-            class_school=user.class_school,
-            group=user.group,
-        )
+        db = DatabaseControl()
+        user_model = await db.validate_db(user)
         token_control = JWTControl()
         await ORMService().add_user(user_model)
         data = {'user_name': user.email}
@@ -64,7 +53,6 @@ async def login(user: GetUser,request: Request) -> Response:
 
 @app.post('/logout')
 async def logout(response: Response):
-    response.delete_cookie(key="access")
     response.delete_cookie(key="refresh")
     raise HTTPException(
                 status_code=status.HTTP_200_OK,
