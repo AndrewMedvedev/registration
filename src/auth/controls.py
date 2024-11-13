@@ -5,8 +5,8 @@ from jose.exceptions import JWTError
 from src.config import Settings as setting
 import datetime  
 from datetime import datetime , timedelta
-from src.auth.schemas import GetUser , UserModel , ApplicanModel , SchoolboyModel , StudentModel
-from src.auth.models import Applican , Schoolboy , Student
+from src.auth.schemas import GetUser , UserModel , ApplicantModel , SchoolboyModel , StudentModel
+from src.auth.models import Applicant , Schoolboy , Student
 
 
 
@@ -100,7 +100,7 @@ class DatabaseControl:
     @staticmethod
     async def validate_db(user: UserModel):
         if user.snils != "string":
-            user_model = Applican(
+            user_model = Applicant(
                 phone_number=user.phone_number,
                 first_name=user.first_name,
                 last_name=user.last_name,
@@ -136,17 +136,18 @@ class DatabaseControl:
             return user_model
         
         
-class LoginControl:
+class UserControl:
     
     
     @staticmethod
-    async def validate_login(user: GetUser):
-        if user.who == "Абитуриент":
-            return Applican
-        elif user.who == "Студент":
-            return Student
-        elif user.who == "Школьнки":
-            return Schoolboy
+    async def check_user(user: GetUser):
+        match user.who:
+            case "Абитуриент":
+                return Applicant
+            case "Студент":
+                return Student
+            case "Школьник":
+                return Schoolboy
         
         
         

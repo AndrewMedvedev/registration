@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Response , Request , HTTPException, status , Depends 
 from fastapi.responses import JSONResponse , RedirectResponse
 from src.auth.schemas import UserModel , GetUser 
-from src.auth.controls import JWTControl , HashPass , DatabaseControl , LoginControl
+from src.auth.controls import JWTControl , HashPass , DatabaseControl , UserControl
 from src.services.orm import ORMService
 
 
@@ -34,7 +34,7 @@ async def registration(user: UserModel,_: Request) -> Response:
 
 @app.post('/login')    
 async def login(user: GetUser) -> Response:
-    model = await LoginControl.validate_login(user)
+    model = await UserControl.check_user(user)
     stmt = await ORMService().get_user(model=model,email=user.email,hash_password=user.hash_password)
     if (stmt.email == user.email) and HashPass.verify_password(user.hash_password, stmt.hash_password):
         data = {'user_name': user.email}
@@ -64,7 +64,5 @@ async def logout(response: Response):
 # @app.middleware("http")
 # async def notlog(request: Request, call_next):
 #     refresh = request.cookies.get('refresh')
-#     access = request.cookies.get('access')
-#     if not access and :
-        
+#     if not refresh:
 #         return RedirectResponse('/login')

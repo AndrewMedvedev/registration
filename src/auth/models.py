@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship, Mapped, mapped_column
 from src.database import Base, str_uniq, int_pk, str_null_true , str_nullable , str_def
    
         
-class Applican(Base):
+class Applicant(Base):
     id: Mapped[int_pk]
     phone_number: Mapped[str_uniq]
     first_name: Mapped[str_nullable]
@@ -56,6 +56,7 @@ class Schoolboy(Base):
     email: Mapped[str_uniq]
     number_school: Mapped[str_nullable]
     class_school : Mapped[str_nullable]
+    hash_password: Mapped[str_nullable]
     
     
     def __str__(self):

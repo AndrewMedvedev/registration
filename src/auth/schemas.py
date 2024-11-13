@@ -4,7 +4,6 @@ import phonenumbers
 from fastapi import HTTPException , status
 
 
-
 class UserModel(BaseModel):
     phone_number: str = Field(default=..., description="Номер телефона в международном формате, начинающийся с '+'")
     email: str = Field(default=...,min_length=5, max_length=100, description="Электронная почта ")
@@ -32,7 +31,6 @@ class UserModel(BaseModel):
             )
 
 
-
     @field_validator("email")
     @classmethod
     def validate_email(cls, value: str) -> str:
@@ -50,7 +48,8 @@ class GetUser(BaseModel):
     hash_password: str = Field(default=...,description="Пароль")
     who: str = Field(default=...)
     
-class ApplicanModel(BaseModel):
+    
+class ApplicantModel(BaseModel):
     phone_number: str = Field(default=..., description="Номер телефона в международном формате, начинающийся с '+'")
     first_name: str = Field(default=..., min_length=1, max_length=50, description="Имя, от 1 до 50 символов")
     last_name: str = Field(default=..., min_length=1, max_length=50, description="Фамилия, от 1 до 50 символов")
@@ -71,7 +70,6 @@ class ApplicanModel(BaseModel):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Номер телефона должен начинаться с "+" и содержать от 1 до 15 цифр"
             )
-
 
 
     @field_validator("email")
@@ -122,8 +120,6 @@ class StudentModel(BaseModel):
             )
         
 
-        
-        
 class SchoolboyModel(BaseModel):
     phone_number: str = Field(default=..., description="Номер телефона в международном формате, начинающийся с '+'")
     first_name: str = Field(default=..., min_length=1, max_length=50, description="Имя, от 1 до 50 символов")
@@ -147,6 +143,7 @@ class SchoolboyModel(BaseModel):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Номер телефона должен начинаться с "+" и содержать от 1 до 15 цифр"
             )
+
 
     @field_validator("email")
     @classmethod
