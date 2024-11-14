@@ -1,9 +1,8 @@
 from fastapi import FastAPI, Response , Request , HTTPException, status , Depends 
 from fastapi.responses import JSONResponse , RedirectResponse
 from src.auth.schemas import UserModel , GetUser 
-from src.auth.controls import JWTControl , HashPass , DatabaseControl , UserControl
+from src.auth.controls import JWTControl , HashPass , DatabaseControl , UserControl , ValidateJWT
 from src.services.orm import ORMService
-
 
 app = FastAPI(
     title="Регистрация"
@@ -35,7 +34,7 @@ async def registration(user: UserModel,_: Request) -> Response:
 @app.post('/login')    
 async def login(user: GetUser) -> Response:
     model = await UserControl.check_user(user)
-    stmt = await ORMService().get_user(model=model,email=user.email,hash_password=user.hash_password)
+    stmt = await ORMService().get_user(model=model ,email=user.email,hash_password=user.hash_password)
     if (stmt.email == user.email) and HashPass.verify_password(user.hash_password, stmt.hash_password):
         data = {'user_name': user.email}
         token_control = JWTControl()
@@ -66,3 +65,9 @@ async def logout(response: Response):
 #     refresh = request.cookies.get('refresh')
 #     if not refresh:
 #         return RedirectResponse('/login')
+
+@app.post('/refresh')
+async def tok(request: Request):
+    tkn = request.cookies.get('refresh')
+    return await ValidateJWT.validate_refresh(tkn)
+    

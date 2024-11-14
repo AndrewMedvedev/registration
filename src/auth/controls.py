@@ -71,23 +71,19 @@ class ValidateJWT:
             )
 
 
-    async def validate_refresh(request:Request):
+    async def validate_refresh(token):
         try:
-            refresh = jwt.decode(request.cookies.get('refresh'),setting.SECRET_KEY,setting.ALGORITHM)
+            refresh = jwt.decode(token,setting.SECRET_KEY,setting.ALGORITHM)
             if 'user_name' not in refresh and 'mode' not in refresh:
                 raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             )
-            if refresh['mode'] != 'access_token':
+            if refresh['mode'] != 'refresh_token':
                 raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             )
-            user = await GetUser.filter(email=refresh['user_name']).first()
-            if not user:
-                raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            )
-            return user
+            
+            return "ok"
         except JWTError:
             raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
