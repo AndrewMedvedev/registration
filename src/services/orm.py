@@ -1,6 +1,6 @@
 from sqlalchemy import select
 from src.services.db import DatabaseSessionService
-from src.auth.schemas import UserModel
+from src.auth.models import User
 
 
 class ORMService(DatabaseSessionService):
@@ -17,10 +17,10 @@ class ORMService(DatabaseSessionService):
         return {"message": 200}
 
 
-    async def get_user(self,model,email: str ,hash_password: str,):
+    async def get_user(self,email: str ,hash_password: str):
         async with self.session() as session:
             user = await session.execute(
-                select(model).where(model.email == email and model.hash_password == hash_password)
+                select(User).where(User.email == email and User.hash_password == hash_password)
             )
             try:
                 return user.scalars().one()

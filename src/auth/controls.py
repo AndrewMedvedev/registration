@@ -5,9 +5,7 @@ from jose.exceptions import JWTError
 from src.config import Settings as setting
 import datetime  
 from datetime import datetime , timedelta
-from src.auth.schemas import GetUser , UserModel , ApplicantModel , SchoolboyModel , StudentModel
-from src.auth.models import Applicant , Schoolboy , Student
-
+from src.auth.schemas import GetUser 
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -40,7 +38,7 @@ class JWTControl:
     @staticmethod
     async def create_refresh(data: dict):
         data["header"] = { "alg": "HS256", "typ": "JWT"}
-        data["exp"] = timedelta(days=1) + datetime.now()
+        data["exp"] = timedelta(hours=5) + datetime.now()
         data["mode"] = "refresh_token"
         return jwt.encode(data,setting.SECRET_KEY,setting.ALGORITHM)
     
@@ -48,106 +46,59 @@ class JWTControl:
 class ValidateJWT:
     
     
-    async def validate_access(request:Request):
-        try:
-            access = jwt.decode(request.cookies.get('access'),setting.SECRET_KEY,setting.ALGORITHM)
-            if 'user_name' not in access and 'mode' not in access:
+    @staticmethod
+    async def validate_access(token):
+        if not token:
+            return HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            )
+        else:
+            try:
+                access = jwt.decode(token,setting.SECRET_KEY,setting.ALGORITHM)
+                if 'user_name' not in access and 'mode' not in access:
+                    raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                )
+                if access['mode'] != 'access_token':
+                    raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                )
+                
+                return HTTPException(
+                status_code=status.HTTP_200_OK
+                )
+            except JWTError:
                 raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            )
-            if access['mode'] != 'access_token':
-                raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            )
-            user = await GetUser.filter(email=access['user_name']).first()
-            if not user:
-                raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            )
-            return user
-        except JWTError:
-            raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            )
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                )
 
-
+    @staticmethod
     async def validate_refresh(token):
-        try:
-            refresh = jwt.decode(token,setting.SECRET_KEY,setting.ALGORITHM)
-            if 'user_name' not in refresh and 'mode' not in refresh:
+        if not token:
+            return HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            )
+        else:
+            try:
+                refresh = jwt.decode(token,setting.SECRET_KEY,setting.ALGORITHM)
+                if 'user_name' not in refresh and 'mode' not in refresh:
+                    raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                )
+                if refresh['mode'] != 'refresh_token':
+                    raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                )
+                
+                return HTTPException(
+                status_code=status.HTTP_200_OK
+                )
+            except JWTError:
                 raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            )
-            if refresh['mode'] != 'refresh_token':
-                raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            )
-            
-            return "ok"
-        except JWTError:
-            raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            )
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                )
 
 
-class DatabaseControl:
-    
-
-    @staticmethod
-    async def validate_db(user: UserModel):
-        if user.snils != "string":
-            user_model = Applicant(
-                phone_number=user.phone_number,
-                first_name=user.first_name,
-                last_name=user.last_name,
-                first_name_fa=user.first_name_fa,
-                email=user.email,
-                snils=user.snils,
-                hash_password=HashPass.get_password_hash(user.hash_password)
-            )
-            return user_model
-        elif user.faculty != "string":
-            user_model = Student(
-                phone_number=user.phone_number,
-                first_name=user.first_name,
-                last_name=user.last_name,
-                first_name_fa=user.first_name_fa,
-                email=user.email,
-                faculty=user.faculty,
-                group=user.group,
-                hash_password=HashPass.get_password_hash(user.hash_password)
-            )
-            return user_model
-        elif user.class_school != "string":
-            user_model = Schoolboy(
-                phone_number=user.phone_number,
-                first_name=user.first_name,
-                last_name=user.last_name,
-                first_name_fa=user.first_name_fa,
-                email=user.email,
-                number_school=user.number_school,
-                class_school=user.class_school,
-                hash_password=HashPass.get_password_hash(user.hash_password)
-            )
-            return user_model
-        
-        
-class UserControl:
-    
-    
-    @staticmethod
-    async def check_user(user: GetUser):
-        match user.who:
-            case "Абитуриент":
-                return Applicant
-            case "Студент":
-                return Student
-            case "Школьник":
-                return Schoolboy
-        
-        
-        
-            
 
 
 

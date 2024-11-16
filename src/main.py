@@ -1,8 +1,10 @@
 from fastapi import FastAPI, Response , Request , HTTPException, status , Depends 
 from fastapi.responses import JSONResponse , RedirectResponse
 from src.auth.schemas import UserModel , GetUser 
-from src.auth.controls import JWTControl , HashPass , DatabaseControl , UserControl , ValidateJWT
+from src.auth.controls import JWTControl , HashPass , ValidateJWT
 from src.services.orm import ORMService
+from src.auth.models import User
+
 
 app = FastAPI(
     title="Регистрация"
@@ -10,20 +12,32 @@ app = FastAPI(
 
 
 @app.post('/registration')
-async def registration(user: UserModel,_: Request) -> Response:
+async def registration(user: UserModel,response: Response):
     if user.validate_phone_number(user.phone_number) and user.validate_email(user.email):
-        db = DatabaseControl()
-        user_model = await db.validate_db(user)
+        user_model = User(
+                phone_number=user.phone_number,
+                email=user.email,
+                hash_password=HashPass.get_password_hash(user.hash_password),
+                first_name=user.first_name,
+                last_name=user.last_name,
+                first_name_fa=user.first_name_fa,
+                snils=user.snils,
+                faculty=user.faculty,
+                group=user.group,
+                number_school=user.number_school,
+                class_school=user.class_school,
+                who=user.who
+            )
         token_control = JWTControl()
         await ORMService().add_user(user_model)
         data = {'user_name': user.email}
         access = await token_control.create_access(data)
         refresh = await token_control.create_refresh(data)
-        response = JSONResponse({
-                'access':access
-                })
         response.set_cookie(key='refresh',value=refresh)
-        return response
+        response.set_cookie(key='access',value=access)
+        return HTTPException(
+            status_code=status.HTTP_200_OK
+        )
     else:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -32,19 +46,18 @@ async def registration(user: UserModel,_: Request) -> Response:
 
 
 @app.post('/login')    
-async def login(user: GetUser) -> Response:
-    model = await UserControl.check_user(user)
-    stmt = await ORMService().get_user(model=model ,email=user.email,hash_password=user.hash_password)
+async def login(user: GetUser,response: Response):
+    stmt = await ORMService().get_user(email=user.email,hash_password=user.hash_password)
     if (stmt.email == user.email) and HashPass.verify_password(user.hash_password, stmt.hash_password):
         data = {'user_name': user.email}
         token_control = JWTControl()
         access = await token_control.create_access(data)
         refresh = await token_control.create_refresh(data)
-        response = JSONResponse({
-                'access':access
-                })
         response.set_cookie(key='refresh',value=refresh)
-        return response
+        response.set_cookie(key='access',value=access)
+        return HTTPException(
+            status_code=status.HTTP_200_OK
+        )
     else:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED
@@ -53,21 +66,24 @@ async def login(user: GetUser) -> Response:
 
 @app.post('/logout')
 async def logout(response: Response):
-    response.delete_cookie(key="refresh")
+    response.delete_cookie(key='access')
+    response.delete_cookie(key='refresh')
     raise HTTPException(
                 status_code=status.HTTP_200_OK,
                 )
     
 
-
 # @app.middleware("http")
-# async def notlog(request: Request, call_next):
+# async def notlog(request: Request):
+#     access = request.cookies.get('access')
 #     refresh = request.cookies.get('refresh')
 #     if not refresh:
 #         return RedirectResponse('/login')
 
-@app.post('/refresh')
-async def tok(request: Request):
-    tkn = request.cookies.get('refresh')
-    return await ValidateJWT.validate_refresh(tkn)
+
+@app.post('/validate/jwt')
+async def validate_jwt(request: Request):
+    access = request.cookies.get('access')
+    refresh = request.cookies.get('refresh')
+    return await ValidateJWT.validate_access(access) , await ValidateJWT.validate_refresh(refresh)
     
