@@ -5,19 +5,13 @@ from src.database import Base, str_uniq, int_pk, str_null_true , str_nullable , 
     
 class User(Base):
     id: Mapped[int_pk]
-    phone_number: Mapped[str_uniq]
-    email: Mapped[str_uniq]
-    hash_password: Mapped[str_nullable]
     first_name: Mapped[str_nullable]
     last_name: Mapped[str_nullable]
     first_name_fa : Mapped[str_null_true]
-    snils: Mapped[str_null_true]
-    faculty : Mapped[str_null_true]
-    group : Mapped[str_null_true]
-    number_school: Mapped[str_null_true]
-    class_school : Mapped[str_null_true]
-    who: Mapped[str_nullable]
-   
+    phone_number: Mapped[str_uniq]
+    email: Mapped[str_uniq]
+    hash_password: Mapped[str_nullable]
+    
    
     def __str__(self):
             return (f"{self.__class__.__name__}(id={self.id}, "

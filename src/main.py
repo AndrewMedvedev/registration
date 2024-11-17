@@ -15,18 +15,13 @@ app = FastAPI(
 async def registration(user: UserModel,response: Response):
     if user.validate_phone_number(user.phone_number) and user.validate_email(user.email):
         user_model = User(
-                phone_number=user.phone_number,
-                email=user.email,
-                hash_password=HashPass.get_password_hash(user.hash_password),
                 first_name=user.first_name,
                 last_name=user.last_name,
                 first_name_fa=user.first_name_fa,
-                snils=user.snils,
-                faculty=user.faculty,
-                group=user.group,
-                number_school=user.number_school,
-                class_school=user.class_school,
-                who=user.who
+                phone_number=user.phone_number,
+                email=user.email,
+                hash_password=HashPass.get_password_hash(user.hash_password)
+                
             )
         token_control = JWTControl()
         await ORMService().add_user(user_model)

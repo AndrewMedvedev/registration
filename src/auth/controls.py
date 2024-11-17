@@ -72,6 +72,7 @@ class ValidateJWT:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 )
 
+
     @staticmethod
     async def validate_refresh(token):
         if not token:
