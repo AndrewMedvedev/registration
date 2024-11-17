@@ -5,9 +5,6 @@ from fastapi import HTTPException , status
 
 
 class UserModel(BaseModel):
-    first_name: str = Field(default=..., min_length=1, max_length=50, description="Имя, от 1 до 50 символов")
-    last_name: str = Field(default=..., min_length=1, max_length=50, description="Фамилия, от 1 до 50 символов")
-    first_name_fa : str = Field(default=..., min_length=1, max_length=50, description="Отчество, от 1 до 50 символов")
     phone_number: str = Field(default=..., description="Номер телефона в международном формате, начинающийся с '+'")
     email: str = Field(default=...,min_length=5, max_length=100, description="Электронная почта ")
     hash_password : str = Field(default=...,description="Пароль")

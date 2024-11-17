@@ -15,13 +15,9 @@ app = FastAPI(
 async def registration(user: UserModel,response: Response):
     if user.validate_phone_number(user.phone_number) and user.validate_email(user.email):
         user_model = User(
-                first_name=user.first_name,
-                last_name=user.last_name,
-                first_name_fa=user.first_name_fa,
                 phone_number=user.phone_number,
                 email=user.email,
                 hash_password=HashPass.get_password_hash(user.hash_password)
-                
             )
         token_control = JWTControl()
         await ORMService().add_user(user_model)
@@ -63,9 +59,9 @@ async def login(user: GetUser,response: Response):
 async def logout(response: Response):
     response.delete_cookie(key='access')
     response.delete_cookie(key='refresh')
-    raise HTTPException(
-                status_code=status.HTTP_200_OK,
-                )
+    return HTTPException(
+            status_code=status.HTTP_200_OK
+        )
     
 
 # @app.middleware("http")

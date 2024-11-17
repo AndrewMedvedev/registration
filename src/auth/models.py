@@ -5,9 +5,6 @@ from src.database import Base, str_uniq, int_pk, str_null_true , str_nullable , 
     
 class User(Base):
     id: Mapped[int_pk]
-    first_name: Mapped[str_nullable]
-    last_name: Mapped[str_nullable]
-    first_name_fa : Mapped[str_null_true]
     phone_number: Mapped[str_uniq]
     email: Mapped[str_uniq]
     hash_password: Mapped[str_nullable]
