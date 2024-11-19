@@ -4,7 +4,7 @@ WORKDIR /fastapi_auth
 
 COPY poetry.lock pyproject.toml ./
 
-RUN pip install --no-cache-dir -r pyproject.toml
+RUN poetry add --no-cache-dir -r pyproject.toml
 
 COPY . .
 
