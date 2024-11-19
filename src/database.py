@@ -19,6 +19,7 @@ str_null_true = Annotated[str, mapped_column(nullable=True)]
 str_nullable = Annotated[str,mapped_column(nullable=False)]
 str_def = Annotated[str,mapped_column(default=None)]
 
+
 class Base(AsyncAttrs, DeclarativeBase):
     __abstract__ = True
 

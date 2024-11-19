@@ -1,14 +1,22 @@
 from fastapi import FastAPI, Response , Request , HTTPException, status , Depends 
-from fastapi.responses import JSONResponse , RedirectResponse
+from fastapi.responses import RedirectResponse
 from src.auth.schemas import UserModel , GetUser 
 from src.auth.controls import JWTControl , HashPass , ValidateJWT
 from src.services.orm import ORMService
 from src.auth.models import User
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.middleware import SlowAPIMiddleware
+from slowapi.errors import RateLimitExceeded
 
 
-app = FastAPI(
-    title="Регистрация"
-)
+limiter = Limiter(key_func=get_remote_address, default_limits=["10/second"])
+app = FastAPI(title="Регистрация")
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_middleware(SlowAPIMiddleware)
+
+
 
 
 @app.post('/registration')
