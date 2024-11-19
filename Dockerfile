@@ -1,10 +1,10 @@
-FROM python:3.12
+FROM python:3.11
 
 WORKDIR /fastapi_auth
 
-COPY poetry.lock pyproject.toml ./
+COPY pyproject.toml .
 
-RUN poetry add pyproject.toml
+RUN pip install --no-cache-dir -r pyproject.toml
 
 COPY . .
 
