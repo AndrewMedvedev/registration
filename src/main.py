@@ -10,12 +10,11 @@ from slowapi.middleware import SlowAPIMiddleware
 from slowapi.errors import RateLimitExceeded
 
 
-limiter = Limiter(key_func=get_remote_address, default_limits=["10/second"])
+limiter = Limiter(key_func=get_remote_address, default_limits=["10/minute"])
 app = FastAPI(title="Регистрация")
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(SlowAPIMiddleware)
-
 
 
 @app.post('/registration')
