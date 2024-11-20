@@ -18,7 +18,6 @@ app.add_middleware(SlowAPIMiddleware)
 
 
 
-
 @app.post('/registration')
 async def registration(user: UserModel,response: Response):
     if user.validate_phone_number(user.phone_number) and user.validate_email(user.email):
