@@ -1,6 +1,6 @@
 from sqlalchemy import ForeignKey, text, Text
 from sqlalchemy.orm import relationship, Mapped, mapped_column
-from src.database import Base, str_uniq, int_pk, str_null_true , str_nullable , str_def
+from src.database import Base, str_uniq, int_pk, str_nullable 
 
     
 class User(Base):
