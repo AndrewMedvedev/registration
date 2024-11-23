@@ -3,9 +3,8 @@ from fastapi import HTTPException, status
 from jose import jwt
 from jose.exceptions import JWTError
 from src.config import Settings as setting
-import datetime  
 from datetime import datetime , timedelta
-
+import datetime  
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -101,10 +100,6 @@ class ValidateJWT:
                 
                 
 
-
-
-
-    
     
 
     
