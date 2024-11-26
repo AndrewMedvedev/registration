@@ -40,3 +40,32 @@ class GetUser(BaseModel):
     hash_password: str = Field(default=...,description="Пароль")
     
     
+class RefreshUser(BaseModel):
+    email:  str = Field(default=...,min_length=5, max_length=100, description="Электронная почта ")
+    hash_password: str = Field(default=...,description="Пароль")
+    new_hashpass : str = Field(default=...,description="Пароль")
+            
+
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, value: str) -> str:
+        if validate_email(value):
+            return value
+        else:
+            raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="email не соответствует формату"
+            )
+    
+    
+    @field_validator("new_hashpass")
+    @classmethod
+    def validate_new_hashpass(cls, value: str) -> str:
+        mesyac = ["январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"]
+        if value.lower() not in mesyac:
+            return value
+        else:
+            raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="пароль не соответствует формату"
+            )

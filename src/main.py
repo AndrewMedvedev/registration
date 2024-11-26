@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Response , Request , HTTPException, status 
 from fastapi.responses import RedirectResponse
-from src.auth.schemas import UserModel , GetUser 
+from src.auth.schemas import UserModel , GetUser, RefreshUser
 from src.auth.controls import JWTControl , HashPass , ValidateJWT
 from src.services.orm import ORMService
 from src.auth.models import User
@@ -84,3 +84,22 @@ async def validate_jwt(request: Request):
     refresh = request.cookies.get('refresh')
     return await ValidateJWT.validate_access(access) , await ValidateJWT.validate_refresh(refresh)
     
+    
+@app.post('/refresh')
+async def refresh_pass(user: RefreshUser , response: Response):
+    stmt = await ORMService().get_user(email=user.email,hash_password=user.hash_password)
+    if (stmt.email == user.email) and HashPass.verify_password(user.hash_password, stmt.hash_password):
+        await ORMService().replace_password(new_hashpass=HashPass.get_password_hash(user.new_hashpass),email=user.email)
+        data = {'user_name': user.email}
+        token_control = JWTControl()
+        access = await token_control.create_access(data)
+        refresh = await token_control.create_refresh(data)
+        response.set_cookie(key='refresh',value=refresh)
+        response.set_cookie(key='access',value=access)
+        return HTTPException(
+            status_code=status.HTTP_200_OK
+        )
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED
+        )
