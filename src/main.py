@@ -19,27 +19,22 @@ app.add_middleware(SlowAPIMiddleware)
 
 @app.post('/registration')
 async def registration(user: UserModel,response: Response):
-    if user.validate_phone_number(user.phone_number) and user.validate_email(user.email):
-        user_model = User(
-                phone_number=user.phone_number,
-                email=user.email,
-                hash_password=HashPass.get_password_hash(user.hash_password)
-            )
-        token_control = JWTControl()
-        await ORMService().add_user(user_model)
-        data = {'user_name': user.email}
-        access = await token_control.create_access(data)
-        refresh = await token_control.create_refresh(data)
-        response.set_cookie(key='refresh',value=refresh)
-        response.set_cookie(key='access',value=access)
-        return HTTPException(
-            status_code=status.HTTP_200_OK
+    user_model = User(
+            phone_number=user.phone_number,
+            email=user.email,
+            hash_password=HashPass.get_password_hash(user.hash_password)
         )
-    else:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Неправильно введены данные"
-            )
+    token_control = JWTControl()
+    await ORMService().add_user(user_model)
+    data = {'user_name': user.email}
+    access = await token_control.create_access(data)
+    refresh = await token_control.create_refresh(data)
+    response.set_cookie(key='refresh',value=refresh)
+    response.set_cookie(key='access',value=access)
+    return HTTPException(
+        status_code=status.HTTP_200_OK
+    )
+
 
 
 @app.post('/login')    
