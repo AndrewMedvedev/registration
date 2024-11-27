@@ -27,18 +27,6 @@ class ORMService(DatabaseSessionService):
             except Exception as _ex:
                 print(_ex)
                 
-                
-    async def replace_password(
-            self,
-            new_hashpass: str,
-            email: str
-    ) -> User:
-        async with self.session() as session:
-            query = select(User).where(User.email == email)
-            user = await session.execute(query)
-            user = user.scalars().first()
-            user.hash_password = new_hashpass 
-            await session.commit()
-            return user
+
                 
     
