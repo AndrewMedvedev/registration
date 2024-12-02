@@ -1,4 +1,5 @@
-from fastapi import FastAPI, Response , Request , HTTPException, status 
+from fastapi import FastAPI, Response , Request , HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from src.auth.schemas import UserModel , GetUser
 from src.auth.controls import JWTControl , HashPass , ValidateJWT
@@ -17,6 +18,15 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(SlowAPIMiddleware)
 
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 @app.post('/registration')
 async def registration(user: UserModel,response: Response):
     user_model = User(
@@ -29,11 +39,8 @@ async def registration(user: UserModel,response: Response):
     data = {'user_name': user.email}
     access = await token_control.create_access(data)
     refresh = await token_control.create_refresh(data)
-    response.set_cookie(key='refresh',value=refresh)
     response.set_cookie(key='access',value=access)
-    return HTTPException(
-        status_code=status.HTTP_200_OK
-    )
+    return {'refresh': refresh}
 
 
 
@@ -45,11 +52,8 @@ async def login(user: GetUser,response: Response):
         token_control = JWTControl()
         access = await token_control.create_access(data)
         refresh = await token_control.create_refresh(data)
-        response.set_cookie(key='refresh',value=refresh)
         response.set_cookie(key='access',value=access)
-        return HTTPException(
-            status_code=status.HTTP_200_OK
-        )
+        return {'refresh': refresh}
     else:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED
@@ -59,7 +63,6 @@ async def login(user: GetUser,response: Response):
 @app.post('/logout')
 async def logout(response: Response):
     response.delete_cookie(key='access')
-    response.delete_cookie(key='refresh')
     return HTTPException(
             status_code=status.HTTP_200_OK
         )
@@ -75,6 +78,6 @@ async def logout(response: Response):
 
 @app.post('/validate/jwt')
 async def validate_jwt(request: Request):
-    access = request.cookies.get('access')
-    refresh = request.cookies.get('refresh')
-    return await ValidateJWT.validate_access(access) , await ValidateJWT.validate_refresh(refresh)
+    return await ValidateJWT.validate_refresh(request)
+
+

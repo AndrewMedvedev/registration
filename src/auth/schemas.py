@@ -40,4 +40,3 @@ class GetUser(BaseModel):
     hash_password: str = Field(default=...,description="Пароль")
     
     
-        

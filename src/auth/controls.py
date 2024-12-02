@@ -1,5 +1,5 @@
 from passlib.context import CryptContext
-from fastapi import HTTPException, status 
+from fastapi import HTTPException, status , Response
 from jose import jwt
 from jose.exceptions import JWTError
 from src.config import Settings as setting
@@ -46,34 +46,7 @@ class ValidateJWT:
     
     
     @staticmethod
-    async def validate_access(token):
-        if not token:
-            return HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            )
-        else:
-            try:
-                access = jwt.decode(token,setting.SECRET_KEY,setting.ALGORITHM)
-                if 'user_name' not in access and 'mode' not in access:
-                    raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                )
-                if access['mode'] != 'access_token':
-                    raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                )
-                
-                return HTTPException(
-                status_code=status.HTTP_200_OK
-                )
-            except JWTError:
-                raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                )
-
-
-    @staticmethod
-    async def validate_refresh(token):
+    async def validate_refresh(response: Response, token):
         if not token:
             return HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -89,10 +62,9 @@ class ValidateJWT:
                     raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 )
-                
-                return HTTPException(
-                status_code=status.HTTP_200_OK
-                )
+                data = {'user_name': refresh['user_name']}
+                access = await JWTControl.create_access(data)
+                return response.set_cookie(key='access',value=access)
             except JWTError:
                 raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
