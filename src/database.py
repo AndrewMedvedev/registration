@@ -14,8 +14,9 @@ async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 int_pk = Annotated[int, mapped_column(primary_key=True)]
 str_uniq = Annotated[str, mapped_column(unique=True, nullable=False)]
 str_null_true = Annotated[str, mapped_column(nullable=True)]
-str_nullable = Annotated[str,mapped_column(nullable=False)]
-str_def = Annotated[str,mapped_column(default=None)]
+str_nullable = Annotated[str, mapped_column(nullable=False)]
+str_def = Annotated[str, mapped_column(default=None)]
+int_null = Annotated[int, mapped_column(nullable=False, unique=True)]
 
 
 class Base(AsyncAttrs, DeclarativeBase):
@@ -24,5 +25,3 @@ class Base(AsyncAttrs, DeclarativeBase):
     @declared_attr.directive
     def __tablename__(cls) -> str:
         return f"{cls.__name__.lower()}s"
-
-    

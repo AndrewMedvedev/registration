@@ -1,15 +1,19 @@
 from pydantic import BaseModel, Field, field_validator
 from email_validator import validate_email
 import phonenumbers
-from fastapi import HTTPException , status
+from fastapi import HTTPException, status
 
 
 class UserModel(BaseModel):
-    phone_number: str = Field(default=..., description="Номер телефона в международном формате, начинающийся с '+'")
-    email: str = Field(default=...,min_length=5, max_length=100, description="Электронная почта ")
-    hash_password : str = Field(default=...,description="Пароль")
-    
-    
+    phone_number: str = Field(
+        default=...,
+        description="Номер телефона в международном формате, начинающийся с '+'",
+    )
+    email: str = Field(
+        default=..., min_length=5, max_length=100, description="Электронная почта "
+    )
+    hash_password: str = Field(default=..., description="Пароль")
+
     @field_validator("phone_number")
     @classmethod
     def validate_phone_number(cls, values: str) -> str:
@@ -18,10 +22,10 @@ class UserModel(BaseModel):
             return values
         else:
             raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Номер телефона должен начинаться с "+" и содержать от 1 до 15 цифр"
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Номер телефона должен начинаться с "
+                + " и содержать от 1 до 15 цифр",
             )
-            
 
     @field_validator("email")
     @classmethod
@@ -30,13 +34,13 @@ class UserModel(BaseModel):
             return value
         else:
             raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="email не соответствует формату"
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="email не соответствует формату",
             )
 
 
 class GetUser(BaseModel):
-    email:  str = Field(default=...,min_length=5, max_length=100, description="Электронная почта ")
-    hash_password: str = Field(default=...,description="Пароль")
-    
-    
+    email: str = Field(
+        default=..., min_length=5, max_length=100, description="Электронная почта "
+    )
+    hash_password: str = Field(default=..., description="Пароль")
