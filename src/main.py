@@ -32,7 +32,7 @@ async def registration(user: UserModel, response: Response):
     user_model = User(
         phone_number=user.phone_number,
         email=user.email,
-        hash_password=HashPass.get_password_hash(user.hash_password)
+        hash_password=HashPass.get_password_hash(user.hash_password),
     )
     token_control = JWTControl()
     await ORMService().add_user(user_model)
@@ -58,7 +58,7 @@ async def login(user: GetUser, response: Response):
         response.set_cookie(key="access", value=access)
         return {"refresh": refresh}
     else:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
 
 @app.post("/logout")
@@ -67,14 +67,24 @@ async def logout(response: Response):
     return HTTPException(status_code=status.HTTP_200_OK)
 
 
-# @app.middleware("http")
-# async def notlog(request: Request):
-#     access = request.cookies.get('access')
-#     refresh = request.cookies.get('refresh')
-#     if not refresh:
-#         return RedirectResponse('/login')
+@app.post("/validate_refresh/jwt")
+async def validate_refresh(refresh: str, response: Response):
+    tkn = await ValidateJWT.validate_refresh(refresh)
+    if tkn != False:
+        token_control = JWTControl()
+        data = {"user_name": tkn}
+        access = await token_control.create_access(data)
+        response.set_cookie(key="access", value=access)
+        return HTTPException(status_code=status.HTTP_200_OK)
+    else:
+        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
 
-@app.post("/validate/jwt")
-async def validate_jwt(request: Request):
-    return await ValidateJWT.validate_refresh(request)
+@app.post('/validate_access/jwt')
+async def validate_access(request: Request, response: Response):
+    access = request.cookies.get('access')
+    tkn = await ValidateJWT.validate_access(access)
+    if tkn != False:
+        return HTTPException(status_code=status.HTTP_200_OK)
+    else:
+        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)

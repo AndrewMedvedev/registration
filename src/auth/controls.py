@@ -41,26 +41,31 @@ class JWTControl:
 class ValidateJWT:
 
     @staticmethod
-    async def validate_refresh(response: Response, token):
+    async def validate_refresh(token):
         if not token:
-            return HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-            )
+            return False
         else:
             try:
                 refresh = jwt.decode(token, setting.SECRET_KEY, setting.ALGORITHM)
                 if "user_name" not in refresh and "mode" not in refresh:
-                    raise HTTPException(
-                        status_code=status.HTTP_401_UNAUTHORIZED,
-                    )
+                    return False
                 if refresh["mode"] != "refresh_token":
-                    raise HTTPException(
-                        status_code=status.HTTP_401_UNAUTHORIZED,
-                    )
-                data = {"user_name": refresh["user_name"]}
-                access = await JWTControl.create_access(data)
-                return response.set_cookie(key="access", value=access)
+                    return False
+                return refresh["user_name"]
             except JWTError:
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                )
+                return False
+
+    @staticmethod
+    async def validate_access(token):
+        if not token:
+            return False
+        else:
+            try:
+                access = jwt.decode(token, setting.SECRET_KEY, setting.ALGORITHM)
+                if "user_name" not in access and "mode" not in access:
+                    return False
+                if access["mode"] != "access_token":
+                    return False
+                return True
+            except JWTError:
+                return False
