@@ -39,7 +39,7 @@ async def registration(user: UserModel, response: Response):
     data = {"user_name": user.email}
     access = await token_control.create_access(data)
     refresh = await token_control.create_refresh(data)
-    response.set_cookie(key="access", value=access)
+    response.set_cookie(key="access", value=access, httponly=True, secure=True, samesite="none")
     return {"refresh": refresh}
 
 
@@ -55,7 +55,7 @@ async def login(user: GetUser, response: Response):
         token_control = JWTControl()
         access = await token_control.create_access(data)
         refresh = await token_control.create_refresh(data)
-        response.set_cookie(key="access", value=access)
+        response.set_cookie(key="access", value=access, httponly=True, secure=True, samesite="none")
         return {"refresh": refresh}
     else:
         return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
@@ -74,7 +74,7 @@ async def validate_refresh(refresh: str, response: Response):
         token_control = JWTControl()
         data = {"user_name": tkn}
         access = await token_control.create_access(data)
-        response.set_cookie(key="access", value=access)
+        response.set_cookie(key="access", value=access, httponly=True, secure=True, samesite="none")
         return HTTPException(status_code=status.HTTP_200_OK)
     else:
         return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
