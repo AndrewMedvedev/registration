@@ -39,6 +39,7 @@ class JWTControl:
 
 
 class ValidateJWT:
+    
 
     @staticmethod
     async def validate_refresh(token):

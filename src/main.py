@@ -39,7 +39,9 @@ async def registration(user: UserModel, response: Response):
     data = {"user_name": user.email}
     access = await token_control.create_access(data)
     refresh = await token_control.create_refresh(data)
-    response.set_cookie(key="access", value=access, httponly=True, secure=True, samesite="none")
+    response.set_cookie(
+        key="access", value=access, httponly=True, secure=True, samesite="none"
+    )
     return {"refresh": refresh}
 
 
@@ -55,7 +57,9 @@ async def login(user: GetUser, response: Response):
         token_control = JWTControl()
         access = await token_control.create_access(data)
         refresh = await token_control.create_refresh(data)
-        response.set_cookie(key="access", value=access, httponly=True, secure=True, samesite="none")
+        response.set_cookie(
+            key="access", value=access, httponly=True, secure=True, samesite="none"
+        )
         return {"refresh": refresh}
     else:
         return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
@@ -67,24 +71,21 @@ async def logout(response: Response):
     return HTTPException(status_code=status.HTTP_200_OK)
 
 
-@app.post("/validate_refresh/jwt")
-async def validate_refresh(refresh: str, response: Response):
-    tkn = await ValidateJWT.validate_refresh(refresh)
-    if tkn != False:
-        token_control = JWTControl()
-        data = {"user_name": tkn}
-        access = await token_control.create_access(data)
-        response.set_cookie(key="access", value=access, httponly=True, secure=True, samesite="none")
+@app.post("/validate_tokens/jwt")
+async def validate_access(refresh: str, request: Request, response: Response):
+    tkn_refresh = await ValidateJWT.validate_refresh(refresh)
+    access = request.cookies.get("access")
+    tkn_access = await ValidateJWT.validate_access(access)
+    if tkn_access != False:
         return HTTPException(status_code=status.HTTP_200_OK)
     else:
-        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-
-
-@app.post('/validate_access/jwt')
-async def validate_access(request: Request, response: Response):
-    access = request.cookies.get('access')
-    tkn = await ValidateJWT.validate_access(access)
-    if tkn != False:
-        return HTTPException(status_code=status.HTTP_200_OK)
-    else:
-        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+        if tkn_refresh != False:
+            token_control = JWTControl()
+            data = {"user_name": tkn_refresh}
+            access = await token_control.create_access(data)
+            response.set_cookie(
+                key="access", value=access, httponly=True, secure=True, samesite="none"
+            )
+            return HTTPException(status_code=status.HTTP_200_OK)
+        else:
+            return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
