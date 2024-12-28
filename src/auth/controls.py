@@ -1,6 +1,5 @@
 import uuid
 from passlib.context import CryptContext
-from fastapi import HTTPException, status, Response
 from jose import jwt
 from jose.exceptions import JWTError
 from src.config import Settings as setting
