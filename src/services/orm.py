@@ -1,6 +1,6 @@
 from sqlalchemy import select
 from src.services.db import DatabaseSessionService
-from src.auth.models import User
+from src.database.models import User
 
 
 class ORMService(DatabaseSessionService):

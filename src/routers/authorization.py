@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException, status, Response
-from auth.controls import HashPass, JWTControl
-from auth.models import User
-from auth.schemas import GetUser, UserModel
-from services.orm import ORMService
+from src.database.controls import HashPass, JWTControl
+from src.database.models import User
+from src.database.schemas import GetUser, UserModel
+from src.services.orm import ORMService
 
 router = APIRouter(prefix="/authorization", tags=["authorization"])
 

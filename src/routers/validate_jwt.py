@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status, Request, Response
-from auth.controls import JWTControl, ValidateJWT
+from src.database.controls import JWTControl, ValidateJWT
 
 router = APIRouter(prefix="/validate_jwt", tags=["validate_jwt"])
 

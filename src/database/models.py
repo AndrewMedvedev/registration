@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Mapped
-from src.database import Base, str_uniq, int_pk, str_nullable, int_null
+from database.database import Base, str_uniq, int_pk, str_nullable, int_null
 
 
 class User(Base):
