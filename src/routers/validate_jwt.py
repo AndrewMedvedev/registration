@@ -4,7 +4,7 @@ from src.database.controls import JWTControl, ValidateJWT
 router = APIRouter(prefix="/validate_jwt", tags=["validate_jwt"])
 
 
-@router.post("/validate_tokens/jwt")
+@router.post("/")
 async def validate_access(refresh: str, request: Request, response: Response):
     tkn_refresh = await ValidateJWT.validate_refresh(refresh)
     access = request.cookies.get("access")
