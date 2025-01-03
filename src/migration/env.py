@@ -12,7 +12,7 @@ from os.path import dirname, abspath
 
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
 
-from database.db import DATABASE_URL, Base
+from src.database.data import DATABASE_URL, Base
 from src.database.models import User
 
 config = context.config
