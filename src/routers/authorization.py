@@ -65,7 +65,7 @@ async def login(user: GetUserPhoneNumber, response: Response):
         return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
 
-@router.post("/logout")
+@router.get("/logout")
 async def logout(response: Response):
     response.delete_cookie(key="access")
     return HTTPException(status_code=status.HTTP_200_OK)
