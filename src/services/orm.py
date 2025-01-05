@@ -8,7 +8,6 @@ class ORMService(DatabaseSessionService):
         super().__init__()
         self.init()
 
-
     async def add_user(self, user):
         async with self.session() as session:
             session.add(user)
@@ -16,17 +15,27 @@ class ORMService(DatabaseSessionService):
             await session.refresh(user)
         return {"message": 200}
 
-
-    async def get_user(self,email: str ,hash_password: str):
+    async def get_user_email(self, email: str, hash_password: str):
         async with self.session() as session:
             user = await session.execute(
-                select(User).where(User.email == email and User.hash_password == hash_password)
+                select(User).where(
+                    User.email == email and User.hash_password == hash_password
+                )
             )
             try:
                 return user.scalars().one()
             except Exception as _ex:
                 print(_ex)
-                
 
-                
-    
+    async def get_user_phone_number(self, phone_number: str, hash_password: str):
+        async with self.session() as session:
+            user = await session.execute(
+                select(User).where(
+                    User.phone_number == phone_number
+                    and User.hash_password == hash_password
+                )
+            )
+        try:
+            return user.scalar()
+        except Exception as _ex:
+            print(_ex)

@@ -15,18 +15,11 @@ class DatabaseSessionService:
         self._engine: Optional[AsyncEngine] = None
         self._sessionmaker: Optional[async_sessionmaker[AsyncSession]] = None
 
-
     def init(self) -> None:
-        self._engine = create_async_engine(
-            url= get_db_url(),
-            echo=True
-            
-        )
+        self._engine = create_async_engine(url=get_db_url(), echo=True)
         self._sessionmaker = async_sessionmaker(
-            bind=self._engine,
-            expire_on_commit=False
+            bind=self._engine, expire_on_commit=False
         )
-
 
     async def close(self) -> None:
         if self._engine is None:
@@ -34,7 +27,6 @@ class DatabaseSessionService:
         await self._engine.dispose()
         self._engine = None
         self._sessionmaker = None
-
 
     @contextlib.asynccontextmanager
     async def session(self):
@@ -44,7 +36,6 @@ class DatabaseSessionService:
             except Exception as _ex:
                 await session.rollback()
                 raise _ex
-
 
     @contextlib.asynccontextmanager
     async def connect(self) -> AsyncIterator[AsyncConnection]:
