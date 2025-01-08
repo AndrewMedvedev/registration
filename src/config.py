@@ -15,6 +15,12 @@ class Settings:
     DB_PASSWORD: str = config["DB_PASSWORD"]
     SECRET_KEY: str = config["SECRET_KEY"]
     ALGORITHM: str = config["ALGORITHM"]
+    VK_APP_ID: str = config["VK_APP_ID"]
+    VK_APP_SECRET: str = config["VK_APP_SECRET"]
+    VK_REDIRECT_URI: str = config["VK_REDIRECT_URI"]
+    VK_AUTH_URL: str = config["VK_AUTH_URL"]
+    VK_TOKEN_URL: str = config["VK_TOKEN_URL"]
+    VK_API_URL: str = config["VK_API_URL"]
 
 
 settings = Settings()
@@ -25,3 +31,4 @@ def get_db_url():
         f"postgresql+asyncpg://{settings.DB_USER}:{settings.DB_PASSWORD}@"
         f"{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}"
     )
+
