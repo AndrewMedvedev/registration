@@ -9,7 +9,7 @@ router = APIRouter(prefix="/authorization_vk", tags=["authorization_vk"])
 @router.get("/login")
 async def vk_login():
     params = {
-        "client_id": settings.VK_CLIENT_ID,
+        "client_id": settings.VK_APP_ID,
         "redirect_uri": settings.VK_REDIRECT_URI,
         "response_type": "code",
         "scope": "email",
@@ -25,8 +25,8 @@ async def vk_callback(code: str):
     Эндпоинт для обработки ответа от VK.
     """
     params = {
-        "client_id": settings.VK_CLIENT_ID,
-        "client_secret": settings.VK_CLIENT_SECRET,
+        "client_id": settings.VK_APP_ID,
+        "client_secret": settings.VK_APP_SECRET,
         "redirect_uri": settings.VK_REDIRECT_URI,
         "code": code,
     }
