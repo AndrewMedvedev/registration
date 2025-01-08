@@ -15,7 +15,7 @@ class Settings:
     DB_PASSWORD: str = config["DB_PASSWORD"]
     SECRET_KEY: str = config["SECRET_KEY"]
     ALGORITHM: str = config["ALGORITHM"]
-    VK_APP_ID: str = config["VK_APP_ID"]
+    VK_APP_ID: int = config["VK_APP_ID"]
     VK_APP_SECRET: str = config["VK_APP_SECRET"]
     VK_REDIRECT_URI: str = config["VK_REDIRECT_URI"]
     VK_AUTH_URL: str = config["VK_AUTH_URL"]
