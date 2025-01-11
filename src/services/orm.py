@@ -44,6 +44,6 @@ class ORMService(DatabaseSessionService):
         async with self.session() as session:
             user = await session.execute(select(UserVk).where(UserVk.id_vk == id_vk))
             try:
-                return user.scalars().one()
+                return user.scalar()
             except Exception as _ex:
                 print(_ex)
