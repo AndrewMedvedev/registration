@@ -28,7 +28,6 @@ class User(Base):
 class UserVk(Base):
     id: Mapped[int_pk]
     id_vk: Mapped[int_null]
-    id_tg: Mapped[int_null | None]
     email: Mapped[str_uniq | None]
 
     def __str__(self):

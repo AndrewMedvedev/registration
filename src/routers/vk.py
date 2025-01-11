@@ -23,7 +23,7 @@ async def vk_link():
 
 
 @router.get("/registration")
-async def vk_registration(response: Response, code: str, id_tg: int):
+async def vk_registration(response: Response, code: str):
     try:
         params = {
             "client_secret": settings.CLIENT_SECRET,
@@ -38,7 +38,6 @@ async def vk_registration(response: Response, code: str, id_tg: int):
         token_control = JWTControl()
         user_model = UserVk(
             id_vk=user.get("user_id"),
-            id_tg=id_tg,
             email=(user.get("email")).lower()
         )
         await ORMService().add_user(user_model)
