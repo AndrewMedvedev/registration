@@ -14,6 +14,7 @@ class UserModel(BaseModel):
     )
     hash_password: str = Field(default=..., description="Пароль")
 
+
     @field_validator("phone_number")
     @classmethod
     def validate_phone_number(cls, values: str) -> str:
@@ -37,6 +38,12 @@ class UserModel(BaseModel):
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="email не соответствует формату",
             )
+
+
+class VKModel(BaseModel):
+    id_vk: int
+    id_tg: str
+    email: str
 
 
 class GetUserEmail(BaseModel):

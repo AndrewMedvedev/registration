@@ -1,6 +1,6 @@
 from sqlalchemy import select
 from src.services.db import DatabaseSessionService
-from src.database.models import User
+from src.database.models import User, UserVk
 
 
 class ORMService(DatabaseSessionService):
@@ -39,3 +39,11 @@ class ORMService(DatabaseSessionService):
             return user.scalar()
         except Exception as _ex:
             print(_ex)
+
+    async def get_user_id_vk(self, id_vk: int):
+        async with self.session() as session:
+            user = await session.execute(select(UserVk).where(UserVk.id_vk == id_vk))
+            try:
+                return user.scalars().one()
+            except Exception as _ex:
+                print(_ex)

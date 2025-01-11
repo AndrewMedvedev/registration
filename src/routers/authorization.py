@@ -25,7 +25,7 @@ async def registration(user: UserModel, response: Response):
     return {"refresh": refresh}
 
 
-@router.post("/login_email")
+@router.post("/login/email")
 async def login(user: GetUserEmail, response: Response):
     stmt = await ORMService().get_user_email(
         email=user.email, hash_password=user.hash_password
@@ -45,7 +45,7 @@ async def login(user: GetUserEmail, response: Response):
         return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
 
-@router.post("/login_phone_number")
+@router.post("/login/phone/number")
 async def login(user: GetUserPhoneNumber, response: Response):
     stmt = await ORMService().get_user_phone_number(
         phone_number=user.phone_number, hash_password=user.hash_password
