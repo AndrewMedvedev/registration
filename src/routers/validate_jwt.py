@@ -5,7 +5,7 @@ router = APIRouter(prefix="/validate/jwt", tags=["validate/jwt"])
 
 
 @router.post("/refresh")
-async def validate_refresh(refresh: str, response: Response):
+async def validate_refresh(refresh: str, response: Response) -> HTTPException:
     tkn_refresh = await ValidateJWT.validate_refresh(refresh)
     if tkn_refresh != False:
         token_control = JWTControl()
@@ -20,7 +20,7 @@ async def validate_refresh(refresh: str, response: Response):
 
 
 @router.get("/access")
-async def validate_access(request: Request):
+async def validate_access(request: Request) -> HTTPException:
     access = request.cookies.get("access")
     tkn_access = await ValidateJWT.validate_access(access)
     if tkn_access != False:

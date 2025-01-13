@@ -25,14 +25,14 @@ class HashPass:
 class JWTControl:
 
     @staticmethod
-    async def create_access(data: dict):
+    async def create_access(data: dict) -> str:
         data["header"] = {"alg": "HS256", "typ": "JWT", "uuid": str(uuid.uuid4())}
         data["exp"] = timedelta(hours=2) + datetime.now()
         data["mode"] = "access_token"
         return jwt.encode(data, settings.SECRET_KEY, settings.ALGORITHM)
 
     @staticmethod
-    async def create_refresh(data: dict):
+    async def create_refresh(data: dict) -> str:
         data["header"] = {"alg": "HS256", "typ": "JWT", "uuid": str(uuid.uuid4())}
         data["exp"] = timedelta(hours=5) + datetime.now()
         data["mode"] = "refresh_token"
@@ -42,7 +42,7 @@ class JWTControl:
 class ValidateJWT:
 
     @staticmethod
-    async def validate_refresh(token):
+    async def validate_refresh(token) -> str:
         if not token:
             return False
         else:
@@ -57,7 +57,7 @@ class ValidateJWT:
                 return False
 
     @staticmethod
-    async def validate_access(token):
+    async def validate_access(token) -> bool:
         if not token:
             return False
         else:

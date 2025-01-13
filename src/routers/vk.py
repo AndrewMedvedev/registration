@@ -9,7 +9,7 @@ router = APIRouter(prefix="/vk", tags=["vk"])
 
 
 @router.get("/link")
-async def vk_link():
+async def vk_link() -> str:
     params = {
         "response_type": "code",
         "client_id": settings.VK_APP_ID,
@@ -23,7 +23,7 @@ async def vk_link():
 
 
 @router.get("/registration")
-async def vk_registration(response: Response, code: str):
+async def vk_registration(response: Response, code: str) -> dict:
     try:
         params = {
             "client_secret": settings.CLIENT_SECRET,
@@ -55,7 +55,7 @@ async def vk_registration(response: Response, code: str):
 
 
 @router.get("/login")
-async def vk_login(response: Response, code: str):
+async def vk_login(response: Response, code: str) -> dict:
     params = {
         "client_secret": settings.CLIENT_SECRET,
         "grant_type": "authorization_code",

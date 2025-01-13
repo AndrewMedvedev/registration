@@ -8,7 +8,7 @@ class ORMService(DatabaseSessionService):
         super().__init__()
         self.init()
 
-    async def add_user(self, user):
+    async def add_user(self, user) -> dict:
         async with self.session() as session:
             session.add(user)
             await session.commit()
@@ -27,7 +27,7 @@ class ORMService(DatabaseSessionService):
             except Exception as _ex:
                 print(_ex)
 
-    async def get_user_phone_number(self, phone_number: str, hash_password: str):
+    async def get_user_phone_number(self, phone_number: str, hash_password: str) -> dict:
         async with self.session() as session:
             user = await session.execute(
                 select(User).where(
@@ -40,7 +40,7 @@ class ORMService(DatabaseSessionService):
         except Exception as _ex:
             print(_ex)
 
-    async def get_user_id_vk(self, id_vk: int):
+    async def get_user_id_vk(self, id_vk: int) -> dict:
         async with self.session() as session:
             user = await session.execute(select(UserVk).where(UserVk.id_vk == id_vk))
             try:
