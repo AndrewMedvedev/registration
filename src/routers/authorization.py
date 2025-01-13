@@ -66,6 +66,6 @@ async def login(user: GetUserPhoneNumber, response: Response) -> dict:
 
 
 @router.get("/logout")
-async def logout(response: Response) -> HTTPException:
+async def logout(response: Response):
     response.delete_cookie(key="access")
     return HTTPException(status_code=status.HTTP_200_OK)
