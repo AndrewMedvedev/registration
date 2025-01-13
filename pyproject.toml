@@ -9,7 +9,6 @@ readme = "README.md"
 python = "^3.12"
 fastapi = {extras = ["all"], version = "^0.115.3"}
 asyncpg = "^0.30.0"
-sqlalchemy = "^2.0.36"
 asyncio = "^3.4.3"
 alembic = "^1.13.3"
 pydantic-settings = "^2.6.0"
@@ -23,6 +22,7 @@ loguru = "^0.7.2"
 slowapi = "^0.1.9"
 requests = "^2.32.3"
 aiohttp = "^3.11.11"
+sqlalchemy = "^2.0.37"
 
 
 [build-system]
