@@ -21,7 +21,7 @@ async def vk_link() -> str:
 
 
 @router.get("/registration")
-async def vk_registration(response: Response, code: str):
+async def vk_registration(response: Response, code: str) -> dict:
     params = {
         "client_secret": settings.CLIENT_SECRET,
         "grant_type": "authorization_code",
@@ -47,7 +47,7 @@ async def vk_registration(response: Response, code: str):
 
 
 @router.get("/login")
-async def vk_login(response: Response, code: str):
+async def vk_login(response: Response, code: str) -> dict:
     params = {
         "client_secret": settings.CLIENT_SECRET,
         "grant_type": "authorization_code",
