@@ -1,9 +1,7 @@
 from fastapi import APIRouter, Request, HTTPException, Response, status
-from src.services.orm import ORMService
 from src.config import Settings as settings
 from src.database.models import UserVk
-from src.database.controls import VKControls
-from src.database.controls import JWTControl
+from src.classes.vk_class import VK
 
 router = APIRouter(prefix="/vk", tags=["vk"])
 
@@ -33,24 +31,19 @@ async def vk_registration(response: Response, code: str):
         "client_id": settings.VK_APP_ID,
         "state": settings.STATE,
     }
-    user = await VKControls.get_token(params)
-    token_control = JWTControl()
-    user_model = UserVk(
-        id_vk=user.get("user_id"),
-        email=(user.get("email")).lower()
-    )
-    await ORMService().add_user(user_model)
-    data_tkn = {"user_name": user.get("user_id")}
-    access = await token_control.create_access(data_tkn)
-    refresh = await token_control.create_refresh(data_tkn)
+    user = await VK(params).get_data_user()
+    user_model = UserVk(id_vk=user.get("user_id"), email=(user.get("email")).lower())
+    await VK(user_model=user_model).data_add()
+    data = {"user_name": user.get("user_id")}
+    tokens = await VK(data=data).create_tokens()
     response.set_cookie(
-    key="access", value=access, httponly=True, secure=True, samesite="none"
-)
-    return {"refresh": refresh}
-
-        # return HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
-
-        
+        key="access",
+        value=tokens.get("access"),
+        httponly=True,
+        secure=True,
+        samesite="none",
+    )
+    return {"refresh": tokens.get("refresh")}
 
 
 @router.get("/login")
@@ -64,16 +57,18 @@ async def vk_login(response: Response, code: str):
         "client_id": settings.VK_APP_ID,
         "state": settings.STATE,
     }
-    user = await VKControls.get_token(params)
-    stmt  = await ORMService().get_user_id_vk(user.get("user_id"))
-    token_control = JWTControl()
-    if stmt.id_vk == user.get("user_id"):
-        data_tkn = {"user_name": user.get("user_id")}
-        access = await token_control.create_access(data_tkn)
-        refresh = await token_control.create_refresh(data_tkn)
+    user = await VK(params).get_data_user()
+    stmt = await VK(user_id=user.get("user_id")).data_get()
+    if stmt is not False:
+        data = {"user_name": user.get("user_id")}
+        tokens = await VK(data=data).create_tokens()
         response.set_cookie(
-        key="access", value=access, httponly=True, secure=True, samesite="none"
+        key="access",
+        value=tokens.get("access"),
+        httponly=True,
+        secure=True,
+        samesite="none",
     )
-        return {"refresh": refresh}
+        return {"refresh": tokens.get("refresh")}
     else:
         return HTTPException(status_code=status.HTTP_400_BAD_REQUEST)

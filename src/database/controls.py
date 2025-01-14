@@ -72,20 +72,3 @@ class ValidateJWT:
                 return False
 
 
-class VKControls:
-
-    async def get_token(params: dict) -> dict:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(
-                settings.VK_TOKEN_URL, params=params, ssl=False
-            ) as data:
-                get_token = await data.json()
-                return get_token
-
-    async def get_user_data(params: dict) -> dict:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(
-                settings.VK_API_URL, params=params, ssl=False
-            ) as user_response:
-                user_data = await user_response.json()
-                return user_data["response"]
