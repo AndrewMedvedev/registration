@@ -14,7 +14,6 @@ class UserModel(BaseModel):
     )
     hash_password: str = Field(default=..., description="Пароль")
 
-
     @field_validator("phone_number")
     @classmethod
     def validate_phone_number(cls, values: str) -> str:

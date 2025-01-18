@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, HTTPException, Response, status
+from fastapi import APIRouter, HTTPException, Response, status
 from src.config import Settings as settings
 from src.database.models import UserVk
 from src.classes.vk_class import VK

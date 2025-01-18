@@ -1,16 +1,15 @@
 from fastapi import APIRouter, HTTPException, status, Request, Response
-from src.database.controls import JWTControl, ValidateJWT
+from src.classes.jwt_classes import JWTCreate, ValidateJWT
 
 router = APIRouter(prefix="/validate/jwt", tags=["validate/jwt"])
 
 
 @router.post("/refresh")
 async def validate_refresh(refresh: str, response: Response):
-    tkn_refresh = await ValidateJWT.validate_refresh(refresh)
+    tkn_refresh = await ValidateJWT(refresh).validate_refresh()
     if tkn_refresh != False:
-        token_control = JWTControl()
         data = {"user_name": tkn_refresh}
-        access = await token_control.create_access(data)
+        access = await JWTCreate(data).create_access()
         response.set_cookie(
             key="access", value=access, httponly=True, secure=True, samesite="none"
         )
@@ -22,7 +21,7 @@ async def validate_refresh(refresh: str, response: Response):
 @router.get("/access")
 async def validate_access(request: Request):
     access = request.cookies.get("access")
-    tkn_access = await ValidateJWT.validate_access(access)
+    tkn_access = await ValidateJWT(access).validate_access()
     if tkn_access != False:
         return HTTPException(status_code=status.HTTP_200_OK)
     else:

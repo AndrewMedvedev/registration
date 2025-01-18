@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, status, Response
-from src.database.controls import HashPass, JWTControl
+from src.classes.jwt_classes import JWTCreate
+from src.database.controls import HashPass
 from src.database.models import User
 from src.database.schemas import GetUserEmail, GetUserPhoneNumber, UserModel
 from src.services.orm import ORMService
@@ -14,11 +15,10 @@ async def registration(user: UserModel, response: Response) -> dict:
         email=user.email,
         hash_password=HashPass.get_password_hash(user.hash_password),
     )
-    token_control = JWTControl()
     await ORMService().add_user(user_model)
     data = {"user_name": user.email}
-    access = await token_control.create_access(data)
-    refresh = await token_control.create_refresh(data)
+    access = await JWTCreate(data).create_access()
+    refresh = await JWTCreate(data).create_refresh()
     response.set_cookie(
         key="access", value=access, httponly=True, secure=True, samesite="none"
     )
@@ -34,9 +34,8 @@ async def login(user: GetUserEmail, response: Response) -> dict:
         user.hash_password, stmt.hash_password
     ):
         data = {"user_name": user.email}
-        token_control = JWTControl()
-        access = await token_control.create_access(data)
-        refresh = await token_control.create_refresh(data)
+        access = await JWTCreate(data).create_access()
+        refresh = await JWTCreate(data).create_refresh()
         response.set_cookie(
             key="access", value=access, httponly=True, secure=True, samesite="none"
         )
@@ -54,9 +53,8 @@ async def login(user: GetUserPhoneNumber, response: Response) -> dict:
         user.hash_password, stmt.hash_password
     ):
         data = {"user_name": stmt.email}
-        token_control = JWTControl()
-        access = await token_control.create_access(data)
-        refresh = await token_control.create_refresh(data)
+        access = await JWTCreate(data).create_access()
+        refresh = await JWTCreate(data).create_refresh()
         response.set_cookie(
             key="access", value=access, httponly=True, secure=True, samesite="none"
         )

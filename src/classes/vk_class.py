@@ -1,4 +1,4 @@
-from src.database.controls import JWTControl
+from src.classes.jwt_classes import JWTCreate
 from src.services.orm import ORMService
 from src.config import Settings as settings
 import aiohttp
@@ -41,8 +41,7 @@ class VK:
 
     async def create_tokens(self) -> dict:
         if self._data is not None:
-            token_control = JWTControl()
-            access = await token_control.create_access(self._data)
-            refresh = await token_control.create_refresh(self._data)
+            access = await JWTCreate(self._data).create_access()
+            refresh = await JWTCreate(self._data).create_refresh()
             tokens = {"access": access, "refresh": refresh}
             return tokens
