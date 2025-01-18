@@ -31,7 +31,7 @@ class ValidateJWT:
     def __init__(self, token: str) -> None:
         self.token = token
 
-    async def validate_refresh(self) -> str:
+    async def validate_refresh(self) -> str | bool:
         if not self.token:
             return False
         else:

@@ -8,8 +8,11 @@ from src.services.orm import ORMService
 router = APIRouter(prefix="/authorization", tags=["authorization"])
 
 
-@router.post("/registration")
-async def registration(user: UserModel, response: Response) -> dict:
+@router.post(
+    "/registration",
+    response_model=None,
+)
+async def registration(user: UserModel) -> dict:
     user_model = User(
         phone_number=user.phone_number,
         email=user.email,
@@ -19,14 +22,14 @@ async def registration(user: UserModel, response: Response) -> dict:
     data = {"user_name": user.email}
     access = await JWTCreate(data).create_access()
     refresh = await JWTCreate(data).create_refresh()
-    response.set_cookie(
-        key="access", value=access, httponly=True, secure=True, samesite="none"
-    )
-    return {"refresh": refresh}
+    return {"access": access, "refresh": refresh}
 
 
-@router.post("/login/email")
-async def login(user: GetUserEmail, response: Response) -> dict:
+@router.post(
+    "/login/email",
+    response_model=None,
+)
+async def login(user: GetUserEmail) -> dict | HTTPException:
     stmt = await ORMService().get_user_email(
         email=user.email, hash_password=user.hash_password
     )
@@ -36,16 +39,16 @@ async def login(user: GetUserEmail, response: Response) -> dict:
         data = {"user_name": user.email}
         access = await JWTCreate(data).create_access()
         refresh = await JWTCreate(data).create_refresh()
-        response.set_cookie(
-            key="access", value=access, httponly=True, secure=True, samesite="none"
-        )
-        return {"refresh": refresh}
+        return {"access": access, "refresh": refresh}
     else:
         return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
 
-@router.post("/login/phone/number")
-async def login(user: GetUserPhoneNumber, response: Response) -> dict:
+@router.post(
+    "/login/phone/number",
+    response_model=None,
+)
+async def login(user: GetUserPhoneNumber) -> dict | HTTPException:
     stmt = await ORMService().get_user_phone_number(
         phone_number=user.phone_number, hash_password=user.hash_password
     )
@@ -55,15 +58,16 @@ async def login(user: GetUserPhoneNumber, response: Response) -> dict:
         data = {"user_name": stmt.email}
         access = await JWTCreate(data).create_access()
         refresh = await JWTCreate(data).create_refresh()
-        response.set_cookie(
-            key="access", value=access, httponly=True, secure=True, samesite="none"
-        )
-        return {"refresh": refresh}
+        return {"access": access, "refresh": refresh}
     else:
         return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
 
-@router.get("/logout")
-async def logout(response: Response):
+@router.post(
+    "/logout",
+    response_model=None,
+)
+async def logout(response: Response) -> HTTPException:
     response.delete_cookie(key="access")
+    response.delete_cookie(key="refresh")
     return HTTPException(status_code=status.HTTP_200_OK)

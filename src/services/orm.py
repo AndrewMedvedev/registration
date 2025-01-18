@@ -15,7 +15,7 @@ class ORMService(DatabaseSessionService):
             await session.refresh(user)
         return {"message": 200}
 
-    async def get_user_email(self, email: str, hash_password: str):
+    async def get_user_email(self, email: str, hash_password: str) -> dict:
         async with self.session() as session:
             user = await session.execute(
                 select(User).where(

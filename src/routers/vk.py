@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Response, status
+from fastapi import APIRouter, HTTPException, status
 from src.config import Settings as settings
 from src.database.models import UserVk
 from src.classes.vk_class import VK
@@ -20,8 +20,11 @@ async def vk_link() -> str:
     return url
 
 
-@router.get("/registration")
-async def vk_registration(response: Response, code: str) -> dict:
+@router.get(
+    "/registration",
+    response_model=None,
+)
+async def vk_registration(code: str) -> dict:
     params = {
         "client_secret": settings.CLIENT_SECRET,
         "grant_type": "authorization_code",
@@ -36,18 +39,14 @@ async def vk_registration(response: Response, code: str) -> dict:
     await VK(user_model=user_model).data_add()
     data = {"user_name": user.get("user_id")}
     tokens = await VK(data=data).create_tokens()
-    response.set_cookie(
-        key="access",
-        value=tokens.get("access"),
-        httponly=True,
-        secure=True,
-        samesite="none",
-    )
-    return {"refresh": tokens.get("refresh")}
+    return {"access": tokens.get("access"), "refresh": tokens.get("refresh")}
 
 
-@router.get("/login")
-async def vk_login(response: Response, code: str) -> dict:
+@router.get(
+    "/login",
+    response_model=None,
+)
+async def vk_login(code: str) -> dict | HTTPException:
     params = {
         "client_secret": settings.CLIENT_SECRET,
         "grant_type": "authorization_code",
@@ -62,13 +61,6 @@ async def vk_login(response: Response, code: str) -> dict:
     if stmt is not False:
         data = {"user_name": user.get("user_id")}
         tokens = await VK(data=data).create_tokens()
-        response.set_cookie(
-        key="access",
-        value=tokens.get("access"),
-        httponly=True,
-        secure=True,
-        samesite="none",
-    )
-        return {"refresh": tokens.get("refresh")}
+        return {"access": tokens.get("access"), "refresh": tokens.get("refresh")}
     else:
         return HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
