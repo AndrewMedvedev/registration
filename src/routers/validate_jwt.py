@@ -17,7 +17,7 @@ async def validate_refresh(
         False
 
 
-@router.get("/access")
+@router.post("/access")
 async def validate_access(
     access: str,
 ) -> bool:
