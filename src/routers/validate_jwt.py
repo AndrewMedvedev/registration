@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, status
 from src.classes.jwt_classes import JWTCreate, ValidateJWT
 
 router = APIRouter(prefix="/validate/jwt", tags=["validate/jwt"])
@@ -7,14 +7,17 @@ router = APIRouter(prefix="/validate/jwt", tags=["validate/jwt"])
 @router.post("/refresh")
 async def validate_refresh(
     refresh: str,
-) -> dict | bool:
+) -> dict | HTTPException:
     tkn_refresh = await ValidateJWT(refresh).validate_refresh()
-    if tkn_refresh != False:
-        data = {"user_name": tkn_refresh}
-        access = await JWTCreate(data).create_access()
-        return {"access": access}
-    else:
-        False
+    try:
+        if tkn_refresh != False:
+            data = {"user_name": tkn_refresh}
+            access = await JWTCreate(data).create_access()
+            return {"access": access}
+    except:
+        return HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 @router.post("/access")
