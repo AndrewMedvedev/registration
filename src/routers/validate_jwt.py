@@ -12,21 +12,16 @@ async def validate_refresh(
     refresh: str,
 ) -> dict | HTTPException:
     tkn_refresh = await ValidateJWT(refresh).validate_refresh()
-    try:
-        if tkn_refresh != False:
-            data = {"user_name": tkn_refresh}
-            access = await JWTCreate(data).create_access()
-            return {"access": access}
-    except:
-        return HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+    if tkn_refresh != False:
+        data = {"user_name": tkn_refresh}
+        access = await JWTCreate(data).create_access()
+        return {"access": access}
+    else:
+        False
 
 
 @router.post("/access")
 async def validate_access(
     access: str,
-) -> bool:
-    tkn_access = await ValidateJWT(access).validate_access()
-    if tkn_access != False:
-        return True
-    else:
-        False
+) -> str | bool:
+    return await ValidateJWT(access).validate_access()
