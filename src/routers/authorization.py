@@ -10,7 +10,6 @@ router = APIRouter(prefix="/authorization", tags=["authorization"])
 
 @router.post(
     "/registration",
-    response_model=None,
 )
 async def registration(user: UserModel) -> dict:
     user_model = User(
