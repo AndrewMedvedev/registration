@@ -35,7 +35,7 @@ async def vk_registration(code: str) -> dict:
         "state": settings.STATE,
     }
     user = await VK(params).get_data_user()
-    user_model = UserVk(id_vk=user.get("user_id"), email=(user.get("email")).lower())
+    user_model = UserVk(id_vk=user.get("user_id"), email=(user.get("email").lower()))
     await VK(user_model=user_model).data_add()
     data = {"user_name": user.get("email")}
     tokens = await VK(data=data).create_tokens()
