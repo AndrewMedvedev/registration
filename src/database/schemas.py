@@ -31,7 +31,7 @@ class UserModel(BaseModel):
     @classmethod
     def validate_email(cls, value: str) -> str:
         if validate_email(value):
-            return value
+            return value.lower()
         else:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -44,6 +44,11 @@ class VKModel(BaseModel):
     id_tg: str
     email: str
 
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, value: str) -> str:
+        return value.lower()
+
 
 class GetUserEmail(BaseModel):
     email: str = Field(
@@ -55,7 +60,7 @@ class GetUserEmail(BaseModel):
     @classmethod
     def validate_email(cls, value: str) -> str:
         if validate_email(value):
-            return value
+            return value.lower()
         else:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
