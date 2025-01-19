@@ -4,7 +4,10 @@ from src.classes.jwt_classes import JWTCreate, ValidateJWT
 router = APIRouter(prefix="/validate/jwt", tags=["validate/jwt"])
 
 
-@router.post("/refresh")
+@router.post(
+    "/refresh",
+    response_model=None,
+)
 async def validate_refresh(
     refresh: str,
 ) -> dict | HTTPException:
@@ -16,8 +19,6 @@ async def validate_refresh(
             return {"access": access}
     except:
         return HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
-
-
 
 
 @router.post("/access")
