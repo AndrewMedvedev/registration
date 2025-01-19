@@ -10,12 +10,12 @@ class VK:
         self,
         params: dict = None,
         data: dict = None,
-        user_id: int = None,
+        email: str = None,
         user_model=None,
     ) -> None:
         self._params = params
         self._data = data
-        self._user_id = user_id
+        self._email = email
         self._user_model = user_model
 
     async def get_data_user(self) -> dict:
@@ -32,9 +32,9 @@ class VK:
             await ORMService().add_user(self._user_model)
 
     async def data_get(self) -> bool:
-        if self._user_id is not None:
-            stmt = await ORMService().get_user_id_vk(self._user_id)
-            if stmt.id_vk == self._user_id:
+        if self._email is not None:
+            stmt = await ORMService().get_user_email_vk(self._email)
+            if stmt.email == self._email:
                 return True
             else:
                 return False

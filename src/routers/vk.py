@@ -37,7 +37,7 @@ async def vk_registration(code: str) -> dict:
     user = await VK(params).get_data_user()
     user_model = UserVk(id_vk=user.get("user_id"), email=(user.get("email")).lower())
     await VK(user_model=user_model).data_add()
-    data = {"user_name": user.get("user_id")}
+    data = {"user_name": user.get("email")}
     tokens = await VK(data=data).create_tokens()
     return {"access": tokens.get("access"), "refresh": tokens.get("refresh")}
 
@@ -57,9 +57,9 @@ async def vk_login(code: str) -> dict | HTTPException:
         "state": settings.STATE,
     }
     user = await VK(params).get_data_user()
-    stmt = await VK(user_id=user.get("user_id")).data_get()
+    stmt = await VK(email=user.get("email")).data_get()
     if stmt is not False:
-        data = {"user_name": user.get("user_id")}
+        data = {"user_name": user.get("email")}
         tokens = await VK(data=data).create_tokens()
         return {"access": tokens.get("access"), "refresh": tokens.get("refresh")}
     else:

@@ -27,7 +27,9 @@ class ORMService(DatabaseSessionService):
             except Exception as _ex:
                 print(_ex)
 
-    async def get_user_phone_number(self, phone_number: str, hash_password: str) -> dict:
+    async def get_user_phone_number(
+        self, phone_number: str, hash_password: str
+    ) -> dict:
         async with self.session() as session:
             user = await session.execute(
                 select(User).where(
@@ -40,9 +42,9 @@ class ORMService(DatabaseSessionService):
         except Exception as _ex:
             print(_ex)
 
-    async def get_user_id_vk(self, id_vk: int) -> dict:
+    async def get_user_email_vk(self, email: str) -> dict:
         async with self.session() as session:
-            user = await session.execute(select(UserVk).where(UserVk.id_vk == id_vk))
+            user = await session.execute(select(UserVk).where(UserVk.email == email))
             try:
                 return user.scalar()
             except Exception as _ex:
