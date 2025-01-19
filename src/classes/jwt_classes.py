@@ -41,13 +41,13 @@ class ValidateJWT:
                 )
                 if "user_name" not in refresh and "mode" not in refresh:
                     return False
-                if refresh["mode"] != "refresh_token":
+                if refresh.get("mode") != "refresh_token":
                     return False
-                return refresh["user_name"]
+                return refresh.get("user_name")
             except JWTError:
                 return False
 
-    async def validate_access(self) -> bool:
+    async def validate_access(self) -> str | bool:
         if not self.token:
             return False
         else:
@@ -55,8 +55,8 @@ class ValidateJWT:
                 access = jwt.decode(self.token, settings.SECRET_KEY, settings.ALGORITHM)
                 if "user_name" not in access and "mode" not in access:
                     return False
-                if access["mode"] != "access_token":
+                if access.get("mode") != "access_token":
                     return False
-                return True
+                return access.get("user_name")
             except JWTError:
                 return False

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status, Response
+from fastapi import APIRouter, HTTPException, status
 from src.classes.jwt_classes import JWTCreate
 from src.database.controls import HashPass
 from src.database.models import User
@@ -63,11 +63,4 @@ async def login(user: GetUserPhoneNumber) -> dict | HTTPException:
         return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
 
-@router.post(
-    "/logout",
-    response_model=None,
-)
-async def logout(response: Response) -> HTTPException:
-    response.delete_cookie(key="access")
-    response.delete_cookie(key="refresh")
-    return HTTPException(status_code=status.HTTP_200_OK)
+

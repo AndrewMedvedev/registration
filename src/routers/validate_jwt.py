@@ -17,12 +17,8 @@ async def validate_refresh(
         False
 
 
-@router.get("/access")
+@router.post("/access")
 async def validate_access(
     access: str,
 ) -> bool:
-    tkn_access = await ValidateJWT(access).validate_access()
-    if tkn_access != False:
-        return True
-    else:
-        False
+    return await ValidateJWT(access).validate_access()
