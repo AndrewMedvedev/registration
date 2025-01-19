@@ -10,12 +10,12 @@ router = APIRouter(prefix="/validate/jwt", tags=["validate/jwt"])
 )
 async def validate_refresh(
     refresh: str,
-) -> dict | HTTPException:
+) -> str | bool:
     tkn_refresh = await ValidateJWT(refresh).validate_refresh()
     if tkn_refresh != False:
         data = {"user_name": tkn_refresh}
         access = await JWTCreate(data).create_access()
-        return {"access": access}
+        return {"access": access, "email": tkn_refresh}
     else:
         False
 
