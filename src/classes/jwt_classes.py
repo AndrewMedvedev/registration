@@ -49,7 +49,7 @@ class ValidateJWT:
                 if validate_email(refresh.get("user_name")):
                     return refresh.get("user_name")
                 else:
-                    False
+                    return False
             except JWTError:
                 return False
 
@@ -70,6 +70,6 @@ class ValidateJWT:
                 if validate_email(access.get("user_name")):
                     return access.get("user_name")
                 else:
-                    False
+                    return False
             except JWTError:
                 return False

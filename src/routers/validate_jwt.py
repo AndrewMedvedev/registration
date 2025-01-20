@@ -1,5 +1,5 @@
-from fastapi import APIRouter, HTTPException, status
-from src.classes.jwt_classes import JWTCreate, ValidateJWT
+from fastapi import APIRouter
+from src.classes.jwt_classes import ValidateJWT
 
 router = APIRouter(prefix="/validate/jwt", tags=["validate/jwt"])
 
@@ -12,10 +12,12 @@ async def validate_refresh(
     refresh: str,
 ) -> str | bool:
     return await ValidateJWT(refresh).validate_refresh()
-    
 
 
-@router.get("/access")
+@router.get(
+    "/access",
+    response_model=None,
+)
 async def validate_access(
     access: str,
 ) -> str | bool:

@@ -1,7 +1,9 @@
+from typing import Literal
 from pydantic import BaseModel, Field, field_validator
 from email_validator import validate_email
-import phonenumbers
+from src.config import Settings as settings
 from fastapi import HTTPException, status
+import phonenumbers
 
 
 class UserModel(BaseModel):
@@ -37,17 +39,6 @@ class UserModel(BaseModel):
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="email не соответствует формату",
             )
-
-
-class VKModel(BaseModel):
-    id_vk: int
-    id_tg: str
-    email: str
-
-    @field_validator("email")
-    @classmethod
-    def validate_email(cls, value: str) -> str:
-        return value.lower()
 
 
 class GetUserEmail(BaseModel):
@@ -86,3 +77,22 @@ class GetUserPhoneNumber(BaseModel):
                 detail="Номер телефона должен начинаться с "
                 + " и содержать от 1 до 15 цифр",
             )
+
+
+class DictLink(BaseModel):
+    response_type: Literal["code"] = "code"
+    client_id: int = settings.VK_APP_ID
+    scope: Literal["email"] = "email"
+    redirect_uri: str = settings.VK_REDIRECT_URI
+    state: str = settings.STATE
+    code_challenge: str = settings.CODE_CHALLENGE
+
+
+class DictGetData(BaseModel):
+    client_secret: str = settings.CLIENT_SECRET
+    grant_type: Literal["authorization_code"] = "authorization_code"
+    code_verifier: str = settings.CODE_VERIFIER
+    redirect_uri: str = settings.VK_REDIRECT_URI
+    code: str
+    client_id: int = settings.VK_APP_ID
+    state: str = settings.STATE
