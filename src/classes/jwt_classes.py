@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from email_validator import validate_email
 from src.config import Settings as settings
 from passlib.context import CryptContext
 from jose.exceptions import JWTError
@@ -45,7 +46,10 @@ class ValidateJWT:
                     return False
                 if refresh.get("mode") != "refresh_token":
                     return False
-                return refresh.get("user_name")
+                if validate_email(refresh.get("user_name")):
+                    return refresh.get("user_name")
+                else:
+                    False
             except JWTError:
                 return False
 
@@ -63,6 +67,9 @@ class ValidateJWT:
                     return False
                 if access.get("mode") != "access_token":
                     return False
-                return access.get("user_name")
+                if validate_email(access.get("user_name")):
+                    return access.get("user_name")
+                else:
+                    False
             except JWTError:
                 return False
