@@ -58,6 +58,7 @@ async def vk_login(code: str) -> dict | HTTPException:
         "state": settings.STATE,
     }
     user = await VK(params).get_data_user()
+    print(user)
     stmt = await VK(email=user.get("email")).data_get()
     if stmt is not False:
         data = {"user_name": user.get("email")}

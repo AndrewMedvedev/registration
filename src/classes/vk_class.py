@@ -21,7 +21,7 @@ class VK:
     async def get_data_user(self) -> dict:
         if self._params is not None:
             async with aiohttp.ClientSession() as session:
-                async with session.get(
+                async with session.post(
                     settings.VK_TOKEN_URL, params=self._params, ssl=False
                 ) as data:
                     user_data = await data.json()

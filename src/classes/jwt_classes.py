@@ -37,7 +37,9 @@ class ValidateJWT:
         else:
             try:
                 refresh = jwt.decode(
-                    self.token, settings.SECRET_KEY, settings.ALGORITHM
+                    self.token,
+                    settings.SECRET_KEY,
+                    settings.ALGORITHM,
                 )
                 if "user_name" not in refresh and "mode" not in refresh:
                     return False
@@ -52,7 +54,11 @@ class ValidateJWT:
             return False
         else:
             try:
-                access = jwt.decode(self.token, settings.SECRET_KEY, settings.ALGORITHM)
+                access = jwt.decode(
+                    self.token,
+                    settings.SECRET_KEY,
+                    settings.ALGORITHM,
+                )
                 if "user_name" not in access and "mode" not in access:
                     return False
                 if access.get("mode") != "access_token":
