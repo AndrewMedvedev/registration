@@ -33,43 +33,34 @@ class ValidateJWT:
         self.token = token
 
     async def validate_refresh(self) -> str | bool:
-        if not self.token:
-            return False
-        else:
-            try:
-                refresh = jwt.decode(
-                    self.token,
-                    settings.SECRET_KEY,
-                    settings.ALGORITHM,
-                )
-                if "user_name" not in refresh and "mode" not in refresh:
-                    return False
-                if refresh.get("mode") != "refresh_token":
-                    return False
-                if validate_email(refresh.get("user_name")):
-                    return refresh.get("user_name")
-                else:
-                    return False
-            except JWTError:
+        try:
+            refresh = jwt.decode(
+                self.token,
+                settings.SECRET_KEY,
+                settings.ALGORITHM,
+            )
+            if "user_name" not in refresh and refresh.get("mode") != "refresh_token":
                 return False
+            elif validate_email(refresh.get("user_name")):
+                data  = {"user_name": refresh.get("user_name")}
+                return await JWTCreate(data).create_access()
+            else:
+                return False
+        except JWTError:
+            return False
 
-    async def validate_access(self) -> str | bool:
-        if not self.token:
-            return False
-        else:
-            try:
-                access = jwt.decode(
-                    self.token,
-                    settings.SECRET_KEY,
-                    settings.ALGORITHM,
-                )
-                if "user_name" not in access and "mode" not in access:
-                    return False
-                if access.get("mode") != "access_token":
-                    return False
-                if validate_email(access.get("user_name")):
-                    return access.get("user_name")
-                else:
-                    return False
-            except JWTError:
+    async def validate_access(self) -> str | bool:   
+        try:
+            access = jwt.decode(
+                self.token,
+                settings.SECRET_KEY,
+                settings.ALGORITHM,
+            )
+            if "user_name" not in access and access.get("mode") != "access_token":
                 return False
+            elif validate_email(access.get("user_name")):
+                return access.get("user_name")
+            else:
+                return False
+        except JWTError:
+            return False
