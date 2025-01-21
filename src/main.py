@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from src.routers.authorization import router as router_authorization
 from src.routers.vk import router as router_vk
+from src.routers.mail_ru import router as router_mail_ru
 from src.routers.validate_jwt import router as router_validate_jwt
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter, _rate_limit_exceeded_handler
@@ -16,6 +17,8 @@ app = FastAPI(title="Регистрация")
 app.include_router(router_authorization)
 
 app.include_router(router_vk)
+
+app.include_router(router_mail_ru)
 
 app.include_router(router_validate_jwt)
 

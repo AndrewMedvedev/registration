@@ -1,6 +1,10 @@
 from sqlalchemy import select
 from src.services.db import DatabaseSessionService
-from src.database.models import User, UserVk
+from src.database.models import (
+    User,
+    UserMailRu,
+    UserVk,
+)
 
 
 class ORMService(DatabaseSessionService):
@@ -45,6 +49,16 @@ class ORMService(DatabaseSessionService):
     async def get_user_email_vk(self, email: str) -> dict:
         async with self.session() as session:
             user = await session.execute(select(UserVk).where(UserVk.email == email))
+            try:
+                return user.scalar()
+            except Exception as _ex:
+                print(_ex)
+
+    async def get_user_email_mail_ru(self, email: str) -> dict:
+        async with self.session() as session:
+            user = await session.execute(
+                select(UserMailRu).where(UserMailRu.email == email)
+            )
             try:
                 return user.scalar()
             except Exception as _ex:

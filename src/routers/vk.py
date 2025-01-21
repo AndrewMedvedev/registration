@@ -1,6 +1,4 @@
 from fastapi import APIRouter, HTTPException
-from src.database.schemas import DictLink
-from src.config import Settings as settings
 from src.classes.vk_class import VK
 
 router = APIRouter(prefix="/vk", tags=["vk"])
