@@ -44,7 +44,7 @@ async def get_data_user_yandex(params: dict) -> dict:
 async def get_token_user_mail_ru(params: dict) -> dict:
     async with aiohttp.ClientSession() as session:
         async with session.post(
-            Settings.MAIL_RU_TOKEN_URL, json=params, ssl=False
+            Settings.MAIL_RU_TOKEN_URL, params=params, ssl=False
         ) as data:
             user_data = await data.json()
             return user_data
