@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from src.classes.authorization_class import Authorization
-from src.database.schemas import GetUserEmail, GetUserPhoneNumber, UserModel
+from src.database.schemas.auth_schemas import GetUserEmail, GetUserPhoneNumber, UserModel
 
 router = APIRouter(prefix="/authorization", tags=["authorization"])
 

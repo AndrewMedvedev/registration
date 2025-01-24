@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from src.routers.authorization import router as router_authorization
 from src.routers.vk import router as router_vk
+from src.routers.yandex import router as router_yandex
 from src.routers.mail_ru import router as router_mail_ru
 from src.routers.validate_jwt import router as router_validate_jwt
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,6 +16,8 @@ limiter = Limiter(key_func=get_remote_address, default_limits=["10/second"])
 app = FastAPI(title="Регистрация")
 
 app.include_router(router_authorization)
+
+app.include_router(router_yandex)
 
 app.include_router(router_vk)
 

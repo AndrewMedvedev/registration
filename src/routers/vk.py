@@ -9,8 +9,7 @@ router = APIRouter(prefix="/vk", tags=["vk"])
     response_model=None,
 )
 async def vk_link() -> str:
-    return await VK().vk_link()
-
+    return await VK.vk_link()
 
 
 @router.get(

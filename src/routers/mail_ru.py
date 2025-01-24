@@ -16,7 +16,7 @@ async def mail_ru_link() -> str:
     "/get/token",
     response_model=None,
 )
-async def mail_ru_get_token(code: str) -> dict:
+async def mail_ru_get_token(code: str) -> str:
     return await MailRu(code=code).mail_ru_get_token()
 
 

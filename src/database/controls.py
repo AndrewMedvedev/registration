@@ -17,7 +17,25 @@ class HashPass:
 async def get_data_user_vk(params: dict) -> dict:
     async with aiohttp.ClientSession() as session:
         async with session.post(
-            Settings.VK_TOKEN_URL, params=params, ssl=False
+            Settings.VK_TOKEN_URL, json=params, ssl=False
+        ) as data:
+            user_data = await data.json()
+            return user_data
+
+
+async def get_token_user_yandex(params: dict) -> dict:
+    async with aiohttp.ClientSession() as session:
+        async with session.post(
+            Settings.YANDEX_TOKEN_URL, data=params, ssl=False
+        ) as data:
+            user_data = await data.json()
+            return user_data
+        
+
+async def get_data_user_yandex(params: dict) -> dict:
+    async with aiohttp.ClientSession() as session:
+        async with session.get(
+            Settings.YANDEX_API_URL, params=params, ssl=False
         ) as data:
             user_data = await data.json()
             return user_data
@@ -26,11 +44,11 @@ async def get_data_user_vk(params: dict) -> dict:
 async def get_token_user_mail_ru(params: dict) -> dict:
     async with aiohttp.ClientSession() as session:
         async with session.post(
-            Settings.MAIL_RU_TOKEN_URL, params=params, ssl=False
+            Settings.MAIL_RU_TOKEN_URL, json=params, ssl=False
         ) as data:
             user_data = await data.json()
             return user_data
-        
+
 
 async def get_data_user_mail_ru(params: dict) -> dict:
     async with aiohttp.ClientSession() as session:

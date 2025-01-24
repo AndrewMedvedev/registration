@@ -1,4 +1,4 @@
-from src.database.schemas import (
+from src.database.schemas.mail_ru_schemas import (
     DictLinkMailRu,
     DictGetDataMailRu,
     DictGetDataTokenMailRu,
@@ -27,7 +27,7 @@ class MailRu:
         url = f"{settings.MAIL_RU_AUTH_URL}?{'&'.join([f'{k}={v}' for k, v in DictLinkMailRu().model_dump().items()])}"
         return url
 
-    async def mail_ru_get_token(self) -> dict:
+    async def mail_ru_get_token(self) -> str:
         model = DictGetDataMailRu(code=self.code).model_dump()
         user = await get_token_user_mail_ru(model)
         return user.get("access_token")
@@ -49,7 +49,7 @@ class MailRu:
             "refresh": refresh,
         }
 
-    async def mail_ru_login(self):
+    async def mail_ru_login(self) -> dict | HTTPException:
         model = DictGetDataTokenMailRu(access_token=self.access_token).model_dump()
         user = await get_data_user_mail_ru(model)
         stmt = await ORMService().get_user_email_mail_ru(user.get("email"))

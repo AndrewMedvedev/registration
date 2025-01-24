@@ -1,8 +1,13 @@
-from typing import Literal
-from pydantic import BaseModel, Field, field_validator
+from pydantic import (
+    BaseModel,
+    Field,
+    field_validator,
+)
+from fastapi import (
+    HTTPException,
+    status,
+)
 from email_validator import validate_email
-from src.config import Settings as settings
-from fastapi import HTTPException, status
 import phonenumbers
 
 
@@ -77,42 +82,3 @@ class GetUserPhoneNumber(BaseModel):
                 detail="Номер телефона должен начинаться с "
                 + " и содержать от 1 до 15 цифр",
             )
-
-
-class DictLinkVK(BaseModel):
-    response_type: Literal["code"] = "code"
-    client_id: int = settings.VK_APP_ID
-    scope: Literal["email"] = "email"
-    redirect_uri: str = settings.VK_REDIRECT_URI
-    state: str = settings.STATE_VK
-    code_challenge: str = settings.CODE_CHALLENGE
-
-
-class DictGetDataVK(BaseModel):
-    client_secret: str = settings.CLIENT_SECRET
-    grant_type: Literal["authorization_code"] = "authorization_code"
-    code_verifier: str = settings.CODE_VERIFIER
-    redirect_uri: str = settings.VK_REDIRECT_URI
-    code: str
-    client_id: int = settings.VK_APP_ID
-    state: str = settings.STATE_VK
-
-
-class DictLinkMailRu(BaseModel):
-    client_id: str = settings.MAIL_RU_APP_ID
-    response_type: Literal["code"] = "code"
-    scope: str = settings.SCOPE
-    redirect_uri: str = settings.MAIL_RU_REDIRECT_URI
-    state: str = settings.STATE_MAIL_RU
-    prompt_force: int = settings.PROMPT_FORCE
-
-
-class DictGetDataMailRu(BaseModel):
-    code: str
-    grant_type: Literal["authorization_code"] = "authorization_code"
-    redirect_uri: str = settings.MAIL_RU_REDIRECT_URI
-    client_id: str = settings.MAIL_RU_APP_ID
-    client_secret: str = settings.MAIL_RU_APP_SECRET
-
-class DictGetDataTokenMailRu(BaseModel):
-    access_token: str

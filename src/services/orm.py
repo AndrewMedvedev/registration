@@ -4,6 +4,7 @@ from src.database.models import (
     User,
     UserMailRu,
     UserVk,
+    UserYandex,
 )
 
 
@@ -58,6 +59,16 @@ class ORMService(DatabaseSessionService):
         async with self.session() as session:
             user = await session.execute(
                 select(UserMailRu).where(UserMailRu.email == email)
+            )
+            try:
+                return user.scalar()
+            except Exception as _ex:
+                print(_ex)
+
+    async def get_user_email_yandex(self, email: str) -> dict:
+        async with self.session() as session:
+            user = await session.execute(
+                select(UserYandex).where(UserYandex.email == email)
             )
             try:
                 return user.scalar()

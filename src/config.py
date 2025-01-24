@@ -23,8 +23,8 @@ class Settings:
     VK_AUTH_URL: str = config["VK_AUTH_URL"]
     VK_TOKEN_URL: str = config["VK_TOKEN_URL"]
     VK_API_URL: str = config["VK_API_URL"]
-    CODE_VERIFIER: str = config["CODE_VERIFIER"]
-    CODE_CHALLENGE: str = config["CODE_CHALLENGE"]
+    VK_CODE_VERIFIER: str = config["VK_CODE_VERIFIER"]
+    VK_CODE_CHALLENGE: str = config["VK_CODE_CHALLENGE"]
     STATE_VK: str = config["STATE_VK"]
     CLIENT_SECRET: str = config["CLIENT_SECRET"]
 
@@ -37,6 +37,17 @@ class Settings:
     SCOPE: str = config["SCOPE"]
     STATE_MAIL_RU: str = config["STATE_MAIL_RU"]
     PROMPT_FORCE: int = config["PROMPT_FORCE"]
+
+    YANDEX_APP_ID: str = config["YANDEX_APP_ID"]
+    YANDEX_APP_SECRET: str = config["YANDEX_APP_SECRET"]
+    YANDEX_REDIRECT_URI: str = config["YANDEX_REDIRECT_URI"]
+    YANDEX_AUTH_URL: str = config["YANDEX_AUTH_URL"]
+    YANDEX_TOKEN_URL: str = config["YANDEX_TOKEN_URL"]
+    YANDEX_API_URL: str = config["YANDEX_API_URL"]
+    STATE_YANDEX: str = config["STATE_YANDEX"]
+    YANDEX_CODE_VERIFIER: str = config["YANDEX_CODE_VERIFIER"]
+    YANDEX_CODE_CHALLENGE: str = config["YANDEX_CODE_CHALLENGE"]
+    YANDEX_SCOPE: str = config["YANDEX_SCOPE"]
 
 
 settings = Settings()

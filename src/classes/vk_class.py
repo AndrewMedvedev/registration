@@ -3,7 +3,7 @@ from src.database.models import UserVk
 from src.classes.jwt_classes import JWTCreate
 from src.services.orm import ORMService
 from src.config import Settings as settings
-from src.database.schemas import DictLinkVK, DictGetDataVK
+from src.database.schemas.vk_schemas import DictLinkVK, DictGetDataVK
 from src.database.controls import get_data_user_vk
 
 
@@ -12,7 +12,7 @@ class VK:
     def __init__(self, code: str = None) -> None:
         self.code = code
 
-    async def vk_link(self) -> str:
+    async def vk_link() -> str:
         url = f"{settings.VK_AUTH_URL}?{'&'.join([f'{k}={v}' for k, v in DictLinkVK().model_dump().items()])}"
         return url
 
