@@ -49,7 +49,7 @@ class ValidateJWT:
         except JWTError:
             return False
 
-    async def validate_access(self) -> str | bool:   
+    async def validate_access(self) -> dict | bool:   
         try:
             access = jwt.decode(
                 self.token,
@@ -59,7 +59,7 @@ class ValidateJWT:
             if "user_name" not in access and access.get("mode") != "access_token":
                 return False
             elif validate_email(access.get("user_name")):
-                return access.get("user_name")
+                return {"email": access.get("user_name")}
             else:
                 return False
         except JWTError:
