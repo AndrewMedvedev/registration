@@ -1,4 +1,3 @@
-from fastapi import HTTPException, status
 from src.classes.jwt_classes import JWTCreate
 from src.database.controls import HashPass
 from src.database.models import User
@@ -22,7 +21,7 @@ class Authorization:
         refresh = await JWTCreate(data).create_refresh()
         return {"access": access, "refresh": refresh}
 
-    async def login_email(self) -> dict | HTTPException:
+    async def login_email(self) -> dict:
         stmt = await ORMService().get_user_email(
             email=self.model.email,
             hash_password=self.model.hash_password,
@@ -34,10 +33,8 @@ class Authorization:
             access = await JWTCreate(data).create_access()
             refresh = await JWTCreate(data).create_refresh()
             return {"access": access, "refresh": refresh}
-        else:
-            return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
-    async def login_phone(self) -> dict | HTTPException:
+    async def login_phone(self) -> dict:
         stmt = await ORMService().get_user_phone_number(
             phone_number=self.model.phone_number,
             hash_password=self.model.hash_password,
@@ -49,5 +46,3 @@ class Authorization:
             access = await JWTCreate(data).create_access()
             refresh = await JWTCreate(data).create_refresh()
             return {"access": access, "refresh": refresh}
-        else:
-            return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)

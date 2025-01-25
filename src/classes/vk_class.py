@@ -1,4 +1,3 @@
-from fastapi import HTTPException, status
 from src.database.models import UserVk
 from src.classes.jwt_classes import JWTCreate
 from src.services.orm import ORMService
@@ -32,7 +31,7 @@ class VK:
             "refresh": refresh,
         }
 
-    async def vk_login(self) -> dict | HTTPException:
+    async def vk_login(self) -> dict:
         model = DictGetDataVK(code=self.code).model_dump()
         user = await get_data_user_vk(model)
         stmt = await ORMService().get_user_email_vk(user.get("email"))
@@ -45,5 +44,3 @@ class VK:
                 "access": access,
                 "refresh": refresh,
             }
-        else:
-            return HTTPException(status_code=status.HTTP_400_BAD_REQUEST)

@@ -3,10 +3,6 @@ from src.database.schemas.yandex_schemas import (
     DictGetDataYandex,
     DictGetDataTokenYandex,
 )
-from fastapi import (
-    HTTPException,
-    status,
-)
 from src.database.controls import (
     get_token_user_yandex,
     get_data_user_yandex,
@@ -49,7 +45,7 @@ class Yandex:
             "refresh": refresh,
         }
 
-    async def yandex_login(self) -> dict | HTTPException:
+    async def yandex_login(self) -> dict:
         model = DictGetDataTokenYandex(oauth_token=self.access_token).model_dump()
         user = await get_data_user_yandex(model)
         stmt = await ORMService().get_user_email_yandex(user.get("default_email"))
@@ -61,5 +57,3 @@ class Yandex:
                 "access": access,
                 "refresh": refresh,
             }
-        else:
-            return HTTPException(status_code=status.HTTP_400_BAD_REQUEST)

@@ -7,10 +7,6 @@ from src.database.controls import (
     get_data_user_mail_ru,
     get_token_user_mail_ru,
 )
-from fastapi import (
-    HTTPException,
-    status,
-)
 from src.config import Settings as settings
 from src.database.models import UserMailRu
 from src.services.orm import ORMService
@@ -49,7 +45,7 @@ class MailRu:
             "refresh": refresh,
         }
 
-    async def mail_ru_login(self) -> dict | HTTPException:
+    async def mail_ru_login(self) -> dict:
         model = DictGetDataTokenMailRu(access_token=self.access_token).model_dump()
         user = await get_data_user_mail_ru(model)
         stmt = await ORMService().get_user_email_mail_ru(user.get("email"))
@@ -61,5 +57,3 @@ class MailRu:
                 "access": access,
                 "refresh": refresh,
             }
-        else:
-            return HTTPException(status_code=status.HTTP_400_BAD_REQUEST)

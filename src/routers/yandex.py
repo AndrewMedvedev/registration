@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status
 from src.classes.yandex_class import Yandex
 
 router = APIRouter(prefix="/yandex", tags=["yandex"])
@@ -8,24 +8,33 @@ router = APIRouter(prefix="/yandex", tags=["yandex"])
     "/link",
     response_model=None,
 )
-async def yandex_link() -> str:
-    return await Yandex.yandex_link()
+async def yandex_link() -> str | HTTPException:
+    try:
+        return await Yandex.yandex_link()
+    except:
+        return HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
 
 
 @router.get(
     "/get/token",
     response_model=None,
 )
-async def yandex_get_token(code: str) -> str:
-    return await Yandex(code=code).yandex_get_token()
+async def yandex_get_token(code: str) -> str | HTTPException:
+    try:
+        return await Yandex(code=code).yandex_get_token()
+    except:
+        return HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
 
 
 @router.get(
     "/registration",
     response_model=None,
 )
-async def yandex_registration(access_token: str) -> dict:
-    return await Yandex(access_token=access_token).yandex_registration()
+async def yandex_registration(access_token: str) -> dict | HTTPException:
+    try:
+        return await Yandex(access_token=access_token).yandex_registration()
+    except:
+        return HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
 
 
 @router.get(
@@ -33,4 +42,7 @@ async def yandex_registration(access_token: str) -> dict:
     response_model=None,
 )
 async def yandex_login(access_token: str) -> dict | HTTPException:
-    return await Yandex(access_token=access_token).yandex_login()
+    try:
+        return await Yandex(access_token=access_token).yandex_login()
+    except:
+        return HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
