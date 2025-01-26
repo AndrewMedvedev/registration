@@ -33,7 +33,7 @@ app.add_middleware(SlowAPIMiddleware)
 
 origins = [
     "http://localhost:3000",
-    " https://register-666-ramzer.onrender.com",
+    "https://register-666-ramzer.onrender.com",
 ]
 
 app.add_middleware(
