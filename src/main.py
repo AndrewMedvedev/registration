@@ -31,7 +31,10 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.add_middleware(SlowAPIMiddleware)
 
-origins = ["http://localhost:3000"]
+origins = [
+    "http://localhost:3000",
+    " https://register-666-ramzer.onrender.com",
+]
 
 app.add_middleware(
     CORSMiddleware,
