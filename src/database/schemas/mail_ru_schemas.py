@@ -9,13 +9,16 @@ class DictLinkMailRu(BaseModel):
     scope: str = settings.SCOPE
     redirect_uri: str = settings.MAIL_RU_REDIRECT_URI
     state: str = settings.STATE_MAIL_RU
-    prompt_force: int = settings.PROMPT_FORCE
+    prompt_force: str = settings.PROMPT_FORCE
 
 
 class DictGetDataMailRu(BaseModel):
-    code: str
     grant_type: Literal["authorization_code"] = "authorization_code"
+    code: str
     redirect_uri: str = settings.MAIL_RU_REDIRECT_URI
+
+
+class DictGetDataMailRuParams(BaseModel):
     client_id: str = settings.MAIL_RU_APP_ID
     client_secret: str = settings.MAIL_RU_APP_SECRET
 

@@ -26,7 +26,7 @@ class Yandex:
     async def yandex_get_token(self) -> str:
         model = DictGetDataYandex(code=self.code).model_dump()
         user = await get_token_user_yandex(model)
-        return user.get("access_token")
+        return user
 
     async def yandex_registration(self) -> dict:
         model = DictGetDataTokenYandex(oauth_token=self.access_token).model_dump()
