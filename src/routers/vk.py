@@ -16,12 +16,29 @@ async def vk_link() -> str | HTTPException:
 
 
 @router.get(
+    "/get/token",
+    response_model=None,
+)
+async def vk_get_token(
+    code: str,
+    device_id: str,
+) -> str | HTTPException:
+    try:
+        return await VK(
+            code=code,
+            device_id=device_id,
+        ).vk_get_token()
+    except:
+        return HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+
+
+@router.get(
     "/registration",
     response_model=None,
 )
-async def vk_registration(code: str) -> dict | HTTPException:
+async def vk_registration(access_token: str) -> dict | HTTPException:
     try:
-        return await VK(code=code).vk_registration()
+        return await VK(access_token=access_token).vk_registration()
     except:
         return HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
 
@@ -30,8 +47,8 @@ async def vk_registration(code: str) -> dict | HTTPException:
     "/login",
     response_model=None,
 )
-async def vk_login(code: str) -> dict | HTTPException:
+async def vk_login(access_token: str) -> dict | HTTPException:
     try:
-        return await VK(code=code).vk_login()
+        return await VK(access_token=access_token).vk_login()
     except:
         return HTTPException(status_code=status.HTTP_400_BAD_REQUEST)

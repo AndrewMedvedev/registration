@@ -25,6 +25,7 @@ class Settings:
     VK_API_URL: str = config["VK_API_URL"]
     VK_CODE_VERIFIER: str = config["VK_CODE_VERIFIER"]
     VK_CODE_CHALLENGE: str = config["VK_CODE_CHALLENGE"]
+    VK_CODE_CHALLENGE_METHOD: str = config["VK_CODE_CHALLENGE_METHOD"]
     STATE_VK: str = config["STATE_VK"]
     CLIENT_SECRET: str = config["CLIENT_SECRET"]
 
