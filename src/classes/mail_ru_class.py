@@ -2,7 +2,6 @@ from src.database.schemas.mail_ru_schemas import (
     DictLinkMailRu,
     DictGetDataMailRu,
     DictGetDataTokenMailRu,
-    DictGetDataMailRuParams,
 )
 from src.database.controls import (
     get_data_user_mail_ru,
@@ -26,8 +25,7 @@ class MailRu:
 
     async def mail_ru_get_token(self) -> str:
         model = DictGetDataMailRu(code=self.code).model_dump()
-        model_params = DictGetDataMailRuParams().model_dump()
-        user = await get_token_user_mail_ru(json_=model, params=model_params)
+        user = await get_token_user_mail_ru(params=model)
         return user
 
     async def mail_ru_registration(self) -> dict:

@@ -16,9 +16,6 @@ class DictGetDataMailRu(BaseModel):
     grant_type: Literal["authorization_code"] = "authorization_code"
     code: str
     redirect_uri: str = settings.MAIL_RU_REDIRECT_URI
-
-
-class DictGetDataMailRuParams(BaseModel):
     client_id: str = settings.MAIL_RU_APP_ID
     client_secret: str = settings.MAIL_RU_APP_SECRET
 

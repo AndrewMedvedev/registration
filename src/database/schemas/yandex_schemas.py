@@ -6,12 +6,11 @@ from src.config import Settings as settings
 class DictLinkYandex(BaseModel):
     response_type: Literal["code"] = "code"
     client_id: str = settings.YANDEX_APP_ID
-    # scope: str = settings.SCOPE
     # redirect_uri: str = settings.YANDEX_REDIRECT_URI
+    # scope: str = settings.SCOPE
     # state: str = settings.STATE_YANDEX
     # code_challenge: str = settings.YANDEX_CODE_CHALLENGE
     # code_challenge_method: str = settings.YANDEX_CODE_CHALLENGE_METHOD
-    # scope: str = settings.YANDEX_SCOPE
 
 
 class DictGetDataYandex(BaseModel):
@@ -19,9 +18,11 @@ class DictGetDataYandex(BaseModel):
     code: str
     # client_id: str = settings.YANDEX_APP_ID
     # client_secret: str = settings.YANDEX_APP_SECRET
-    # code_verifier: str = settings.YANDEX_CODE_VERIFIER
+    code_verifier: str = settings.YANDEX_CODE_VERIFIER
 
 
 class DictGetDataTokenYandex(BaseModel):
     oauth_token: str
     format: Literal["json"] = "json"
+
+
