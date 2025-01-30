@@ -1,3 +1,4 @@
+from fastapi.responses import JSONResponse
 from src.classes.authorization_class import Authorization
 from fastapi import (
     APIRouter,
@@ -20,8 +21,10 @@ router = APIRouter(prefix="/authorization", tags=["authorization"])
 async def registration(user: UserModel) -> dict | HTTPException:
     try:
         return await Authorization(model=user).registration()
-    except:
-        return HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
+        )
 
 
 @router.post(
@@ -31,8 +34,10 @@ async def registration(user: UserModel) -> dict | HTTPException:
 async def login(user: GetUserEmail) -> dict | HTTPException:
     try:
         return await Authorization(model=user).login_email()
-    except:
-        return HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
+        )
 
 
 @router.post(
@@ -42,5 +47,7 @@ async def login(user: GetUserEmail) -> dict | HTTPException:
 async def login_phone(user: GetUserPhoneNumber) -> dict | HTTPException:
     try:
         return await Authorization(model=user).login_phone()
-    except:
-        return HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
+        )
