@@ -1,0 +1,5 @@
+.venv
+.gitignore
+.github
+poerty.lock
+pyproject.toml

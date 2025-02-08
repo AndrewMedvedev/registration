@@ -1,0 +1,24 @@
+services:
+
+  postgesql:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+
+  auth:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgesql
+    command: [ "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8080" ]
+    restart: always
+
+volumes:
+  .pgdata:

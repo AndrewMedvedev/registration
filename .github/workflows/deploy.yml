@@ -1,0 +1,69 @@
+name: Auth
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Add environment variables to .env
+        run: |
+          echo DB_HOST=${{ secrets.DB_HOST }} >> .env
+          echo DB_PORT=${{ secrets.DB_PORT }} >> .env
+          echo DB_NAME=${{ secrets.DB_NAME }} >> .env
+          echo DB_USER=${{ secrets.DB_USER }} >> .env
+          echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
+
+          echo ALGORITHM=${{ secrets.ALGORITHM }} >> .env
+          echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
+
+          echo VK_APP_ID=${{ secrets.VK_APP_ID }} >> .env
+          echo VK_APP_SECRET=${{ secrets.VK_APP_SECRET }} >> .env
+          echo VK_REDIRECT_URI=${{ secrets.VK_REDIRECT_URI }} >> .env
+          echo VK_AUTH_URL=${{ secrets.VK_AUTH_URL }} >> .env
+          echo VK_TOKEN_URL=${{ secrets.VK_TOKEN_URL }} >> .env
+          echo VK_API_URL=${{ secrets.VK_API_URL }} >> .env
+          echo VK_CODE_VERIFIER=${{ secrets.VK_CODE_VERIFIER }} >> .env
+          echo VK_CODE_CHALLENGE=${{ secrets.VK_CODE_CHALLENGE }} >> .env
+          echo VK_CODE_CHALLENGE_METHOD=${{ secrets.VK_CODE_CHALLENGE_METHOD }} >> .env
+          echo STATE_VK=${{ secrets.STATE_VK }} >> .env
+          echo CLIENT_SECRET=${{ secrets.CLIENT_SECRET }} >> .env
+
+          echo MAIL_RU_APP_ID=${{ secrets.MAIL_RU_APP_ID }} >> .env
+          echo MAIL_RU_APP_SECRET=${{ secrets.MAIL_RU_APP_SECRET }} >> .env
+          echo MAIL_RU_REDIRECT_URI=${{ secrets.MAIL_RU_REDIRECT_URI }} >> .env
+          echo MAIL_RU_AUTH_URL=${{ secrets.MAIL_RU_AUTH_URL }} >> .env
+          echo MAIL_RU_TOKEN_URL=${{ secrets.MAIL_RU_TOKEN_URL }} >> .env
+          echo MAIL_RU_API_URL=${{ secrets.MAIL_RU_API_URL }} >> .env
+          echo SCOPE=${{ secrets.SCOPE }} >> .env
+          echo STATE_MAIL_RU=${{ secrets.STATE_MAIL_RU }} >> .env
+          echo PROMPT_FORCE=${{ secrets.PROMPT_FORCE }} >> .env
+
+          echo YANDEX_APP_ID=${{ secrets.YANDEX_APP_ID }} >> .env
+          echo YANDEX_APP_SECRET=${{ secrets.YANDEX_APP_SECRET }} >> .env
+          echo YANDEX_REDIRECT_URI=${{ secrets.YANDEX_REDIRECT_URI }} >> .env
+          echo YANDEX_AUTH_URL=${{ secrets.YANDEX_AUTH_URL }} >> .env
+          echo YANDEX_TOKEN_URL=${{ secrets.YANDEX_TOKEN_URL }} >> .env
+          echo YANDEX_API_URL=${{ secrets.YANDEX_API_URL }} >> .env
+          echo STATE_YANDEX=${{ secrets.STATE_YANDEX }} >> .env
+          echo YANDEX_CODE_VERIFIER=${{ secrets.YANDEX_CODE_VERIFIER }} >> .env
+          echo YANDEX_CODE_CHALLENGE=${{ secrets.YANDEX_CODE_CHALLENGE }} >> .env
+          echo YANDEX_SCOPE=${{ secrets.YANDEX_SCOPE }} >> .env
+
+      - name: Set environment variables
+        run: |
+          echo "BACKEND_IMAGE=$(echo ${{env.BACKEND_IMAGE}} )" >> $GITHUB_ENV
+      - name: Pull images
+        run: |
+          docker pull ${{ env.BACKEND_IMAGE }} || true
+      - name: Build images
+        run: |
+          docker compose -f 'docker-compose.yml' up -d --build 
