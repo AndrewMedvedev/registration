@@ -42,14 +42,17 @@ class ValidateJWT:
             if "user_name" not in refresh and refresh.get("mode") != "refresh_token":
                 return False
             elif validate_email(refresh.get("user_name")):
-                data  = {"user_name": refresh.get("user_name")}
-                return {"access": await JWTCreate(data=data).create_access(), "email": refresh.get("user_name")}
+                data = {"user_name": refresh.get("user_name")}
+                return {
+                    "access": await JWTCreate(data=data).create_access(),
+                    "email": refresh.get("user_name"),
+                }
             else:
                 return False
         except JWTError:
             return False
 
-    async def validate_access(self) -> dict | bool:   
+    async def validate_access(self) -> dict | bool:
         try:
             access = jwt.decode(
                 self.token,
