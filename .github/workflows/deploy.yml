@@ -11,52 +11,52 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DB_VARS: >
-        DB_HOST=${{ secrets.DB_HOST }}
-        DB_PORT=${{ secrets.DB_PORT }}
-        DB_NAME=${{ secrets.DB_NAME }}
-        DB_USER=${{ secrets.DB_USER }}
-        DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-  
-      CORE_VARS: >
-        ALGORITHM=${{ secrets.ALGORITHM }}
-        SECRET_KEY=${{ secrets.SECRET_KEY }}
-        CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
-  
-      VK_VARS: >
-        VK_APP_ID=${{ secrets.VK_APP_ID }}
-        VK_APP_SECRET=${{ secrets.VK_APP_SECRET }}
-        VK_REDIRECT_URI=${{ secrets.VK_REDIRECT_URI }}
-        VK_AUTH_URL=${{ secrets.VK_AUTH_URL }}
-        VK_TOKEN_URL=${{ secrets.VK_TOKEN_URL }}
-        VK_API_URL=${{ secrets.VK_API_URL }}
-        VK_CODE_VERIFIER=${{ secrets.VK_CODE_VERIFIER }}
-        VK_CODE_CHALLENGE=${{ secrets.VK_CODE_CHALLENGE }}
-        VK_CODE_CHALLENGE_METHOD=${{ secrets.VK_CODE_CHALLENGE_METHOD }}
-        STATE_VK=${{ secrets.STATE_VK }}
-  
-      MAIL_RU_VARS: >
-        MAIL_RU_APP_ID=${{ secrets.MAIL_RU_APP_ID }}
-        MAIL_RU_APP_SECRET=${{ secrets.MAIL_RU_APP_SECRET }}
-        MAIL_RU_REDIRECT_URI=${{ secrets.MAIL_RU_REDIRECT_URI }}
-        MAIL_RU_AUTH_URL=${{ secrets.MAIL_RU_AUTH_URL }}
-        MAIL_RU_TOKEN_URL=${{ secrets.MAIL_RU_TOKEN_URL }}
-        MAIL_RU_API_URL=${{ secrets.MAIL_RU_API_URL }}
-        SCOPE=${{ secrets.SCOPE }}
-        STATE_MAIL_RU=${{ secrets.STATE_MAIL_RU }}
-        PROMPT_FORCE=${{ secrets.PROMPT_FORCE }}
-  
-      YANDEX_VARS: >
-        YANDEX_APP_ID=${{ secrets.YANDEX_APP_ID }}
-        YANDEX_APP_SECRET=${{ secrets.YANDEX_APP_SECRET }}
-        YANDEX_REDIRECT_URI=${{ secrets.YANDEX_REDIRECT_URI }}
-        YANDEX_AUTH_URL=${{ secrets.YANDEX_AUTH_URL }}
-        YANDEX_TOKEN_URL=${{ secrets.YANDEX_TOKEN_URL }}
-        YANDEX_API_URL=${{ secrets.YANDEX_API_URL }}
-        STATE_YANDEX=${{ secrets.STATE_YANDEX }}
-        YANDEX_CODE_VERIFIER=${{ secrets.YANDEX_CODE_VERIFIER }}
-        YANDEX_CODE_CHALLENGE=${{ secrets.YANDEX_CODE_CHALLENGE }}
-        YANDEX_SCOPE=${{ secrets.YANDEX_SCOPE }}
+        DB_VARS: >
+          DB_HOST=${{ secrets.DB_HOST }}
+          DB_PORT=${{ secrets.DB_PORT }}
+          DB_NAME=${{ secrets.DB_NAME }}
+          DB_USER=${{ secrets.DB_USER }}
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+      
+        CORE_VARS: >
+          ALGORITHM=${{ secrets.ALGORITHM }}
+          SECRET_KEY=${{ secrets.SECRET_KEY }}
+          CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
+      
+        VK_VARS: >
+          VK_APP_ID=${{ secrets.VK_APP_ID }}
+          VK_APP_SECRET=${{ secrets.VK_APP_SECRET }}
+          VK_REDIRECT_URI=${{ secrets.VK_REDIRECT_URI }}
+          VK_AUTH_URL=${{ secrets.VK_AUTH_URL }}
+          VK_TOKEN_URL=${{ secrets.VK_TOKEN_URL }}
+          VK_API_URL=${{ secrets.VK_API_URL }}
+          VK_CODE_VERIFIER=${{ secrets.VK_CODE_VERIFIER }}
+          VK_CODE_CHALLENGE=${{ secrets.VK_CODE_CHALLENGE }}
+          VK_CODE_CHALLENGE_METHOD=${{ secrets.VK_CODE_CHALLENGE_METHOD }}
+          STATE_VK=${{ secrets.STATE_VK }}
+      
+        MAIL_RU_VARS: >
+          MAIL_RU_APP_ID=${{ secrets.MAIL_RU_APP_ID }}
+          MAIL_RU_APP_SECRET=${{ secrets.MAIL_RU_APP_SECRET }}
+          MAIL_RU_REDIRECT_URI=${{ secrets.MAIL_RU_REDIRECT_URI }}
+          MAIL_RU_AUTH_URL=${{ secrets.MAIL_RU_AUTH_URL }}
+          MAIL_RU_TOKEN_URL=${{ secrets.MAIL_RU_TOKEN_URL }}
+          MAIL_RU_API_URL=${{ secrets.MAIL_RU_API_URL }}
+          SCOPE=${{ secrets.SCOPE }}
+          STATE_MAIL_RU=${{ secrets.STATE_MAIL_RU }}
+          PROMPT_FORCE=${{ secrets.PROMPT_FORCE }}
+      
+        YANDEX_VARS: >
+          YANDEX_APP_ID=${{ secrets.YANDEX_APP_ID }}
+          YANDEX_APP_SECRET=${{ secrets.YANDEX_APP_SECRET }}
+          YANDEX_REDIRECT_URI=${{ secrets.YANDEX_REDIRECT_URI }}
+          YANDEX_AUTH_URL=${{ secrets.YANDEX_AUTH_URL }}
+          YANDEX_TOKEN_URL=${{ secrets.YANDEX_TOKEN_URL }}
+          YANDEX_API_URL=${{ secrets.YANDEX_API_URL }}
+          STATE_YANDEX=${{ secrets.STATE_YANDEX }}
+          YANDEX_CODE_VERIFIER=${{ secrets.YANDEX_CODE_VERIFIER }}
+          YANDEX_CODE_CHALLENGE=${{ secrets.YANDEX_CODE_CHALLENGE }}
+          YANDEX_SCOPE=${{ secrets.YANDEX_SCOPE }}
 
 
     steps:
