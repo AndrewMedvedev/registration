@@ -19,6 +19,7 @@ async def get_token_user_vk(params: dict) -> dict:
         async with session.post(
             Settings.VK_TOKEN_URL,
             json=params,
+            ssl=False,
         ) as data:
             user_data = await data.json()
             return user_data
@@ -29,6 +30,7 @@ async def get_data_user_vk(params: dict) -> dict:
         async with session.post(
             Settings.VK_API_URL,
             json=params,
+            ssl=False,
         ) as data:
             user_data = await data.json()
             return user_data.get("user")
@@ -39,6 +41,7 @@ async def get_token_user_yandex(params: str) -> dict:
         async with session.post(
             url=Settings.YANDEX_TOKEN_URL,
             data=params,
+            ssl=False,
         ) as data:
             user_data = await data.json()
             return user_data
@@ -49,6 +52,7 @@ async def get_data_user_yandex(params: dict) -> dict:
         async with session.get(
             Settings.YANDEX_API_URL,
             params=params,
+            ssl=False,
         ) as data:
             user_data = await data.json()
             return user_data
@@ -59,6 +63,7 @@ async def get_token_user_mail_ru(params: dict) -> dict:
         async with session.post(
             url=Settings.MAIL_RU_TOKEN_URL,
             data=params,
+            ssl=False,
         ) as data:
             user_data = await data.json()
             return user_data
@@ -69,6 +74,7 @@ async def get_data_user_mail_ru(params: dict) -> dict:
         async with session.get(
             Settings.MAIL_RU_API_URL,
             params=params,
+            ssl=False,
         ) as data:
             user_data = await data.json()
             return user_data
