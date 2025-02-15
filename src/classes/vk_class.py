@@ -1,13 +1,16 @@
-from src.database.models import UserVk
+from src.database import (
+    UserVk,
+    get_data_user_vk,
+    get_token_user_vk,
+)
 from src.classes.jwt_classes import JWTCreate
 from src.services.orm import ORMService
 from src.config import Settings as settings
-from src.database.schemas.vk_schemas import (
+from src.database.schemas import (
     DictLinkVK,
     DictGetDataVK,
     DictGetDataTokenVK,
 )
-from src.database.controls import get_data_user_vk, get_token_user_vk
 
 
 class VK:

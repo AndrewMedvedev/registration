@@ -2,10 +2,10 @@ from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
 from src.classes.mail_ru_class import MailRu
 
-router = APIRouter(prefix="/mail.ru", tags=["mail.ru"])
+router_mail_ru = APIRouter(prefix="/mail.ru", tags=["mail.ru"])
 
 
-@router.get(
+@router_mail_ru.get(
     "/link",
     response_model=None,
 )
@@ -17,7 +17,7 @@ async def mail_ru_link() -> str | HTTPException:
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
         )
 
-@router.get(
+@router_mail_ru.get(
     "/get/token",
     response_model=None,
 )
@@ -29,7 +29,7 @@ async def mail_ru_get_token(code: str) -> str | HTTPException:
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
         )
 
-@router.get(
+@router_mail_ru.get(
     "/registration",
     response_model=None,
 )
@@ -41,7 +41,7 @@ async def mail_ru_registration(access_token: str) -> dict | HTTPException:
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
         )
 
-@router.get(
+@router_mail_ru.get(
     "/login",
     response_model=None,
 )

@@ -11,10 +11,10 @@ from src.database.schemas.auth_schemas import (
     UserModel,
 )
 
-router = APIRouter(prefix="/authorization", tags=["authorization"])
+router_authorization = APIRouter(prefix="/authorization", tags=["authorization"])
 
 
-@router.post(
+@router_authorization.post(
     "/registration",
     response_model=None,
 )
@@ -27,7 +27,7 @@ async def registration(user: UserModel) -> dict | HTTPException:
         )
 
 
-@router.post(
+@router_authorization.post(
     "/login/email",
     response_model=None,
 )
@@ -40,7 +40,7 @@ async def login(user: GetUserEmail) -> dict | HTTPException:
         )
 
 
-@router.post(
+@router_authorization.post(
     "/login/phone/number",
     response_model=None,
 )

@@ -2,10 +2,10 @@ from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
 from src.classes.yandex_class import Yandex
 
-router = APIRouter(prefix="/yandex", tags=["yandex"])
+router_yandex = APIRouter(prefix="/yandex", tags=["yandex"])
 
 
-@router.get(
+@router_yandex.get(
     "/link",
     response_model=None,
 )
@@ -18,7 +18,7 @@ async def yandex_link() -> str | HTTPException:
         )
 
 
-@router.get(
+@router_yandex.get(
     "/get/token",
     response_model=None,
 )
@@ -31,7 +31,7 @@ async def yandex_get_token(code: str) -> str | HTTPException:
         )
 
 
-@router.get(
+@router_yandex.get(
     "/registration",
     response_model=None,
 )
@@ -44,7 +44,7 @@ async def yandex_registration(access_token: str) -> dict | HTTPException:
         )
 
 
-@router.get(
+@router_yandex.get(
     "/login",
     response_model=None,
 )

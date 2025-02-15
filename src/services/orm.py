@@ -1,6 +1,6 @@
 from sqlalchemy import select
 from src.services.db import DatabaseSessionService
-from src.database.models import (
+from src.database import (
     User,
     UserMailRu,
     UserVk,

@@ -2,10 +2,10 @@ from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
 from src.classes.vk_class import VK
 
-router = APIRouter(prefix="/vk", tags=["vk"])
+router_vk = APIRouter(prefix="/vk", tags=["vk"])
 
 
-@router.get(
+@router_vk.get(
     "/link",
     response_model=None,
 )
@@ -18,7 +18,7 @@ async def vk_link() -> str | HTTPException:
         )
 
 
-@router.get(
+@router_vk.get(
     "/get/token",
     response_model=None,
 )
@@ -37,7 +37,7 @@ async def vk_get_token(
         )
 
 
-@router.get(
+@router_vk.get(
     "/registration",
     response_model=None,
 )
@@ -50,7 +50,7 @@ async def vk_registration(access_token: str) -> dict | HTTPException:
         )
 
 
-@router.get(
+@router_vk.get(
     "/login",
     response_model=None,
 )

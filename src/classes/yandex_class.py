@@ -1,14 +1,14 @@
-from src.database.schemas.yandex_schemas import (
+from src.database.schemas import (
     DictLinkYandex,
     DictGetDataYandex,
     DictGetDataTokenYandex,
 )
-from src.database.controls import (
+from src.database import (
+    UserYandex,
     get_token_user_yandex,
     get_data_user_yandex,
 )
 from src.config import Settings as settings
-from src.database.models import UserYandex
 from src.services.orm import ORMService
 from src.classes.jwt_classes import JWTCreate
 

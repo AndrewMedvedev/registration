@@ -1,6 +1,5 @@
-from src.classes.jwt_classes import JWTCreate
-from src.database.controls import HashPass
-from src.database.models import User
+from src.classes.jwt_classes import JWTCreate 
+from src.database import User, HashPass
 from src.services.orm import ORMService
 
 

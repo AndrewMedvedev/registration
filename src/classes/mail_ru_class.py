@@ -1,14 +1,14 @@
-from src.database.schemas.mail_ru_schemas import (
+from src.database.schemas import (
     DictLinkMailRu,
     DictGetDataMailRu,
     DictGetDataTokenMailRu,
 )
-from src.database.controls import (
+from src.database import (
+    UserMailRu,
     get_data_user_mail_ru,
     get_token_user_mail_ru,
 )
 from src.config import Settings as settings
-from src.database.models import UserMailRu
 from src.services.orm import ORMService
 from src.classes.jwt_classes import JWTCreate
 
