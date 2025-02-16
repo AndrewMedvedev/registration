@@ -1,7 +1,7 @@
-from src.classes.mail_ru_class import MailRu
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
 
+from src.classes.mail_ru_class import MailRu
 
 router_mail_ru = APIRouter(prefix="/mail.ru", tags=["mail.ru"])
 

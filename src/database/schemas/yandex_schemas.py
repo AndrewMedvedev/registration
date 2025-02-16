@@ -1,7 +1,8 @@
-from src.config import Settings as settings
 from typing import Literal
+
 from pydantic import BaseModel
 
+from src.config import Settings as settings
 
 
 class DictLinkYandex(BaseModel):

@@ -1,8 +1,8 @@
-from src.classes.jwt_classes import JWTCreate
-from src.database import User, HashPass
-from src.services.orm import ORMService
 from fastapi.responses import JSONResponse
 
+from src.classes.jwt_classes import JWTCreate
+from src.database import HashPass, User
+from src.services.orm import ORMService
 
 
 class Authorization:

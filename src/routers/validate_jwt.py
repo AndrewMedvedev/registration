@@ -1,6 +1,6 @@
-from src.classes.jwt_classes import ValidateJWT
 from fastapi import APIRouter
 
+from src.classes.jwt_classes import ValidateJWT
 
 router_validate_jwt = APIRouter(prefix="/validate/jwt", tags=["validate/jwt"])
 

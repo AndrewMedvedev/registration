@@ -1,17 +1,10 @@
-from src.database import (
-    UserVk,
-    get_data_user_vk,
-    get_token_user_vk,
-)
-from src.classes.jwt_classes import JWTCreate
-from src.services.orm import ORMService
-from src.config import Settings as settings
-from src.database.schemas import (
-    DictLinkVK,
-    DictGetDataVK,
-    DictGetDataTokenVK,
-)
 from fastapi.responses import JSONResponse
+
+from src.classes.jwt_classes import JWTCreate
+from src.config import Settings as settings
+from src.database import UserVk, get_data_user_vk, get_token_user_vk
+from src.database.schemas import DictGetDataTokenVK, DictGetDataVK, DictLinkVK
+from src.services.orm import ORMService
 
 
 class VK:

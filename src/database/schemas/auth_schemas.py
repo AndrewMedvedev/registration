@@ -1,14 +1,7 @@
-from pydantic import (
-    BaseModel,
-    Field,
-    field_validator,
-)
-from fastapi import (
-    HTTPException,
-    status,
-)
-from email_validator import validate_email
 import phonenumbers
+from email_validator import validate_email
+from fastapi import HTTPException, status
+from pydantic import BaseModel, Field, field_validator
 
 
 class UserModel(BaseModel):

@@ -1,7 +1,7 @@
-from src.classes.vk_class import VK
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
 
+from src.classes.vk_class import VK
 
 router_vk = APIRouter(prefix="/vk", tags=["vk"])
 

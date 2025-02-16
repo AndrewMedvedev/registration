@@ -1,11 +1,7 @@
 from sqlalchemy import select
+
+from src.database import User, UserMailRu, UserVk, UserYandex
 from src.services.db import DatabaseSessionService
-from src.database import (
-    User,
-    UserMailRu,
-    UserVk,
-    UserYandex,
-)
 
 
 class ORMService(DatabaseSessionService):

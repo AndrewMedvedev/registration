@@ -1,5 +1,4 @@
-from dotenv import find_dotenv, dotenv_values
-
+from dotenv import dotenv_values, find_dotenv
 
 env_path = find_dotenv()
 

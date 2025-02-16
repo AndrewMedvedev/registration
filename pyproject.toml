@@ -23,6 +23,7 @@ slowapi = "^0.1.9"
 requests = "^2.32.3"
 aiohttp = "^3.11.11"
 sqlalchemy = "^2.0.37"
+isort = "^6.0.0"
 
 
 [build-system]

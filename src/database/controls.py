@@ -1,7 +1,7 @@
-from src.config import Settings
 import aiohttp
 from passlib.context import CryptContext
 
+from src.config import Settings
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

@@ -1,15 +1,9 @@
-from src.database.schemas.auth_schemas import (
-    GetUserEmail,
-    GetUserPhoneNumber,
-    UserModel,
-)
-from src.classes.authorization_class import Authorization
+from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
-from fastapi import (
-    APIRouter,
-    status,
-)
 
+from src.classes.authorization_class import Authorization
+from src.database.schemas.auth_schemas import (GetUserEmail,
+                                               GetUserPhoneNumber, UserModel)
 
 router_authorization = APIRouter(prefix="/authorization", tags=["authorization"])
 

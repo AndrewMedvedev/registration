@@ -1,7 +1,7 @@
-from src.classes.yandex_class import Yandex
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
 
+from src.classes.yandex_class import Yandex
 
 router_yandex = APIRouter(prefix="/yandex", tags=["yandex"])
 

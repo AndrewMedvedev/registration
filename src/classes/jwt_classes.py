@@ -1,10 +1,12 @@
-from src.config import Settings as settings
-from datetime import datetime, timedelta
-from email_validator import validate_email
-from passlib.context import CryptContext
-from jose.exceptions import JWTError
-from jose import jwt
 import uuid
+from datetime import datetime, timedelta
+
+from email_validator import validate_email
+from jose import jwt
+from jose.exceptions import JWTError
+from passlib.context import CryptContext
+
+from src.config import Settings as settings
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

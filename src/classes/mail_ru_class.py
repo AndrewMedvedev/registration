@@ -1,18 +1,12 @@
-from src.database.schemas import (
-    DictLinkMailRu,
-    DictGetDataMailRu,
-    DictGetDataTokenMailRu,
-)
-from src.database import (
-    UserMailRu,
-    get_data_user_mail_ru,
-    get_token_user_mail_ru,
-)
-from src.config import Settings as settings
-from src.services.orm import ORMService
-from src.classes.jwt_classes import JWTCreate
 from fastapi.responses import JSONResponse
 
+from src.classes.jwt_classes import JWTCreate
+from src.config import Settings as settings
+from src.database import (UserMailRu, get_data_user_mail_ru,
+                          get_token_user_mail_ru)
+from src.database.schemas import (DictGetDataMailRu, DictGetDataTokenMailRu,
+                                  DictLinkMailRu)
+from src.services.orm import ORMService
 
 
 class MailRu:
