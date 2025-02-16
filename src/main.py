@@ -1,4 +1,3 @@
-from fastapi import FastAPI
 from src.routers import (
     router_authorization,
     router_vk,
@@ -6,6 +5,7 @@ from src.routers import (
     router_yandex,
     router_validate_jwt,
 )
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address

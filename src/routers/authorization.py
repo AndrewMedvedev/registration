@@ -1,15 +1,15 @@
-from fastapi.responses import JSONResponse
-from src.classes.authorization_class import Authorization
-from fastapi import (
-    APIRouter,
-    HTTPException,
-    status,
-)
 from src.database.schemas.auth_schemas import (
     GetUserEmail,
     GetUserPhoneNumber,
     UserModel,
 )
+from src.classes.authorization_class import Authorization
+from fastapi.responses import JSONResponse
+from fastapi import (
+    APIRouter,
+    status,
+)
+
 
 router_authorization = APIRouter(prefix="/authorization", tags=["authorization"])
 
@@ -18,7 +18,7 @@ router_authorization = APIRouter(prefix="/authorization", tags=["authorization"]
     "/registration",
     response_model=None,
 )
-async def registration(user: UserModel) -> dict | HTTPException:
+async def registration(user: UserModel) -> JSONResponse:
     try:
         return await Authorization(model=user).registration()
     except Exception as e:
@@ -31,7 +31,7 @@ async def registration(user: UserModel) -> dict | HTTPException:
     "/login/email",
     response_model=None,
 )
-async def login(user: GetUserEmail) -> dict | HTTPException:
+async def login(user: GetUserEmail) -> JSONResponse:
     try:
         return await Authorization(model=user).login_email()
     except Exception as e:
@@ -44,7 +44,7 @@ async def login(user: GetUserEmail) -> dict | HTTPException:
     "/login/phone/number",
     response_model=None,
 )
-async def login_phone(user: GetUserPhoneNumber) -> dict | HTTPException:
+async def login_phone(user: GetUserPhoneNumber) -> JSONResponse:
     try:
         return await Authorization(model=user).login_phone()
     except Exception as e:

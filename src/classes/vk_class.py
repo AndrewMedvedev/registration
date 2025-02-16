@@ -11,6 +11,7 @@ from src.database.schemas import (
     DictGetDataVK,
     DictGetDataTokenVK,
 )
+from fastapi.responses import JSONResponse
 
 
 class VK:
@@ -42,10 +43,12 @@ class VK:
         data = {"user_name": user.get("email")}
         access = await JWTCreate(data).create_access()
         refresh = await JWTCreate(data).create_refresh()
-        return {
-            "access": access,
-            "refresh": refresh,
-        }
+        return JSONResponse(
+            content={
+                "access": access,
+                "refresh": refresh,
+            }
+        )
 
     async def vk_login(self) -> dict:
         model = DictGetDataTokenVK(access_token=self.access_token).model_dump()
@@ -55,7 +58,9 @@ class VK:
             data = {"user_name": user.get("email").lower()}
             access = await JWTCreate(data).create_access()
             refresh = await JWTCreate(data).create_refresh()
-            return {
+            return JSONResponse(
+            content={
                 "access": access,
                 "refresh": refresh,
             }
+        )

@@ -1,6 +1,8 @@
-from src.classes.jwt_classes import JWTCreate 
+from src.classes.jwt_classes import JWTCreate
 from src.database import User, HashPass
 from src.services.orm import ORMService
+from fastapi.responses import JSONResponse
+
 
 
 class Authorization:
@@ -18,7 +20,12 @@ class Authorization:
         data = {"user_name": self.model.email}
         access = await JWTCreate(data).create_access()
         refresh = await JWTCreate(data).create_refresh()
-        return {"access": access, "refresh": refresh}
+        return JSONResponse(
+            content={
+                "access": access,
+                "refresh": refresh,
+            }
+        )
 
     async def login_email(self) -> dict:
         stmt = await ORMService().get_user_email(
@@ -31,7 +38,12 @@ class Authorization:
             data = {"user_name": self.model.email}
             access = await JWTCreate(data).create_access()
             refresh = await JWTCreate(data).create_refresh()
-            return {"access": access, "refresh": refresh}
+            return JSONResponse(
+                content={
+                    "access": access,
+                    "refresh": refresh,
+                }
+            )
 
     async def login_phone(self) -> dict:
         stmt = await ORMService().get_user_phone_number(
@@ -44,4 +56,9 @@ class Authorization:
             data = {"user_name": stmt.email}
             access = await JWTCreate(data).create_access()
             refresh = await JWTCreate(data).create_refresh()
-            return {"access": access, "refresh": refresh}
+            return JSONResponse(
+                content={
+                    "access": access,
+                    "refresh": refresh,
+                }
+            )

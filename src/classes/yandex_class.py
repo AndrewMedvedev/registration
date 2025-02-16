@@ -11,6 +11,8 @@ from src.database import (
 from src.config import Settings as settings
 from src.services.orm import ORMService
 from src.classes.jwt_classes import JWTCreate
+from fastapi.responses import JSONResponse
+
 
 
 class Yandex:
@@ -40,10 +42,12 @@ class Yandex:
         data = {"user_name": user.get("default_email")}
         access = await JWTCreate(data).create_access()
         refresh = await JWTCreate(data).create_refresh()
-        return {
-            "access": access,
-            "refresh": refresh,
-        }
+        return JSONResponse(
+            content={
+                "access": access,
+                "refresh": refresh,
+            }
+        )
 
     async def yandex_login(self) -> dict:
         model = DictGetDataTokenYandex(oauth_token=self.access_token).model_dump()
@@ -53,7 +57,9 @@ class Yandex:
             data = {"user_name": user.get("default_email")}
             access = await JWTCreate(data).create_access()
             refresh = await JWTCreate(data).create_refresh()
-            return {
+            return JSONResponse(
+            content={
                 "access": access,
                 "refresh": refresh,
             }
+        )

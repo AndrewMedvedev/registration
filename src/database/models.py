@@ -1,4 +1,3 @@
-from sqlalchemy.orm import Mapped
 from src.database.data import (
     Base,
     str_uniq,
@@ -6,6 +5,8 @@ from src.database.data import (
     int_null,
     str_nullable,
 )
+from sqlalchemy.orm import Mapped
+
 
 
 class User(Base):

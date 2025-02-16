@@ -1,6 +1,7 @@
-from fastapi import APIRouter, HTTPException, status
-from fastapi.responses import JSONResponse
 from src.classes.vk_class import VK
+from fastapi import APIRouter, status
+from fastapi.responses import JSONResponse
+
 
 router_vk = APIRouter(prefix="/vk", tags=["vk"])
 
@@ -9,7 +10,7 @@ router_vk = APIRouter(prefix="/vk", tags=["vk"])
     "/link",
     response_model=None,
 )
-async def vk_link() -> str | HTTPException:
+async def vk_link() -> str | JSONResponse:
     try:
         return await VK.vk_link()
     except Exception as e:
@@ -25,7 +26,7 @@ async def vk_link() -> str | HTTPException:
 async def vk_get_token(
     code: str,
     device_id: str,
-) -> str | HTTPException:
+) -> str | JSONResponse:
     try:
         return await VK(
             code=code,
@@ -41,7 +42,7 @@ async def vk_get_token(
     "/registration",
     response_model=None,
 )
-async def vk_registration(access_token: str) -> dict | HTTPException:
+async def vk_registration(access_token: str) -> JSONResponse:
     try:
         return await VK(access_token=access_token).vk_registration()
     except Exception as e:
@@ -54,7 +55,7 @@ async def vk_registration(access_token: str) -> dict | HTTPException:
     "/login",
     response_model=None,
 )
-async def vk_login(access_token: str) -> dict | HTTPException:
+async def vk_login(access_token: str) -> JSONResponse:
     try:
         return await VK(access_token=access_token).vk_login()
     except Exception as e:

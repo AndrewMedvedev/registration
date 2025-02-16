@@ -11,6 +11,8 @@ from src.database import (
 from src.config import Settings as settings
 from src.services.orm import ORMService
 from src.classes.jwt_classes import JWTCreate
+from fastapi.responses import JSONResponse
+
 
 
 class MailRu:
@@ -40,10 +42,12 @@ class MailRu:
         data = {"user_name": user.get("email")}
         access = await JWTCreate(data).create_access()
         refresh = await JWTCreate(data).create_refresh()
-        return {
-            "access": access,
-            "refresh": refresh,
-        }
+        return JSONResponse(
+            content={
+                "access": access,
+                "refresh": refresh,
+            }
+        )
 
     async def mail_ru_login(self) -> dict:
         model = DictGetDataTokenMailRu(access_token=self.access_token).model_dump()
@@ -53,7 +57,9 @@ class MailRu:
             data = {"user_name": user.get("email")}
             access = await JWTCreate(data).create_access()
             refresh = await JWTCreate(data).create_refresh()
-            return {
-                "access": access,
-                "refresh": refresh,
-            }
+            return JSONResponse(
+                content={
+                    "access": access,
+                    "refresh": refresh,
+                }
+            )

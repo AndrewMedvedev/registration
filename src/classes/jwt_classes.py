@@ -1,6 +1,6 @@
+from src.config import Settings as settings
 from datetime import datetime, timedelta
 from email_validator import validate_email
-from src.config import Settings as settings
 from passlib.context import CryptContext
 from jose.exceptions import JWTError
 from jose import jwt
