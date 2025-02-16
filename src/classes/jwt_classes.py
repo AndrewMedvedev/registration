@@ -32,7 +32,7 @@ class ValidateJWT:
     def __init__(self, token: str) -> None:
         self.token = token
 
-    async def validate_refresh(self) -> dict | bool:
+    async def validate_refresh(self) -> str | bool:
         try:
             refresh = jwt.decode(
                 self.token,
@@ -43,9 +43,7 @@ class ValidateJWT:
                 return False
             elif validate_email(refresh.get("user_name")):
                 data = {"user_name": refresh.get("user_name")}
-                return {
-                    "access": await JWTCreate(data=data).create_access(),
-                }
+                return await JWTCreate(data=data).create_access()
             else:
                 return False
         except JWTError:
