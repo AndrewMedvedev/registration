@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 
 from src.classes.vk_class import VK
 
-router_vk = APIRouter(prefix="/vk", tags=["vk"])
+router_vk = APIRouter(prefix="/vk/v1", tags=["vk"])
 
 
 @router_vk.get(
