@@ -24,7 +24,7 @@ class Yandex:
         user = await get_token_user_yandex(model)
         return user
 
-    async def yandex_registration(self) -> dict:
+    async def yandex_registration(self) -> JSONResponse:
         model = DictGetDataTokenYandex(oauth_token=self.access_token).model_dump()
         user = await get_data_user_yandex(model)
         user_model = UserYandex(
@@ -43,7 +43,7 @@ class Yandex:
             }
         )
 
-    async def yandex_login(self) -> dict:
+    async def yandex_login(self) -> JSONResponse:
         model = DictGetDataTokenYandex(oauth_token=self.access_token).model_dump()
         user = await get_data_user_yandex(model)
         stmt = await ORMService().get_user_email_yandex(user.get("default_email"))

@@ -25,7 +25,7 @@ class VK:
         user = await get_token_user_vk(model)
         return user
 
-    async def vk_registration(self) -> dict:
+    async def vk_registration(self) -> JSONResponse:
         model = DictGetDataTokenVK(access_token=self.access_token).model_dump()
         user = await get_data_user_vk(model)
         user_model = UserVk(
@@ -43,7 +43,7 @@ class VK:
             }
         )
 
-    async def vk_login(self) -> dict:
+    async def vk_login(self) -> JSONResponse:
         model = DictGetDataTokenVK(access_token=self.access_token).model_dump()
         user = await get_data_user_vk(model)
         stmt = await ORMService().get_user_email_vk(user.get("email").lower())

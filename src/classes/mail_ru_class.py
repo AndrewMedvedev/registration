@@ -24,7 +24,7 @@ class MailRu:
         user = await get_token_user_mail_ru(params=model)
         return user
 
-    async def mail_ru_registration(self) -> dict:
+    async def mail_ru_registration(self) -> JSONResponse:
         model = DictGetDataTokenMailRu(access_token=self.access_token).model_dump()
         user = await get_data_user_mail_ru(model)
         user_model = UserMailRu(
@@ -43,7 +43,7 @@ class MailRu:
             }
         )
 
-    async def mail_ru_login(self) -> dict:
+    async def mail_ru_login(self) -> JSONResponse:
         model = DictGetDataTokenMailRu(access_token=self.access_token).model_dump()
         user = await get_data_user_mail_ru(model)
         stmt = await ORMService().get_user_email_mail_ru(user.get("email"))

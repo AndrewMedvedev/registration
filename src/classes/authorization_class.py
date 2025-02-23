@@ -10,7 +10,7 @@ class Authorization:
     def __init__(self, model) -> None:
         self.model = model
 
-    async def registration(self) -> dict:
+    async def registration(self) -> JSONResponse:
         user_model = User(
             phone_number=self.model.phone_number,
             email=self.model.email,
@@ -27,7 +27,7 @@ class Authorization:
             }
         )
 
-    async def login_email(self) -> dict:
+    async def login_email(self) -> JSONResponse:
         stmt = await ORMService().get_user_email(
             email=self.model.email,
             hash_password=self.model.hash_password,
@@ -45,7 +45,7 @@ class Authorization:
                 }
             )
 
-    async def login_phone(self) -> dict:
+    async def login_phone(self) -> JSONResponse:
         stmt = await ORMService().get_user_phone_number(
             phone_number=self.model.phone_number,
             hash_password=self.model.hash_password,
