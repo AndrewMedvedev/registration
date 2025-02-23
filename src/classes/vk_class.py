@@ -2,7 +2,8 @@ from fastapi.responses import JSONResponse
 
 from src.classes.jwt_classes import JWTCreate
 from src.config import Settings as settings
-from src.database import UserVk, get_data_user_vk, get_token_user_vk
+from src.database import get_data_user_vk, get_token_user_vk
+from src.database.models import UserVk
 from src.database.schemas import DictGetDataTokenVK, DictGetDataVK, DictLinkVK
 from src.services.orm import ORMService
 
@@ -29,11 +30,13 @@ class VK:
         model = DictGetDataTokenVK(access_token=self.access_token).model_dump()
         user = await get_data_user_vk(model)
         user_model = UserVk(
+            first_name=user.get("first_name"),
+            last_name=user.get("last_name"),
             id_vk=int(user.get("user_id")),
             email=user.get("email").lower(),
         )
-        await ORMService().add_user(user_model)
-        data = {"user_name": user.get("email")}
+        user_id = await ORMService().add_user(user_model)
+        data = {"user_id": user_id}
         access = await JWTCreate(data).create_access()
         refresh = await JWTCreate(data).create_refresh()
         return JSONResponse(
@@ -48,12 +51,12 @@ class VK:
         user = await get_data_user_vk(model)
         stmt = await ORMService().get_user_email_vk(user.get("email").lower())
         if stmt.email == user.get("email").lower():
-            data = {"user_name": user.get("email").lower()}
+            data = {"user_id": stmt.id}
             access = await JWTCreate(data).create_access()
             refresh = await JWTCreate(data).create_refresh()
             return JSONResponse(
-            content={
-                "access": access,
-                "refresh": refresh,
-            }
-        )
+                content={
+                    "access": access,
+                    "refresh": refresh,
+                }
+            )

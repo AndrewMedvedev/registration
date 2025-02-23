@@ -21,5 +21,5 @@ async def validate_refresh(
 )
 async def validate_access(
     access: str,
-) -> dict | bool:
+) -> bool:
     return await ValidateJWT(access).validate_access()

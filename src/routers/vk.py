@@ -38,7 +38,7 @@ async def vk_get_token(
         )
 
 
-@router_vk.get(
+@router_vk.post(
     "/registration",
     response_model=None,
 )
@@ -51,7 +51,7 @@ async def vk_registration(access_token: str) -> JSONResponse:
         )
 
 
-@router_vk.get(
+@router_vk.post(
     "/login",
     response_model=None,
 )

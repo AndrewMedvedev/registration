@@ -1,7 +1,8 @@
 from fastapi.responses import JSONResponse
 
 from src.classes.jwt_classes import JWTCreate
-from src.database import HashPass, User
+from src.database import HashPass
+from src.database.models import User
 from src.services.orm import ORMService
 
 
@@ -12,12 +13,14 @@ class Authorization:
 
     async def registration(self) -> JSONResponse:
         user_model = User(
+            first_name=self.model.first_name,
+            last_name=self.model.last_name,
             phone_number=self.model.phone_number,
             email=self.model.email,
             hash_password=HashPass.get_password_hash(self.model.hash_password),
         )
-        await ORMService().add_user(user_model)
-        data = {"user_name": self.model.email}
+        user_id = await ORMService().add_user(user_model)
+        data = {"user_id": user_id}
         access = await JWTCreate(data).create_access()
         refresh = await JWTCreate(data).create_refresh()
         return JSONResponse(
@@ -35,7 +38,7 @@ class Authorization:
         if (stmt.email == self.model.email) and HashPass.verify_password(
             self.model.hash_password, stmt.hash_password
         ):
-            data = {"user_name": self.model.email}
+            data = {"user_id": stmt.id}
             access = await JWTCreate(data).create_access()
             refresh = await JWTCreate(data).create_refresh()
             return JSONResponse(
@@ -53,7 +56,7 @@ class Authorization:
         if (stmt.phone_number == self.model.phone_number) and HashPass.verify_password(
             self.model.hash_password, stmt.hash_password
         ):
-            data = {"user_name": stmt.email}
+            data = {"user_id": stmt.id}
             access = await JWTCreate(data).create_access()
             refresh = await JWTCreate(data).create_refresh()
             return JSONResponse(

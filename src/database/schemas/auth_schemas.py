@@ -5,14 +5,11 @@ from pydantic import BaseModel, Field, field_validator
 
 
 class UserModel(BaseModel):
-    phone_number: str = Field(
-        default=...,
-        description="Номер телефона в международном формате, начинающийся с '+'",
-    )
-    email: str = Field(
-        default=..., min_length=5, max_length=100, description="Электронная почта "
-    )
-    hash_password: str = Field(default=..., description="Пароль")
+    first_name: str
+    last_name: str
+    phone_number: str
+    email: str
+    hash_password: str
 
     @field_validator("phone_number")
     @classmethod

@@ -32,7 +32,7 @@ async def yandex_get_token(code: str) -> str | JSONResponse:
         )
 
 
-@router_yandex.get(
+@router_yandex.post(
     "/registration",
     response_model=None,
 )
@@ -45,7 +45,7 @@ async def yandex_registration(access_token: str) -> JSONResponse:
         )
 
 
-@router_yandex.get(
+@router_yandex.post(
     "/login",
     response_model=None,
 )

@@ -1,7 +1,5 @@
 import uuid
 from datetime import datetime, timedelta
-
-from email_validator import validate_email
 from jose import jwt
 from jose.exceptions import JWTError
 from passlib.context import CryptContext
@@ -41,15 +39,13 @@ class ValidateJWT:
                 settings.SECRET_KEY,
                 settings.ALGORITHM,
             )
-            if "user_name" not in refresh and refresh.get("mode") != "refresh_token":
+            if "user_id" not in refresh and refresh.get("mode") != "refresh_token":
                 return False
-            elif validate_email(refresh.get("user_name")):
-                data = {"user_name": refresh.get("user_name")}
-                return {
-                    "access": await JWTCreate(data=data).create_access(),
-                }
-            else:
-                return False
+
+            data = {"user_id": refresh.get("user_id")}
+            return {
+                "access": await JWTCreate(data=data).create_access(),
+            }
         except JWTError:
             return False
 
@@ -60,11 +56,8 @@ class ValidateJWT:
                 settings.SECRET_KEY,
                 settings.ALGORITHM,
             )
-            if "user_name" not in access and access.get("mode") != "access_token":
+            if "user_id" not in access and access.get("mode") != "access_token":
                 return False
-            elif validate_email(access.get("user_name")):
-                return True
-            else:
-                return False
+            return True
         except JWTError:
             return False

@@ -30,7 +30,7 @@ async def mail_ru_get_token(code: str) -> str | JSONResponse:
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
         )
 
-@router_mail_ru.get(
+@router_mail_ru.post(
     "/registration",
     response_model=None,
 )
@@ -42,7 +42,7 @@ async def mail_ru_registration(access_token: str) -> JSONResponse:
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
         )
 
-@router_mail_ru.get(
+@router_mail_ru.post(
     "/login",
     response_model=None,
 )
