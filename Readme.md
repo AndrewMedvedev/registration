@@ -11,7 +11,7 @@
 Ресурс для регистрации пользователя.
 
 
-> POST '/authorization/registration'
+> POST '/authorizations/v1/registration'
 
 
 Принимает: first_name, last_name, phone_number, email, hash_password.
@@ -37,7 +37,7 @@
 Ресурс для авторизации пользователя в системе с помощью почты и пароля.
 
 
-> POST '/authorization/login/email'
+> POST '/authorizations/v1/login/email'
 
 
 Принимает: email, hash_password.
@@ -60,7 +60,7 @@
 Ресурс для авторизации пользователя в системе с помощью номера телефона и пароля.
 
 
-> POST '/authorization/login/phone/number'
+> POST '/authorizations/v1/login/phone/number'
 
 
 Принимает: phone_number, hash_password.
@@ -86,7 +86,7 @@
 Ресурс для получения ссылки авторизации vk.
 
 
-> GET '/vk/link'
+> GET '/vk/v1/link'
 
 Ничего не принимает.
 
@@ -99,7 +99,7 @@
 Ресурс для получения access токена vk.
 
 
-> GET '/vk/get/token'
+> GET '/vk/v1/get/token'
 
 
 Принимает параметры: code, device_id.
@@ -123,7 +123,7 @@
 Ресурс для регистрации пользователя используя полученные данные от vk.
 
 
-> POST '/vk/registration'
+> POST '/vk/v1/registration'
 
 
 Принимает параметр: access_token.
@@ -145,7 +145,7 @@
 Ресурс для авторизации пользователя используя полученные данные от vk.
 
 
-> POST '/vk/login'
+> POST '/vk/v1/login'
 
 
 Принимает параметр: access_token.
@@ -170,7 +170,7 @@
 Ресурс для получения ссылки авторизации mail.ru.
 
 
-> GET '/mail.ru/link'
+> GET '/mail.ru/v1/link'
 
 Ничего не принимает.
 
@@ -183,7 +183,7 @@
 Ресурс для получения access токена mail.ru.
 
 
-> GET '/mail.ru/get/token'
+> GET '/mail.ru/v1/get/token'
 
 
 Принимает параметры: code.
@@ -205,7 +205,7 @@
 Ресурс для регистрации пользователя используя полученные данные от mail.ru.
 
 
-> POST '/mail.ru/registration'
+> POST '/mail.ru/v1/registration'
 
 
 Принимает параметр: access_token.
@@ -227,7 +227,7 @@
 Ресурс для авторизации пользователя используя полученные данные от mail.ru.
 
 
-> POST '/mail.ru/login'
+> POST '/mail.ru/v1/login'
 
 
 Принимает параметр: access_token.
@@ -252,7 +252,7 @@
 Ресурс для получения ссылки авторизации yandex.
 
 
-> GET '/yandex/link'
+> GET '/yandex/v1/link'
 
 Ничего не принимает.
 
@@ -265,7 +265,7 @@
 Ресурс для получения access токена yandex.
 
 
-> GET '/yandex/get/token'
+> GET '/mail.ru/v1/get/token'
 
 
 Принимает параметры: code.
@@ -288,7 +288,7 @@
 Ресурс для регистрации пользователя используя полученные данные от yandex.
 
 
-> POST '/yandex/registration'
+> POST '/mail.ru/v1/registration'
 
 
 Принимает параметр: access_token.
@@ -310,7 +310,7 @@
 Ресурс для авторизации пользователя используя полученные данные от yandex.
 
 
-> POST '/yandex/login'
+> POST '/mail.ru/v1/login'
 
 
 Принимает параметр: access_token.
