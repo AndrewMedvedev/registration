@@ -14,11 +14,13 @@
 > POST '/authorization/registration'
 
 
-Принимает: phone_number, email, hash_password.
+Принимает: first_name, last_name, phone_number, email, hash_password.
 
 
 | Name | Type |
 |:-------------:|:-------:|
+| first_name | str |
+| last_name | str |
 | phone_number | str |
 | email | str |
 | hash_password | str |
@@ -121,7 +123,7 @@
 Ресурс для регистрации пользователя используя полученные данные от vk.
 
 
-> GET '/vk/registration'
+> POST '/vk/registration'
 
 
 Принимает параметр: access_token.
@@ -143,7 +145,7 @@
 Ресурс для авторизации пользователя используя полученные данные от vk.
 
 
-> GET '/vk/login'
+> POST '/vk/login'
 
 
 Принимает параметр: access_token.
@@ -203,7 +205,7 @@
 Ресурс для регистрации пользователя используя полученные данные от mail.ru.
 
 
-> GET '/mail.ru/registration'
+> POST '/mail.ru/registration'
 
 
 Принимает параметр: access_token.
@@ -225,7 +227,7 @@
 Ресурс для авторизации пользователя используя полученные данные от mail.ru.
 
 
-> GET '/mail.ru/login'
+> POST '/mail.ru/login'
 
 
 Принимает параметр: access_token.
@@ -286,7 +288,7 @@
 Ресурс для регистрации пользователя используя полученные данные от yandex.
 
 
-> GET '/yandex/registration'
+> POST '/yandex/registration'
 
 
 Принимает параметр: access_token.
@@ -308,7 +310,7 @@
 Ресурс для авторизации пользователя используя полученные данные от yandex.
 
 
-> GET '/yandex/login'
+> POST '/yandex/login'
 
 
 Принимает параметр: access_token.
@@ -345,8 +347,7 @@
 
 Пример ответа:
 '{
-  "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhbmRyZWptZWR2ZWRldjI3MTNAZ21haWwuY29tIiwiaGVhZGVyIjp7ImFsZyI6IkhTMjU2IiwidHlwIjoiSldUIiwidXVpZCI6ImE1ZWQyMGEyLTZlMzktNGExMy1hZGNkLTVlZDViNTkwODQzNSJ9LCJleHAiOjE3MzkyMzE5NDMsIm1vZGUiOiJhY2Nlc3NfdG9rZW4ifQ.PfhN-NI2_FWbuQkeR6wdcLDRhu5sK5EdCi9KRf5saRs",
-  "email": "andrejmedvedev2713@gmail.com"
+  "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhbmRyZWptZWR2ZWRldjI3MTNAZ21haWwuY29tIiwiaGVhZGVyIjp7ImFsZyI6IkhTMjU2IiwidHlwIjoiSldUIiwidXVpZCI6ImE1ZWQyMGEyLTZlMzktNGExMy1hZGNkLTVlZDViNTkwODQzNSJ9LCJleHAiOjE3MzkyMzE5NDMsIm1vZGUiOiJhY2Nlc3NfdG9rZW4ifQ.PfhN-NI2_FWbuQkeR6wdcLDRhu5sK5EdCi9KRf5saRs"
 }'
 
 
