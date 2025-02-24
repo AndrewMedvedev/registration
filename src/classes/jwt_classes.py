@@ -45,11 +45,13 @@ class ValidateJWT:
             data = {"user_id": refresh.get("user_id")}
             return {
                 "access": await JWTCreate(data=data).create_access(),
+                "user_id": refresh.get("user_id"),
+
             }
         except JWTError:
             return False
 
-    async def validate_access(self) -> bool:
+    async def validate_access(self) -> int | bool:
         try:
             access = jwt.decode(
                 self.token,
@@ -58,6 +60,6 @@ class ValidateJWT:
             )
             if "user_id" not in access and access.get("mode") != "access_token":
                 return False
-            return True
+            return access.get("user_id")
         except JWTError:
             return False
