@@ -18,11 +18,12 @@ async def mail_ru_link() -> str | JSONResponse:
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
         )
 
+
 @router_mail_ru.get(
-    "/get/token",
+    "/get/token/{code}",
     response_model=None,
 )
-async def mail_ru_get_token(code: str) -> str | JSONResponse:
+async def mail_ru_get_token(code: str) -> JSONResponse:
     try:
         return await MailRu(code=code).mail_ru_get_token()
     except Exception as e:
@@ -30,8 +31,9 @@ async def mail_ru_get_token(code: str) -> str | JSONResponse:
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
         )
 
+
 @router_mail_ru.post(
-    "/registration",
+    "/registration/{access_token}",
     response_model=None,
 )
 async def mail_ru_registration(access_token: str) -> JSONResponse:
@@ -42,8 +44,9 @@ async def mail_ru_registration(access_token: str) -> JSONResponse:
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
         )
 
+
 @router_mail_ru.post(
-    "/login",
+    "/login/{access_token}",
     response_model=None,
 )
 async def mail_ru_login(access_token: str) -> JSONResponse:

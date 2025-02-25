@@ -20,13 +20,13 @@ async def vk_link() -> str | JSONResponse:
 
 
 @router_vk.get(
-    "/get/token",
+    "/get/token/{code}/{device_id}",
     response_model=None,
 )
 async def vk_get_token(
     code: str,
     device_id: str,
-) -> str | JSONResponse:
+) -> JSONResponse:
     try:
         return await VK(
             code=code,
@@ -39,7 +39,7 @@ async def vk_get_token(
 
 
 @router_vk.post(
-    "/registration",
+    "/registration/{access_token}",
     response_model=None,
 )
 async def vk_registration(access_token: str) -> JSONResponse:
@@ -52,7 +52,7 @@ async def vk_registration(access_token: str) -> JSONResponse:
 
 
 @router_vk.post(
-    "/login",
+    "/login/{access_token}",
     response_model=None,
 )
 async def vk_login(access_token: str) -> JSONResponse:

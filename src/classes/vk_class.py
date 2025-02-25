@@ -21,10 +21,10 @@ class VK:
         url = f"{settings.VK_AUTH_URL}?{'&'.join([f'{k}={v}' for k, v in DictLinkVK().model_dump().items()])}"
         return url
 
-    async def vk_get_token(self) -> str:
+    async def vk_get_token(self) -> JSONResponse:
         model = DictGetDataVK(code=self.code, device_id=self.device_id).model_dump()
         user = await get_token_user_vk(model)
-        return user
+        return JSONResponse(content=user)
 
     async def vk_registration(self) -> JSONResponse:
         model = DictGetDataTokenVK(access_token=self.access_token).model_dump()

@@ -9,8 +9,8 @@ __all__ = (
 
 
 from src.routers.authorization import router_authorization
+from src.routers.get_data import router_data
 from src.routers.mail_ru import router_mail_ru
 from src.routers.validate_jwt import router_validate_jwt
 from src.routers.vk import router_vk
 from src.routers.yandex import router_yandex
-from src.routers.get_data import router_data

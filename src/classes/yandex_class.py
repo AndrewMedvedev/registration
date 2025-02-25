@@ -19,10 +19,10 @@ class Yandex:
         url = f"{settings.YANDEX_AUTH_URL}?{'&'.join([f'{k}={v}' for k, v in DictLinkYandex().model_dump().items()])}"
         return url
 
-    async def yandex_get_token(self) -> str:
+    async def yandex_get_token(self) -> JSONResponse:
         model = DictGetDataYandex(code=self.code).model_dump()
         user = await get_token_user_yandex(model)
-        return user
+        return JSONResponse(content=user)
 
     async def yandex_registration(self) -> JSONResponse:
         model = DictGetDataTokenYandex(oauth_token=self.access_token).model_dump()

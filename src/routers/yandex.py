@@ -20,10 +20,10 @@ async def yandex_link() -> str | JSONResponse:
 
 
 @router_yandex.get(
-    "/get/token",
+    "/get/token/{code}",
     response_model=None,
 )
-async def yandex_get_token(code: str) -> str | JSONResponse:
+async def yandex_get_token(code: str) -> JSONResponse:
     try:
         return await Yandex(code=code).yandex_get_token()
     except Exception as e:
@@ -33,7 +33,7 @@ async def yandex_get_token(code: str) -> str | JSONResponse:
 
 
 @router_yandex.post(
-    "/registration",
+    "/registration/{access_token}",
     response_model=None,
 )
 async def yandex_registration(access_token: str) -> JSONResponse:
@@ -46,7 +46,7 @@ async def yandex_registration(access_token: str) -> JSONResponse:
 
 
 @router_yandex.post(
-    "/login",
+    "/login/{access_token}",
     response_model=None,
 )
 async def yandex_login(access_token: str) -> JSONResponse:

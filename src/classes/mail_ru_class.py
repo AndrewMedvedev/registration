@@ -19,10 +19,10 @@ class MailRu:
         url = f"{settings.MAIL_RU_AUTH_URL}?{'&'.join([f'{k}={v}' for k, v in DictLinkMailRu().model_dump().items()])}"
         return url
 
-    async def mail_ru_get_token(self) -> str:
+    async def mail_ru_get_token(self) -> JSONResponse:
         model = DictGetDataMailRu(code=self.code).model_dump()
         user = await get_token_user_mail_ru(params=model)
-        return user
+        return JSONResponse(content=user)
 
     async def mail_ru_registration(self) -> JSONResponse:
         model = DictGetDataTokenMailRu(access_token=self.access_token).model_dump()
