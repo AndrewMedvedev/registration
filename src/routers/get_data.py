@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 
 from src.classes import GetUser
 
-router_data = APIRouter(prefix="/get/v1", tags=["get_data"])
+router_data = APIRouter(prefix="/api/v1/get/", tags=["get_data"])
 
 
 @router_data.get("/{user_id}")

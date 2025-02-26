@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 
 from src.classes.yandex_class import Yandex
 
-router_yandex = APIRouter(prefix="/yandex/v1", tags=["yandex"])
+router_yandex = APIRouter(prefix="/api/v1/yandex/", tags=["yandex"])
 
 
 @router_yandex.get(

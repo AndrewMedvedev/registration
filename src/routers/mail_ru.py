@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 
 from src.classes.mail_ru_class import MailRu
 
-router_mail_ru = APIRouter(prefix="/mail.ru/v1", tags=["mail.ru"])
+router_mail_ru = APIRouter(prefix="/api/v1/mail.ru/", tags=["mail.ru"])
 
 
 @router_mail_ru.get(
