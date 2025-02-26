@@ -5,7 +5,7 @@ from src.classes.authorization_class import Authorization
 from src.database.schemas.auth_schemas import (GetUserEmail,
                                                GetUserPhoneNumber, UserModel)
 
-router_authorization = APIRouter(prefix="/api/v1/authorizations/", tags=["authorization"])
+router_authorization = APIRouter(prefix="/api/v1/authorizations", tags=["authorization"])
 
 
 @router_authorization.post(
