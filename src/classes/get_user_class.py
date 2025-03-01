@@ -1,6 +1,5 @@
 from fastapi.responses import JSONResponse
 
-from src.config import Settings as settings
 from src.services.orm import ORMService
 
 

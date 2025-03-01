@@ -1,6 +1,6 @@
 from fastapi.responses import JSONResponse
 
-from src.classes.jwt_classes import JWTCreate
+from src.classes.reuse_class import ReUse
 from src.config import Settings as settings
 from src.database import get_data_user_vk, get_token_user_vk
 from src.database.models import UserVk
@@ -17,14 +17,21 @@ class VK:
         self.device_id = device_id
         self.access_token = access_token
 
+    @staticmethod
     async def vk_link() -> str:
-        url = f"{settings.VK_AUTH_URL}?{'&'.join([f'{k}={v}' for k, v in DictLinkVK().model_dump().items()])}"
-        return url
+        return await ReUse.link(
+            setting=settings.VK_AUTH_URL,
+            dictlink=DictLinkVK().model_dump().items(),
+        )
 
     async def vk_get_token(self) -> JSONResponse:
-        model = DictGetDataVK(code=self.code, device_id=self.device_id).model_dump()
-        user = await get_token_user_vk(model)
-        return JSONResponse(content=user)
+        return await ReUse(
+            func=get_token_user_vk,
+        ).get_token(
+            dictgetdata=DictGetDataVK(
+                code=self.code, device_id=self.device_id
+            ).model_dump(),
+        )
 
     async def vk_registration(self) -> JSONResponse:
         model = DictGetDataTokenVK(access_token=self.access_token).model_dump()
@@ -35,28 +42,16 @@ class VK:
             id_vk=int(user.get("user_id")),
             email=user.get("email").lower(),
         )
-        user_id = await ORMService().add_user(user_model)
-        data = {"user_id": user_id}
-        access = await JWTCreate(data).create_access()
-        refresh = await JWTCreate(data).create_refresh()
-        return JSONResponse(
-            content={
-                "access": access,
-                "refresh": refresh,
-            }
+        return await ReUse.registration(
+            user_model=user_model,
         )
 
     async def vk_login(self) -> JSONResponse:
-        model = DictGetDataTokenVK(access_token=self.access_token).model_dump()
-        user = await get_data_user_vk(model)
-        stmt = await ORMService().get_user_email_vk(user.get("email").lower())
-        if stmt.email == user.get("email").lower():
-            data = {"user_id": stmt.id}
-            access = await JWTCreate(data).create_access()
-            refresh = await JWTCreate(data).create_refresh()
-            return JSONResponse(
-                content={
-                    "access": access,
-                    "refresh": refresh,
-                }
-            )
+        return await ReUse(
+            func=get_data_user_vk,
+        ).login(
+            dictgetdatatoken=DictGetDataTokenVK(
+                access_token=self.access_token
+            ).model_dump(),
+            stmt_get=ORMService().get_user_email_vk,
+        )

@@ -1,6 +1,6 @@
 from fastapi.responses import JSONResponse
 
-from src.classes.jwt_classes import JWTCreate
+from src.classes.reuse_class import ReUse
 from src.config import Settings as settings
 from src.database import get_data_user_mail_ru, get_token_user_mail_ru
 from src.database.models import UserMailRu
@@ -15,14 +15,19 @@ class MailRu:
         self.code = code
         self.access_token = access_token
 
+    @staticmethod
     async def mail_ru_link() -> str:
-        url = f"{settings.MAIL_RU_AUTH_URL}?{'&'.join([f'{k}={v}' for k, v in DictLinkMailRu().model_dump().items()])}"
-        return url
+        return await ReUse.link(
+            setting=settings.MAIL_RU_AUTH_URL,
+            dictlink=DictLinkMailRu().model_dump().items(),
+        )
 
     async def mail_ru_get_token(self) -> JSONResponse:
-        model = DictGetDataMailRu(code=self.code).model_dump()
-        user = await get_token_user_mail_ru(params=model)
-        return JSONResponse(content=user)
+        return await ReUse(
+            func=get_token_user_mail_ru,
+        ).get_token(
+            dictgetdata=DictGetDataMailRu(code=self.code).model_dump(),
+        )
 
     async def mail_ru_registration(self) -> JSONResponse:
         model = DictGetDataTokenMailRu(access_token=self.access_token).model_dump()
@@ -34,28 +39,14 @@ class MailRu:
             email=user.get("email"),
             birthday=user.get("birthday"),
         )
-        user_id = await ORMService().add_user(user_model)
-        data = {"user_id": user_id}
-        access = await JWTCreate(data).create_access()
-        refresh = await JWTCreate(data).create_refresh()
-        return JSONResponse(
-            content={
-                "access": access,
-                "refresh": refresh,
-            }
-        )
+        return await ReUse.registration(user_model=user_model)
 
     async def mail_ru_login(self) -> JSONResponse:
-        model = DictGetDataTokenMailRu(access_token=self.access_token).model_dump()
-        user = await get_data_user_mail_ru(model)
-        stmt = await ORMService().get_user_email_mail_ru(user.get("email"))
-        if stmt.email == user.get("email"):
-            data = {"user_id": stmt.id}
-            access = await JWTCreate(data).create_access()
-            refresh = await JWTCreate(data).create_refresh()
-            return JSONResponse(
-                content={
-                    "access": access,
-                    "refresh": refresh,
-                }
-            )
+        return await ReUse(
+            func=get_data_user_mail_ru,
+        ).login(
+            dictgetdatatoken=DictGetDataTokenMailRu(
+                access_token=self.access_token
+            ).model_dump(),
+            stmt_get=ORMService().get_user_email_mail_ru,
+        )
