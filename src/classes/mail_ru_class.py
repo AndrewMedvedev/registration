@@ -11,7 +11,11 @@ from src.services.orm import ORMService
 
 class MailRu:
 
-    def __init__(self, code: str = None, access_token: str = None) -> None:
+    def __init__(
+        self,
+        code: str = None,
+        access_token: str = None,
+    ) -> None:
         self.code = code
         self.access_token = access_token
 
@@ -19,7 +23,7 @@ class MailRu:
     async def mail_ru_link() -> str:
         return await ReUse.link(
             setting=settings.MAIL_RU_AUTH_URL,
-            dictlink=DictLinkMailRu().model_dump().items(),
+            dictlink=DictLinkMailRu().model_dump(),
         )
 
     async def mail_ru_get_token(self) -> JSONResponse:
@@ -30,8 +34,9 @@ class MailRu:
         )
 
     async def mail_ru_registration(self) -> JSONResponse:
-        model = DictGetDataTokenMailRu(access_token=self.access_token).model_dump()
-        user = await get_data_user_mail_ru(model)
+        user = await get_data_user_mail_ru(
+            DictGetDataTokenMailRu(access_token=self.access_token).model_dump()
+        )
         user_model = UserMailRu(
             first_name=user.get("first_name"),
             last_name=user.get("last_name"),

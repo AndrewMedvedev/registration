@@ -10,9 +10,10 @@ class GetUser:
         user_id: int,
     ) -> None:
         self.user_id = user_id
+        self.orm = ORMService()
 
     async def get(self) -> JSONResponse:
-        data = await ORMService().get_data(self.user_id)
+        data = await self.orm.get_data(self.user_id)
         data_dict = {
             "first_name": data.first_name,
             "last_name": data.last_name,

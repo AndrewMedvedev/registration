@@ -10,6 +10,9 @@ class Authorization:
 
     def __init__(self, model) -> None:
         self.model = model
+        self.orm = ORMService()
+        self.jwt_create = JWTCreate
+        self.hash = HashPass
 
     async def registration(self) -> JSONResponse:
         user_model = User(
@@ -17,12 +20,12 @@ class Authorization:
             last_name=self.model.last_name,
             phone_number=self.model.phone_number,
             email=self.model.email,
-            hash_password=HashPass.get_password_hash(self.model.hash_password),
+            hash_password=self.hash.get_password_hash(self.model.hash_password),
         )
-        user_id = await ORMService().add_user(user_model)
+        user_id = await self.orm.add_user(user_model)
         data = {"user_id": user_id}
-        access = await JWTCreate(data).create_access()
-        refresh = await JWTCreate(data).create_refresh()
+        access = await self.jwt_create(data).create_access()
+        refresh = await self.jwt_create(data).create_refresh()
         return JSONResponse(
             content={
                 "access": access,
@@ -31,16 +34,16 @@ class Authorization:
         )
 
     async def login_email(self) -> JSONResponse:
-        stmt = await ORMService().get_user_email(
+        stmt = await self.orm.get_user_email(
             email=self.model.email,
             hash_password=self.model.hash_password,
         )
-        if (stmt.email == self.model.email) and HashPass.verify_password(
+        if (stmt.email == self.model.email) and self.hash.verify_password(
             self.model.hash_password, stmt.hash_password
         ):
             data = {"user_id": stmt.id}
-            access = await JWTCreate(data).create_access()
-            refresh = await JWTCreate(data).create_refresh()
+            access = await self.jwt_create(data).create_access()
+            refresh = await self.jwt_create(data).create_refresh()
             return JSONResponse(
                 content={
                     "access": access,
@@ -49,16 +52,16 @@ class Authorization:
             )
 
     async def login_phone(self) -> JSONResponse:
-        stmt = await ORMService().get_user_phone_number(
+        stmt = await self.orm.get_user_phone_number(
             phone_number=self.model.phone_number,
             hash_password=self.model.hash_password,
         )
-        if (stmt.phone_number == self.model.phone_number) and HashPass.verify_password(
+        if (stmt.phone_number == self.model.phone_number) and self.hash.verify_password(
             self.model.hash_password, stmt.hash_password
         ):
             data = {"user_id": stmt.id}
-            access = await JWTCreate(data).create_access()
-            refresh = await JWTCreate(data).create_refresh()
+            access = await self.jwt_create(data).create_access()
+            refresh = await self.jwt_create(data).create_refresh()
             return JSONResponse(
                 content={
                     "access": access,

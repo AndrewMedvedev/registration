@@ -19,7 +19,7 @@ class Yandex:
     async def yandex_link() -> str:
         return await ReUse.link(
             setting=settings.YANDEX_AUTH_URL,
-            dictlink=DictLinkYandex().model_dump().items(),
+            dictlink=DictLinkYandex().model_dump(),
         )
 
     async def yandex_get_token(self) -> JSONResponse:
@@ -30,8 +30,9 @@ class Yandex:
         )
 
     async def yandex_registration(self) -> JSONResponse:
-        model = DictGetDataTokenYandex(oauth_token=self.access_token).model_dump()
-        user = await get_data_user_yandex(model)
+        user = await get_data_user_yandex(
+            DictGetDataTokenYandex(oauth_token=self.access_token).model_dump()
+        )
         user_model = UserYandex(
             first_name=user.get("first_name"),
             last_name=user.get("last_name"),

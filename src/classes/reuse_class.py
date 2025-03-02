@@ -8,23 +8,21 @@ class ReUse:
 
     def __init__(self, func=None):
         self.func = func
+        self.orm = ORMService()
+        self.jwt_create = JWTCreate
 
     @staticmethod
     async def link(setting: str, dictlink: dict) -> str:
-        url = f"{setting}?{'&'.join([f'{k}={v}' for k, v in dictlink])}"
+        url = f"{setting}?{'&'.join([f'{k}={v}' for k, v in dictlink.items()])}"
         return url
 
     async def get_token(self, dictgetdata: dict) -> JSONResponse:
-        model = dictgetdata
-        user = await self.func(model)
-        return JSONResponse(content=user)
+        return JSONResponse(content=await self.func(dictgetdata))
 
-    @staticmethod
-    async def registration(user_model) -> JSONResponse:
-        user_id = await ORMService().add_user(user_model)
-        data = {"user_id": user_id}
-        access = await JWTCreate(data).create_access()
-        refresh = await JWTCreate(data).create_refresh()
+    async def registration(self, user_model) -> JSONResponse:
+        data = {"user_id": await self.orm.add_user(user_model)}
+        access = await self.jwt_create(data).create_access()
+        refresh = await self.jwt_create(data).create_refresh()
         return JSONResponse(
             content={
                 "access": access,
@@ -37,13 +35,12 @@ class ReUse:
         dictgetdatatoken: dict,
         stmt_get,
     ) -> JSONResponse:
-        model = dictgetdatatoken
-        user = await self.func(model)
+        user = await self.func(dictgetdatatoken)
         stmt = await stmt_get(user.get("email"))
         if stmt.email == user.get("email").lower():
             data = {"user_id": stmt.id}
-            access = await JWTCreate(data).create_access()
-            refresh = await JWTCreate(data).create_refresh()
+            access = await self.jwt_create(data).create_access()
+            refresh = await self.jwt_create(data).create_refresh()
             return JSONResponse(
                 content={
                     "access": access,
