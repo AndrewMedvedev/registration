@@ -13,9 +13,10 @@ class Authorization:
         self.orm = ORMService()
         self.jwt_create = JWTCreate
         self.hash = HashPass
+        self.user = User
 
     async def registration(self) -> JSONResponse:
-        user_model = User(
+        user_model = self.user(
             first_name=self.model.first_name,
             last_name=self.model.last_name,
             phone_number=self.model.phone_number,

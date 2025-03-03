@@ -1,7 +1,7 @@
 from fastapi.responses import JSONResponse
 
 from src.classes.reuse_class import ReUse
-from src.config import Settings as settings
+from src.config import Settings
 from src.database import get_data_user_vk, get_token_user_vk
 from src.database.models import UserVk
 from src.database.schemas import DictGetDataTokenVK, DictGetDataVK, DictLinkVK
@@ -19,16 +19,19 @@ class VK:
         self.code = code
         self.device_id = device_id
         self.access_token = access_token
+        self.settings = Settings
+        self.reuse = ReUse
+        self.user = UserVk
 
-    @staticmethod
-    async def vk_link() -> str:
-        return await ReUse.link(
-            setting=settings.VK_AUTH_URL,
+
+    async def vk_link(self,) -> str:
+        return await self.reuse.link(
+            setting=self.settings.VK_AUTH_URL,
             dictlink=DictLinkVK().model_dump(),
         )
 
     async def vk_get_token(self) -> JSONResponse:
-        return await ReUse(
+        return await self.reuse(
             func=get_token_user_vk,
         ).get_token(
             dictgetdata=DictGetDataVK(
@@ -40,18 +43,18 @@ class VK:
         user = await get_data_user_vk(
             DictGetDataTokenVK(access_token=self.access_token).model_dump()
         )
-        user_model = UserVk(
+        user_model = self.user(
             first_name=user.get("first_name"),
             last_name=user.get("last_name"),
             id_vk=int(user.get("user_id")),
             email=user.get("email").lower(),
         )
-        return await ReUse.registration(
+        return await self.reuse().registration(
             user_model=user_model,
         )
 
     async def vk_login(self) -> JSONResponse:
-        return await ReUse(
+        return await self.reuse(
             func=get_data_user_vk,
         ).login(
             dictgetdatatoken=DictGetDataTokenVK(

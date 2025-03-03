@@ -1,7 +1,7 @@
 from fastapi.responses import JSONResponse
 
 from src.classes.reuse_class import ReUse
-from src.config import Settings as settings
+from src.config import Settings
 from src.database import get_data_user_mail_ru, get_token_user_mail_ru
 from src.database.models import UserMailRu
 from src.database.schemas import (DictGetDataMailRu, DictGetDataTokenMailRu,
@@ -18,16 +18,20 @@ class MailRu:
     ) -> None:
         self.code = code
         self.access_token = access_token
+        self.settings = Settings
+        self.reuse = ReUse
+        self.user = UserMailRu
 
-    @staticmethod
-    async def mail_ru_link() -> str:
-        return await ReUse.link(
-            setting=settings.MAIL_RU_AUTH_URL,
+    async def mail_ru_link(
+        self,
+    ) -> str:
+        return await self.reuse.link(
+            setting=self.settings.MAIL_RU_AUTH_URL,
             dictlink=DictLinkMailRu().model_dump(),
         )
 
     async def mail_ru_get_token(self) -> JSONResponse:
-        return await ReUse(
+        return await self.reuse(
             func=get_token_user_mail_ru,
         ).get_token(
             dictgetdata=DictGetDataMailRu(code=self.code).model_dump(),
@@ -37,17 +41,17 @@ class MailRu:
         user = await get_data_user_mail_ru(
             DictGetDataTokenMailRu(access_token=self.access_token).model_dump()
         )
-        user_model = UserMailRu(
+        user_model = self.user(
             first_name=user.get("first_name"),
             last_name=user.get("last_name"),
             id_mail_ru=user.get("id"),
             email=user.get("email"),
             birthday=user.get("birthday"),
         )
-        return await ReUse.registration(user_model=user_model)
+        return await self.reuse().registration(user_model=user_model)
 
     async def mail_ru_login(self) -> JSONResponse:
-        return await ReUse(
+        return await self.reuse(
             func=get_data_user_mail_ru,
         ).login(
             dictgetdatatoken=DictGetDataTokenMailRu(
