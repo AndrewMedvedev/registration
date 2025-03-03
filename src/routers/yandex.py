@@ -12,7 +12,7 @@ router_yandex = APIRouter(prefix="/api/v1/yandex", tags=["yandex"])
 )
 async def yandex_link() -> str | JSONResponse:
     try:
-        return await Yandex.yandex_link()
+        return await Yandex().yandex_link()
     except Exception as e:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}

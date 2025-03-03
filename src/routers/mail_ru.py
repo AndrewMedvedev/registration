@@ -12,7 +12,7 @@ router_mail_ru = APIRouter(prefix="/api/v1/mail.ru", tags=["mail.ru"])
 )
 async def mail_ru_link() -> str | JSONResponse:
     try:
-        return await MailRu.mail_ru_link()
+        return await MailRu().mail_ru_link()
     except Exception as e:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}

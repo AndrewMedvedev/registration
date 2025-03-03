@@ -12,7 +12,7 @@ router_vk = APIRouter(prefix="/api/v1/vk", tags=["vk"])
 )
 async def vk_link() -> str | JSONResponse:
     try:
-        return await VK.vk_link()
+        return await VK().vk_link()
     except Exception as e:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
