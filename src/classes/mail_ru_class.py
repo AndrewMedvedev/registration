@@ -4,13 +4,10 @@ from src.classes.reuse_class import ReUse
 from src.config import Settings
 from src.database import get_data_user_mail_ru, get_token_user_mail_ru
 from src.database.models import UserMailRu
-from src.database.schemas import (
-    DictGetDataMailRu,
-    DictGetDataTokenMailRu,
-    DictLinkMailRu,
-)
-from src.services.orm import ORMService
+from src.database.schemas import (DictGetDataMailRu, DictGetDataTokenMailRu,
+                                  DictLinkMailRu)
 from src.interfaces import OtherAuthorizationsBase
+from src.services.orm import ORMService
 
 
 class MailRu(OtherAuthorizationsBase):

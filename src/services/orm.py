@@ -1,8 +1,8 @@
 from sqlalchemy import select
 
 from src.database.models import User, UserMailRu, UserVk, UserYandex
-from src.services.db import DatabaseSessionService
 from src.interfaces import CRUDBase
+from src.services.db import DatabaseSessionService
 
 
 class ORMService(DatabaseSessionService, CRUDBase):

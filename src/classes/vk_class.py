@@ -5,8 +5,8 @@ from src.config import Settings
 from src.database import get_data_user_vk, get_token_user_vk
 from src.database.models import UserVk
 from src.database.schemas import DictGetDataTokenVK, DictGetDataVK, DictLinkVK
-from src.services.orm import ORMService
 from src.interfaces import OtherAuthorizationsBase
+from src.services.orm import ORMService
 
 
 class VK(OtherAuthorizationsBase):

@@ -4,13 +4,10 @@ from src.classes.reuse_class import ReUse
 from src.config import Settings
 from src.database import get_data_user_yandex, get_token_user_yandex
 from src.database.models import UserYandex
-from src.database.schemas import (
-    DictGetDataTokenYandex,
-    DictGetDataYandex,
-    DictLinkYandex,
-)
-from src.services.orm import ORMService
+from src.database.schemas import (DictGetDataTokenYandex, DictGetDataYandex,
+                                  DictLinkYandex)
 from src.interfaces import OtherAuthorizationsBase
+from src.services.orm import ORMService
 
 
 class Yandex(OtherAuthorizationsBase):

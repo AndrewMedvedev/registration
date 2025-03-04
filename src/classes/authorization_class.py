@@ -3,8 +3,8 @@ from fastapi.responses import JSONResponse
 from src.classes.jwt_classes import JWTCreate
 from src.database import HashPass
 from src.database.models import User
-from src.services.orm import ORMService
 from src.interfaces import AuthorizationBase
+from src.services.orm import ORMService
 
 
 class Authorization(AuthorizationBase):
