@@ -4,12 +4,16 @@ from src.classes.reuse_class import ReUse
 from src.config import Settings
 from src.database import get_data_user_yandex, get_token_user_yandex
 from src.database.models import UserYandex
-from src.database.schemas import (DictGetDataTokenYandex, DictGetDataYandex,
-                                  DictLinkYandex)
+from src.database.schemas import (
+    DictGetDataTokenYandex,
+    DictGetDataYandex,
+    DictLinkYandex,
+)
 from src.services.orm import ORMService
+from src.interfaces import OtherAuthorizationsBase
 
 
-class Yandex:
+class Yandex(OtherAuthorizationsBase):
 
     def __init__(self, code: str = None, access_token: str = None) -> None:
         self.code = code
@@ -18,7 +22,7 @@ class Yandex:
         self.reuse = ReUse
         self.user = UserYandex
 
-    async def yandex_link(
+    async def link(
         self,
     ) -> str:
         return await self.reuse.link(
@@ -26,14 +30,14 @@ class Yandex:
             dictlink=DictLinkYandex().model_dump(),
         )
 
-    async def yandex_get_token(self) -> JSONResponse:
+    async def get_token(self) -> JSONResponse:
         return await self.reuse(
             func=get_token_user_yandex,
         ).get_token(
             dictgetdata=DictGetDataYandex(code=self.code).model_dump(),
         )
 
-    async def yandex_registration(self) -> JSONResponse:
+    async def registration(self) -> JSONResponse:
         user = await get_data_user_yandex(
             DictGetDataTokenYandex(oauth_token=self.access_token).model_dump()
         )
@@ -48,7 +52,7 @@ class Yandex:
             user_model=user_model,
         )
 
-    async def yandex_login(self) -> JSONResponse:
+    async def login(self) -> JSONResponse:
         return await self.reuse(
             func=get_data_user_yandex,
         ).login(

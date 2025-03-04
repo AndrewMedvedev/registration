@@ -12,7 +12,7 @@ router_mail_ru = APIRouter(prefix="/api/v1/mail.ru", tags=["mail.ru"])
 )
 async def mail_ru_link() -> str | JSONResponse:
     try:
-        return await MailRu().mail_ru_link()
+        return await MailRu().link()
     except Exception as e:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
@@ -25,7 +25,7 @@ async def mail_ru_link() -> str | JSONResponse:
 )
 async def mail_ru_get_token(code: str) -> JSONResponse:
     try:
-        return await MailRu(code=code).mail_ru_get_token()
+        return await MailRu(code=code).get_token()
     except Exception as e:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
@@ -38,7 +38,7 @@ async def mail_ru_get_token(code: str) -> JSONResponse:
 )
 async def mail_ru_registration(access_token: str) -> JSONResponse:
     try:
-        return await MailRu(access_token=access_token).mail_ru_registration()
+        return await MailRu(access_token=access_token).registration()
     except Exception as e:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
@@ -51,7 +51,7 @@ async def mail_ru_registration(access_token: str) -> JSONResponse:
 )
 async def mail_ru_login(access_token: str) -> JSONResponse:
     try:
-        return await MailRu(access_token=access_token).mail_ru_login()
+        return await MailRu(access_token=access_token).login()
     except Exception as e:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}

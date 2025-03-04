@@ -2,9 +2,10 @@ from fastapi.responses import JSONResponse
 
 from src.classes.jwt_classes import JWTCreate
 from src.services.orm import ORMService
+from src.interfaces import ReUseBase
 
 
-class ReUse:
+class ReUse(ReUseBase):
 
     def __init__(self, func=None):
         self.func = func

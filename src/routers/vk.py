@@ -12,7 +12,7 @@ router_vk = APIRouter(prefix="/api/v1/vk", tags=["vk"])
 )
 async def vk_link() -> str | JSONResponse:
     try:
-        return await VK().vk_link()
+        return await VK().link()
     except Exception as e:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
@@ -31,7 +31,7 @@ async def vk_get_token(
         return await VK(
             code=code,
             device_id=device_id,
-        ).vk_get_token()
+        ).get_token()
     except Exception as e:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
@@ -44,7 +44,7 @@ async def vk_get_token(
 )
 async def vk_registration(access_token: str) -> JSONResponse:
     try:
-        return await VK(access_token=access_token).vk_registration()
+        return await VK(access_token=access_token).registration()
     except Exception as e:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
@@ -57,7 +57,7 @@ async def vk_registration(access_token: str) -> JSONResponse:
 )
 async def vk_login(access_token: str) -> JSONResponse:
     try:
-        return await VK(access_token=access_token).vk_login()
+        return await VK(access_token=access_token).login()
     except Exception as e:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}

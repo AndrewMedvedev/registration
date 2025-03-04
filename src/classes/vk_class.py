@@ -6,9 +6,10 @@ from src.database import get_data_user_vk, get_token_user_vk
 from src.database.models import UserVk
 from src.database.schemas import DictGetDataTokenVK, DictGetDataVK, DictLinkVK
 from src.services.orm import ORMService
+from src.interfaces import OtherAuthorizationsBase
 
 
-class VK:
+class VK(OtherAuthorizationsBase):
 
     def __init__(
         self,
@@ -23,14 +24,15 @@ class VK:
         self.reuse = ReUse
         self.user = UserVk
 
-
-    async def vk_link(self,) -> str:
+    async def link(
+        self,
+    ) -> str:
         return await self.reuse.link(
             setting=self.settings.VK_AUTH_URL,
             dictlink=DictLinkVK().model_dump(),
         )
 
-    async def vk_get_token(self) -> JSONResponse:
+    async def get_token(self) -> JSONResponse:
         return await self.reuse(
             func=get_token_user_vk,
         ).get_token(
@@ -39,7 +41,7 @@ class VK:
             ).model_dump(),
         )
 
-    async def vk_registration(self) -> JSONResponse:
+    async def registration(self) -> JSONResponse:
         user = await get_data_user_vk(
             DictGetDataTokenVK(access_token=self.access_token).model_dump()
         )
@@ -53,7 +55,7 @@ class VK:
             user_model=user_model,
         )
 
-    async def vk_login(self) -> JSONResponse:
+    async def login(self) -> JSONResponse:
         return await self.reuse(
             func=get_data_user_vk,
         ).login(

@@ -4,9 +4,10 @@ from src.classes.jwt_classes import JWTCreate
 from src.database import HashPass
 from src.database.models import User
 from src.services.orm import ORMService
+from src.interfaces import AuthorizationBase
 
 
-class Authorization:
+class Authorization(AuthorizationBase):
 
     def __init__(self, model) -> None:
         self.model = model

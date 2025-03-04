@@ -4,12 +4,16 @@ from src.classes.reuse_class import ReUse
 from src.config import Settings
 from src.database import get_data_user_mail_ru, get_token_user_mail_ru
 from src.database.models import UserMailRu
-from src.database.schemas import (DictGetDataMailRu, DictGetDataTokenMailRu,
-                                  DictLinkMailRu)
+from src.database.schemas import (
+    DictGetDataMailRu,
+    DictGetDataTokenMailRu,
+    DictLinkMailRu,
+)
 from src.services.orm import ORMService
+from src.interfaces import OtherAuthorizationsBase
 
 
-class MailRu:
+class MailRu(OtherAuthorizationsBase):
 
     def __init__(
         self,
@@ -22,7 +26,7 @@ class MailRu:
         self.reuse = ReUse
         self.user = UserMailRu
 
-    async def mail_ru_link(
+    async def link(
         self,
     ) -> str:
         return await self.reuse.link(
@@ -30,14 +34,14 @@ class MailRu:
             dictlink=DictLinkMailRu().model_dump(),
         )
 
-    async def mail_ru_get_token(self) -> JSONResponse:
+    async def get_token(self) -> JSONResponse:
         return await self.reuse(
             func=get_token_user_mail_ru,
         ).get_token(
             dictgetdata=DictGetDataMailRu(code=self.code).model_dump(),
         )
 
-    async def mail_ru_registration(self) -> JSONResponse:
+    async def registration(self) -> JSONResponse:
         user = await get_data_user_mail_ru(
             DictGetDataTokenMailRu(access_token=self.access_token).model_dump()
         )
@@ -50,7 +54,7 @@ class MailRu:
         )
         return await self.reuse().registration(user_model=user_model)
 
-    async def mail_ru_login(self) -> JSONResponse:
+    async def login(self) -> JSONResponse:
         return await self.reuse(
             func=get_data_user_mail_ru,
         ).login(

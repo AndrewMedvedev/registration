@@ -2,14 +2,15 @@ from sqlalchemy import select
 
 from src.database.models import User, UserMailRu, UserVk, UserYandex
 from src.services.db import DatabaseSessionService
+from src.interfaces import CRUDBase
 
 
-class ORMService(DatabaseSessionService):
+class ORMService(DatabaseSessionService, CRUDBase):
     def __init__(self) -> None:
         super().__init__()
         self.init()
 
-    async def add_user(self, user) -> dict:
+    async def add_user(self, user) -> int:
         async with self.session() as session:
             session.add(user)
             await session.commit()
@@ -71,12 +72,9 @@ class ORMService(DatabaseSessionService):
             except Exception as _ex:
                 print(_ex)
 
-
     async def get_data(self, user_id: int) -> dict:
         async with self.session() as session:
-            user = await session.execute(
-                select(User).where(User.id == user_id)
-            )
+            user = await session.execute(select(User).where(User.id == user_id))
             try:
                 return user.scalar()
             except Exception as _ex:
