@@ -8,6 +8,8 @@ from src.config import Settings as settings
 class DictLinkYandex(BaseModel):
     response_type: Literal["code"] = "code"
     client_id: str = settings.YANDEX_APP_ID
+    code_challenge: str
+    code_challenge_method: str = "S256"
 
 
 class DictGetDataYandex(BaseModel):
@@ -15,6 +17,7 @@ class DictGetDataYandex(BaseModel):
     code: str
     client_id: str = settings.YANDEX_APP_ID
     client_secret: str = settings.YANDEX_APP_SECRET
+    code_verifier: str
 
 
 class DictGetDataTokenYandex(BaseModel):

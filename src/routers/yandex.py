@@ -20,12 +20,12 @@ async def yandex_link() -> str | JSONResponse:
 
 
 @router_yandex.get(
-    "/get/token/{code}",
+    "/get/token/{code}/{code_verifier}",
     response_model=None,
 )
-async def yandex_get_token(code: str) -> JSONResponse:
+async def yandex_get_token(code: str, code_verifier: str) -> JSONResponse:
     try:
-        return await Yandex(code=code).get_token()
+        return await Yandex(code=code).get_token(code_verifier=code_verifier)
     except Exception as e:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}

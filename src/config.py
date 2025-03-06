@@ -22,9 +22,6 @@ class Settings:
     VK_AUTH_URL: str = config["VK_AUTH_URL"]
     VK_TOKEN_URL: str = config["VK_TOKEN_URL"]
     VK_API_URL: str = config["VK_API_URL"]
-    VK_CODE_VERIFIER: str = config["VK_CODE_VERIFIER"]
-    VK_CODE_CHALLENGE: str = config["VK_CODE_CHALLENGE"]
-    VK_CODE_CHALLENGE_METHOD: str = config["VK_CODE_CHALLENGE_METHOD"]
     STATE_VK: str = config["STATE_VK"]
     CLIENT_SECRET: str = config["CLIENT_SECRET"]
 
@@ -45,8 +42,6 @@ class Settings:
     YANDEX_TOKEN_URL: str = config["YANDEX_TOKEN_URL"]
     YANDEX_API_URL: str = config["YANDEX_API_URL"]
     STATE_YANDEX: str = config["STATE_YANDEX"]
-    YANDEX_CODE_VERIFIER: str = config["YANDEX_CODE_VERIFIER"]
-    YANDEX_CODE_CHALLENGE: str = config["YANDEX_CODE_CHALLENGE"]
     YANDEX_SCOPE: str = config["YANDEX_SCOPE"]
 
 

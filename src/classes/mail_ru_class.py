@@ -1,3 +1,5 @@
+import base64
+import os
 from fastapi.responses import JSONResponse
 
 from src.classes.reuse_class import ReUse
@@ -26,9 +28,11 @@ class MailRu(OtherAuthorizationsBase):
     async def link(
         self,
     ) -> str:
+        state = base64.urlsafe_b64encode(os.urandom(64)).rstrip(b"=").decode("utf-8")
         return await self.reuse.link(
             setting=self.settings.MAIL_RU_AUTH_URL,
-            dictlink=DictLinkMailRu().model_dump(),
+            dictlink=DictLinkMailRu(state=state).model_dump(),
+            code_verifier="."
         )
 
     async def get_token(self) -> JSONResponse:

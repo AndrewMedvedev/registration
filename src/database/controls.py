@@ -79,3 +79,4 @@ async def get_data_user_mail_ru(params: dict) -> dict:
         ) as data:
             user_data = await data.json()
             return user_data
+

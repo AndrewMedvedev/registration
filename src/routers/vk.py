@@ -10,7 +10,7 @@ router_vk = APIRouter(prefix="/api/v1/vk", tags=["vk"])
     "/link",
     response_model=None,
 )
-async def vk_link() -> str | JSONResponse:
+async def vk_link() -> dict | JSONResponse:
     try:
         return await VK().link()
     except Exception as e:
@@ -20,18 +20,19 @@ async def vk_link() -> str | JSONResponse:
 
 
 @router_vk.get(
-    "/get/token/{code}/{device_id}",
+    "/get/token/{code}/{device_id}/{code_verifier}",
     response_model=None,
 )
 async def vk_get_token(
     code: str,
     device_id: str,
+    code_verifier: str,
 ) -> JSONResponse:
     try:
         return await VK(
             code=code,
             device_id=device_id,
-        ).get_token()
+        ).get_token(code_verifier=code_verifier)
     except Exception as e:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}

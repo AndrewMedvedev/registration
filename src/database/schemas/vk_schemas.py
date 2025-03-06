@@ -11,14 +11,14 @@ class DictLinkVK(BaseModel):
     scope: Literal["email"] = "email"
     redirect_uri: str = settings.VK_REDIRECT_URI
     state: str = settings.STATE_VK
-    code_challenge: str = settings.VK_CODE_CHALLENGE
-    code_challenge_method: str = settings.VK_CODE_CHALLENGE_METHOD
+    code_challenge: str
+    code_challenge_method: str = "s256"
 
 
 class DictGetDataVK(BaseModel):
     grant_type: Literal["authorization_code"] = "authorization_code"
     code: str
-    code_verifier: str = settings.VK_CODE_VERIFIER
+    code_verifier: str
     client_id: int = settings.VK_APP_ID
     device_id: str
     redirect_uri: str = settings.VK_REDIRECT_URI

@@ -13,9 +13,9 @@ class ReUse(ReUseBase):
         self.jwt_create = JWTCreate
 
     @staticmethod
-    async def link(setting: str, dictlink: dict) -> str:
+    async def link(setting: str, dictlink: dict, code_verifier: str) -> dict:
         url = f"{setting}?{'&'.join([f'{k}={v}' for k, v in dictlink.items()])}"
-        return url
+        return {"url": url, "code_verifier": code_verifier}
 
     async def get_token(self, dictgetdata: dict) -> JSONResponse:
         return JSONResponse(content=await self.func(dictgetdata))
@@ -35,10 +35,11 @@ class ReUse(ReUseBase):
         self,
         dictgetdatatoken: dict,
         stmt_get,
+        field: str,
     ) -> JSONResponse:
         user = await self.func(dictgetdatatoken)
-        stmt = await stmt_get(user.get("email"))
-        if stmt.email == user.get("email").lower():
+        stmt = await stmt_get(user.get(field).lower())
+        if stmt.email == user.get(field).lower():
             data = {"user_id": stmt.id}
             access = await self.jwt_create(data).create_access()
             refresh = await self.jwt_create(data).create_refresh()
