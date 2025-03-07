@@ -2,6 +2,7 @@ from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
 
 from src.classes.yandex_class import Yandex
+from src.database.schemas import RegistrationYandex
 
 router_yandex = APIRouter(prefix="/api/v1/yandex", tags=["yandex"])
 
@@ -33,12 +34,12 @@ async def yandex_get_token(code: str, code_verifier: str) -> JSONResponse:
 
 
 @router_yandex.post(
-    "/registration/{access_token}",
-    response_model=None,
+    "/registration/",
+    response_model=RegistrationYandex,
 )
-async def yandex_registration(access_token: str) -> JSONResponse:
+async def yandex_registration(model: RegistrationYandex) -> JSONResponse:
     try:
-        return await Yandex(access_token=access_token).registration()
+        return await Yandex().registration(model=model)
     except Exception as e:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}

@@ -23,3 +23,12 @@ class DictGetDataYandex(BaseModel):
 class DictGetDataTokenYandex(BaseModel):
     oauth_token: str
     format: Literal["json"] = "json"
+
+
+class RegistrationYandex(BaseModel):
+    user_id: int
+    first_name: str
+    last_name: str
+    id_yandex: int
+    login: str
+    email: str

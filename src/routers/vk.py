@@ -2,6 +2,7 @@ from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
 
 from src.classes.vk_class import VK
+from src.database.schemas import RegistrationVK
 
 router_vk = APIRouter(prefix="/api/v1/vk", tags=["vk"])
 
@@ -40,12 +41,12 @@ async def vk_get_token(
 
 
 @router_vk.post(
-    "/registration/{access_token}",
-    response_model=None,
+    "/registration/",
+    response_model=RegistrationVK,
 )
-async def vk_registration(access_token: str) -> JSONResponse:
+async def vk_registration(model: RegistrationVK) -> JSONResponse:
     try:
-        return await VK(access_token=access_token).registration()
+        return await VK().registration(model=model)
     except Exception as e:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}

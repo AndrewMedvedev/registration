@@ -1,17 +1,15 @@
 import base64
 import hashlib
 import os
+
 from fastapi.responses import JSONResponse
 
 from src.classes.reuse_class import ReUse
 from src.config import Settings
 from src.database import get_data_user_yandex, get_token_user_yandex
 from src.database.models import UserYandex
-from src.database.schemas import (
-    DictGetDataTokenYandex,
-    DictGetDataYandex,
-    DictLinkYandex,
-)
+from src.database.schemas import (DictGetDataTokenYandex, DictGetDataYandex,
+                                  DictLinkYandex, RegistrationYandex)
 from src.interfaces import OtherAuthorizationsBase
 from src.services.orm import ORMService
 
@@ -53,16 +51,14 @@ class Yandex(OtherAuthorizationsBase):
             ).model_dump(),
         )
 
-    async def registration(self) -> JSONResponse:
-        user = await get_data_user_yandex(
-            DictGetDataTokenYandex(oauth_token=self.access_token).model_dump()
-        )
+    async def registration(self, model: RegistrationYandex) -> JSONResponse:
         user_model = self.user(
-            first_name=user.get("first_name"),
-            last_name=user.get("last_name"),
-            id_yandex=user.get("id"),
-            login=user.get("login"),
-            email=user.get("default_email"),
+            user_id=model.user_id,
+            first_name=model.first_name,
+            last_name=model.last_name,
+            id_yandex=model.id_yandex,
+            login=model.login,
+            email=model.email,
         )
         return await self.reuse().registration(
             user_model=user_model,

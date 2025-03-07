@@ -28,3 +28,11 @@ class DictGetDataVK(BaseModel):
 class DictGetDataTokenVK(BaseModel):
     access_token: str
     client_id: int = settings.VK_APP_ID
+
+
+class RegistrationVK(BaseModel):
+    user_id: int
+    first_name: str
+    last_name: str
+    id_vk: int
+    email: str

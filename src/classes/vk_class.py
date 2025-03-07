@@ -1,13 +1,15 @@
 import base64
 import hashlib
 import os
+
 from fastapi.responses import JSONResponse
 
 from src.classes.reuse_class import ReUse
 from src.config import Settings
 from src.database import get_data_user_vk, get_token_user_vk
 from src.database.models import UserVk
-from src.database.schemas import DictGetDataTokenVK, DictGetDataVK, DictLinkVK
+from src.database.schemas import (DictGetDataTokenVK, DictGetDataVK,
+                                  DictLinkVK, RegistrationVK)
 from src.interfaces import OtherAuthorizationsBase
 from src.services.orm import ORMService
 
@@ -57,16 +59,13 @@ class VK(OtherAuthorizationsBase):
             ).model_dump(),
         )
 
-    async def registration(self) -> JSONResponse:
-        user = await get_data_user_vk(
-            DictGetDataTokenVK(access_token=self.access_token).model_dump()
-        )
-        print(user)
+    async def registration(self, model: RegistrationVK) -> JSONResponse:
         user_model = self.user(
-            first_name=user.get("first_name"),
-            last_name=user.get("last_name"),
-            id_vk=int(user.get("user_id")),
-            email=user.get("email").lower(),
+            user_id=model.user_id,
+            first_name=model.first_name,
+            last_name=model.last_name,
+            id_vk=model.id_vk,
+            email=model.email.lower(),
         )
         return await self.reuse().registration(
             user_model=user_model,

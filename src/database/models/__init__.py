@@ -5,7 +5,5 @@ __all__ = (
     "UserYandex",
 )
 
-from src.database.models.mail_ru_model import UserMailRu
-from src.database.models.user_model import User
-from src.database.models.vk_model import UserVk
-from src.database.models.yandex_model import UserYandex
+from src.database.models.relationship_models import (User, UserMailRu, UserVk,
+                                                     UserYandex)

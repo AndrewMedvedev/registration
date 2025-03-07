@@ -21,15 +21,8 @@ class ReUse(ReUseBase):
         return JSONResponse(content=await self.func(dictgetdata))
 
     async def registration(self, user_model) -> JSONResponse:
-        data = {"user_id": await self.orm.add_user(user_model)}
-        access = await self.jwt_create(data).create_access()
-        refresh = await self.jwt_create(data).create_refresh()
-        return JSONResponse(
-            content={
-                "access": access,
-                "refresh": refresh,
-            }
-        )
+        await self.orm.add_user(user_model)
+        return JSONResponse(content={"message": 200})
 
     async def login(
         self,
@@ -40,7 +33,7 @@ class ReUse(ReUseBase):
         user = await self.func(dictgetdatatoken)
         stmt = await stmt_get(user.get(field).lower())
         if stmt.email == user.get(field).lower():
-            data = {"user_id": stmt.id}
+            data = {"user_id": stmt.user_id}
             access = await self.jwt_create(data).create_access()
             refresh = await self.jwt_create(data).create_refresh()
             return JSONResponse(
