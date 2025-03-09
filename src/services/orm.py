@@ -11,11 +11,14 @@ class ORMService(DatabaseSessionService, CRUDBase):
         self.init()
 
     async def add_user(self, user) -> int:
-        async with self.session() as session:
-            session.add(user)
-            await session.commit()
-            await session.refresh(user)
-        return user.id
+        try:
+            async with self.session() as session:
+                session.add(user)
+                await session.commit()
+                await session.refresh(user)
+            return user.id
+        except Exception as e:
+            return "Вы уже зарегестрированны"
 
     async def get_user_email(self, email: str, hash_password: str) -> dict:
         async with self.session() as session:

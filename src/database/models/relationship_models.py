@@ -40,7 +40,10 @@ class User(Base):
 
 class UserVk(Base):
     id: Mapped[int_pk]
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id"),
+        unique=True,
+    )
     first_name: Mapped[str_nullable]
     last_name: Mapped[str_nullable]
     id_vk: Mapped[int_null]
@@ -64,7 +67,10 @@ class UserVk(Base):
 
 class UserYandex(Base):
     id: Mapped[int_pk]
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id"),
+        unique=True,
+    )
     first_name: Mapped[str_nullable]
     last_name: Mapped[str_nullable]
     id_yandex: Mapped[str_uniq]
@@ -89,7 +95,10 @@ class UserYandex(Base):
 
 class UserMailRu(Base):
     id: Mapped[int_pk]
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id"),
+        unique=True,
+    )
     first_name: Mapped[str_nullable]
     last_name: Mapped[str_nullable]
     id_mail_ru: Mapped[str_uniq]

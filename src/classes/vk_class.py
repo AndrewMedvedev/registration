@@ -33,7 +33,7 @@ class VK(OtherAuthorizationsBase):
         self,
     ) -> str:
         code_verifier = (
-            base64.urlsafe_b64encode(os.urandom(128)).rstrip(b"=").decode("utf-8")
+            base64.urlsafe_b64encode(os.urandom(64)).rstrip(b"=").decode("utf-8")
         )
         code_challenge = (
             base64.urlsafe_b64encode(

@@ -29,6 +29,6 @@ class RegistrationYandex(BaseModel):
     user_id: int
     first_name: str
     last_name: str
-    id_yandex: int
+    id_yandex: str
     login: str
     email: str
