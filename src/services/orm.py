@@ -1,4 +1,6 @@
+
 from sqlalchemy import select
+
 
 from src.database.models import User, UserMailRu, UserVk, UserYandex
 from src.interfaces import CRUDBase
@@ -82,3 +84,13 @@ class ORMService(DatabaseSessionService, CRUDBase):
                 return user.scalar()
             except Exception as _ex:
                 print(_ex)
+
+    async def get_number(self, phone_number: str) -> bool:
+        async with self.session() as session:
+            user = await session.execute(select(User).where(User.phone_number == phone_number))
+            try:
+                if user.scalar() is not None:
+                    return True
+                return False
+            except Exception as e:
+                return False 
