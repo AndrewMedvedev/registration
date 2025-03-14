@@ -2,35 +2,28 @@ from abc import ABC, abstractmethod
 
 from fastapi.responses import JSONResponse
 
+from src.database.schemas import GetUserEmail, GetUserPhoneNumber, UserModel
 
-class ReUseBase(ABC):
 
-    @staticmethod
-    @abstractmethod
-    async def link(
-        setting: str,
-        dictlink: dict,
-    ) -> str:
-        raise NotImplementedError
-
-    @abstractmethod
-    async def get_token(
-        self,
-        dictgetdata: dict,
-    ) -> JSONResponse:
-        raise NotImplementedError
+class BasicAuthorizationBase(ABC):
 
     @abstractmethod
     async def registration(
         self,
-        user_model,
+        model: UserModel,
     ) -> JSONResponse:
         raise NotImplementedError
 
     @abstractmethod
-    async def login(
+    async def login_email(
         self,
-        dictgetdatatoken: dict,
-        stmt_get,
+        model: GetUserEmail,
+    ) -> JSONResponse:
+        raise NotImplementedError
+
+    @abstractmethod
+    async def login_phone(
+        self,
+        model: GetUserPhoneNumber,
     ) -> JSONResponse:
         raise NotImplementedError

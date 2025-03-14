@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
 from src.classes.yandex_class import Yandex
@@ -11,13 +11,8 @@ router_yandex = APIRouter(prefix="/api/v1/yandex", tags=["yandex"])
     "/link",
     response_model=None,
 )
-async def yandex_link() -> str | JSONResponse:
-    try:
-        return await Yandex().link()
-    except Exception as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
-        )
+async def yandex_link() -> JSONResponse:
+    return await Yandex().link()
 
 
 @router_yandex.get(
@@ -25,12 +20,10 @@ async def yandex_link() -> str | JSONResponse:
     response_model=None,
 )
 async def yandex_get_token(code: str, code_verifier: str) -> JSONResponse:
-    try:
-        return await Yandex(code=code).get_token(code_verifier=code_verifier)
-    except Exception as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
-        )
+    return await Yandex().get_token(
+        code=code,
+        code_verifier=code_verifier,
+    )
 
 
 @router_yandex.post(
@@ -38,12 +31,7 @@ async def yandex_get_token(code: str, code_verifier: str) -> JSONResponse:
     response_model=RegistrationYandex,
 )
 async def yandex_registration(model: RegistrationYandex) -> JSONResponse:
-    try:
-        return await Yandex().registration(model=model)
-    except Exception as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
-        )
+    return await Yandex().registration(model=model)
 
 
 @router_yandex.post(
@@ -51,9 +39,4 @@ async def yandex_registration(model: RegistrationYandex) -> JSONResponse:
     response_model=None,
 )
 async def yandex_login(access_token: str) -> JSONResponse:
-    try:
-        return await Yandex(access_token=access_token).login()
-    except Exception as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
-        )
+    return await Yandex().login(access_token=access_token)

@@ -1,11 +1,13 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
 from src.classes.authorization_class import Authorization
 from src.database.schemas.auth_schemas import (GetUserEmail,
                                                GetUserPhoneNumber, UserModel)
 
-router_authorization = APIRouter(prefix="/api/v1/authorizations", tags=["authorization"])
+router_authorization = APIRouter(
+    prefix="/api/v1/authorizations", tags=["authorization"]
+)
 
 
 @router_authorization.post(
@@ -13,12 +15,7 @@ router_authorization = APIRouter(prefix="/api/v1/authorizations", tags=["authori
     response_model=None,
 )
 async def registration(user: UserModel) -> JSONResponse:
-    try:
-        return await Authorization(model=user).registration()
-    except Exception as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
-        )
+    return await Authorization().registration(model=user)
 
 
 @router_authorization.post(
@@ -26,12 +23,8 @@ async def registration(user: UserModel) -> JSONResponse:
     response_model=None,
 )
 async def login(user: GetUserEmail) -> JSONResponse:
-    try:
-        return await Authorization(model=user).login_email()
-    except Exception as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
-        )
+    return await Authorization().login_email(model=user)
+        
 
 
 @router_authorization.post(
@@ -39,9 +32,5 @@ async def login(user: GetUserEmail) -> JSONResponse:
     response_model=None,
 )
 async def login_phone(user: GetUserPhoneNumber) -> JSONResponse:
-    try:
-        return await Authorization(model=user).login_phone()
-    except Exception as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
-        )
+    return await Authorization().login_phone(model=user)
+    

@@ -1,8 +1,7 @@
-
 from sqlalchemy import select
 
-
 from src.database.models import User, UserMailRu, UserVk, UserYandex
+from src.errors import DataBaseError
 from src.interfaces import CRUDBase
 from src.services.db import DatabaseSessionService
 
@@ -19,78 +18,72 @@ class ORMService(DatabaseSessionService, CRUDBase):
                 await session.commit()
                 await session.refresh(user)
             return user.id
-        except Exception as e:
-            return "Вы уже зарегестрированны"
+        except DataBaseError:
+            raise DataBaseError("add_user")
 
-    async def get_user_email(self, email: str, hash_password: str) -> dict:
+    async def get_user_email(
+        self,
+        email: str,
+    ) -> dict:
         async with self.session() as session:
-            user = await session.execute(
-                select(User).where(
-                    User.email == email and User.hash_password == hash_password
-                )
-            )
-            try:
-                return user.scalar()
-            except Exception as _ex:
-                print(_ex)
+            user = await session.execute(select(User).where(User.email == email))
+            if (data := user.scalar()) is not None:
+                return data
+            raise DataBaseError("get_user_email")
 
     async def get_user_phone_number(
-        self, phone_number: str, hash_password: str
+        self,
+        phone_number: str,
     ) -> dict:
         async with self.session() as session:
             user = await session.execute(
-                select(User).where(
-                    User.phone_number == phone_number
-                    and User.hash_password == hash_password
-                )
+                select(User).where(User.phone_number == phone_number)
             )
-        try:
-            return user.scalar()
-        except Exception as _ex:
-            print(_ex)
+            if (data := user.scalar()) is not None:
+                return data
+            raise DataBaseError("get_user_phone_number")
+        
 
     async def get_user_email_vk(self, email: str) -> dict:
         async with self.session() as session:
             user = await session.execute(select(UserVk).where(UserVk.email == email))
-            try:
-                return user.scalar()
-            except Exception as _ex:
-                print(_ex)
+            if (data := user.scalar()) is not None:
+                return data
+            raise DataBaseError("get_user_email_vk")
 
     async def get_user_email_mail_ru(self, email: str) -> dict:
         async with self.session() as session:
             user = await session.execute(
                 select(UserMailRu).where(UserMailRu.email == email)
             )
-            try:
-                return user.scalar()
-            except Exception as _ex:
-                print(_ex)
+            if (data := user.scalar()) is not None:
+                return data
+            raise DataBaseError("get_user_email_mail_ru")
 
     async def get_user_email_yandex(self, email: str) -> dict:
         async with self.session() as session:
             user = await session.execute(
                 select(UserYandex).where(UserYandex.email == email)
             )
-            try:
-                return user.scalar()
-            except Exception as _ex:
-                print(_ex)
+            if (data := user.scalar()) is not None:
+                return data
+            raise DataBaseError("get_user_email_yandex")
 
     async def get_data(self, user_id: int) -> dict:
         async with self.session() as session:
             user = await session.execute(select(User).where(User.id == user_id))
-            try:
-                return user.scalar()
-            except Exception as _ex:
-                print(_ex)
+            if (data := user.scalar()) is not None:
+                return data
+            raise DataBaseError("get_data")
 
     async def get_number(self, phone_number: str) -> bool:
         async with self.session() as session:
-            user = await session.execute(select(User).where(User.phone_number == phone_number))
+            user = await session.execute(
+                select(User).where(User.phone_number == phone_number)
+            )
             try:
                 if user.scalar() is not None:
                     return True
                 return False
-            except Exception as e:
-                return False 
+            except Exception:
+                return False

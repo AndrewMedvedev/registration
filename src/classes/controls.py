@@ -1,0 +1,116 @@
+import base64
+import hashlib
+import os
+
+from aiohttp import ClientSession
+from passlib.context import CryptContext
+
+from src.errors import SendError
+from src.errors.errors import PasswordError
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+class HashPass:
+
+    def get_password_hash(password: str) -> str:
+        return pwd_context.hash(password)
+
+    def verify_password(plain_password: str, hashed_password: str) -> bool:
+        if answer := pwd_context.verify(plain_password, hashed_password):
+            return answer
+        raise PasswordError("verify_password")
+
+            
+
+
+class Send:
+
+    def __init__(self):
+        self.clientsession = ClientSession
+
+    async def get_data(
+        self,
+        params: dict,
+        setting: str,
+    ) -> dict:
+        async with self.clientsession() as session:
+            async with session.get(
+                url=setting,
+                params=params,
+                ssl=False,
+            ) as data:
+                    data_dict = await data.json()
+                    if "error" in data_dict:
+                        raise SendError("get_data")
+                    return data_dict
+
+
+    async def post_data(
+        self,
+        params: dict,
+        setting: str,
+    ) -> dict:
+        async with self.clientsession() as session:
+            async with session.post(
+                url=setting,
+                json=params,
+                ssl=False,
+            ) as data:
+                data_dict = await data.json()
+                if "error" in data_dict:
+                    raise SendError("post_data")
+                return data_dict
+
+    async def post_data_yandex(
+        self,
+        params: dict,
+        setting: str,
+    ) -> dict:
+        async with self.clientsession() as session:
+            async with session.post(
+                url=setting,
+                data=params,
+                ssl=False,
+            ) as data:
+                data_dict = await data.json()
+                if "error" in data_dict:
+                    raise SendError("post_data_yandex")
+                return data_dict
+
+
+async def create_codes() -> dict:
+    code_verifier = (
+        base64.urlsafe_b64encode(os.urandom(64)).rstrip(b"=").decode("utf-8")
+    )
+    code_challenge = (
+        base64.urlsafe_b64encode(hashlib.sha256(code_verifier.encode("utf-8")).digest())
+        .rstrip(b"=")
+        .decode("utf-8")
+    )
+    return {
+        "code_verifier": code_verifier,
+        "code_challenge": code_challenge,
+    }
+
+
+# async def get_token_user_mail_ru(params: dict) -> dict:
+#     async with aiohttp.ClientSession() as session:
+#         async with session.post(
+#             url=Settings.MAIL_RU_TOKEN_URL,
+#             data=params,
+#             ssl=False,
+#         ) as data:
+#             user_data = await data.json()
+#             return user_data
+
+
+# async def get_data_user_mail_ru(params: dict) -> dict:
+#     async with aiohttp.ClientSession() as session:
+#         async with session.get(
+#             Settings.MAIL_RU_API_URL,
+#             params=params,
+#             ssl=False,
+#         ) as data:
+#             user_data = await data.json()
+#             return user_data

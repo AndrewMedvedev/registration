@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
 from src.classes.vk_class import VK
@@ -11,13 +11,8 @@ router_vk = APIRouter(prefix="/api/v1/vk", tags=["vk"])
     "/link",
     response_model=None,
 )
-async def vk_link() -> dict | JSONResponse:
-    try:
-        return await VK().link()
-    except Exception as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
-        )
+async def vk_link() -> JSONResponse:
+    return await VK().link()
 
 
 @router_vk.get(
@@ -29,15 +24,11 @@ async def vk_get_token(
     device_id: str,
     code_verifier: str,
 ) -> JSONResponse:
-    try:
-        return await VK(
-            code=code,
-            device_id=device_id,
-        ).get_token(code_verifier=code_verifier)
-    except Exception as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
-        )
+    return await VK().get_token(
+        code=code,
+        device_id=device_id,
+        code_verifier=code_verifier,
+    )
 
 
 @router_vk.post(
@@ -45,12 +36,7 @@ async def vk_get_token(
     response_model=RegistrationVK,
 )
 async def vk_registration(model: RegistrationVK) -> JSONResponse:
-    try:
-        return await VK().registration(model=model)
-    except Exception as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
-        )
+    return await VK().registration(model=model)
 
 
 @router_vk.post(
@@ -58,9 +44,4 @@ async def vk_registration(model: RegistrationVK) -> JSONResponse:
     response_model=None,
 )
 async def vk_login(access_token: str) -> JSONResponse:
-    try:
-        return await VK(access_token=access_token).login()
-    except Exception as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)}
-        )
+    return await VK().login(access_token=access_token)

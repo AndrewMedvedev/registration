@@ -12,7 +12,7 @@ router_validate_jwt = APIRouter(prefix="/validate/jwt", tags=["validate/jwt"])
 async def validate_refresh(
     refresh: str,
 ) -> dict | bool:
-    return await ValidateJWT(refresh).validate_refresh()
+    return await ValidateJWT().validate_refresh(refresh)
 
 
 @router_validate_jwt.get(
@@ -22,4 +22,4 @@ async def validate_refresh(
 async def validate_access(
     access: str,
 ) -> dict | bool:
-    return await ValidateJWT(access).validate_access()
+    return await ValidateJWT().validate_access(access)

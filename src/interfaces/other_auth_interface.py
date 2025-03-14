@@ -3,20 +3,21 @@ from abc import ABC, abstractmethod
 from fastapi.responses import JSONResponse
 
 
-class OtherAuthorizationsBase(ABC):
+class AuthorizationsBase(ABC):
 
+    @staticmethod
     @abstractmethod
-    async def link(self) -> str:
+    async def link() -> JSONResponse:
         raise NotImplementedError
 
     @abstractmethod
-    async def get_token(self) -> JSONResponse:
+    async def get_token() -> JSONResponse:
         raise NotImplementedError
 
     @abstractmethod
-    async def registration(self) -> JSONResponse:
+    async def registration() -> JSONResponse:
         raise NotImplementedError
 
     @abstractmethod
-    async def login(self) -> JSONResponse:
+    async def login() -> JSONResponse:
         raise NotImplementedError
