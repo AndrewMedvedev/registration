@@ -6,7 +6,7 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 from slowapi.util import get_remote_address
 
-from src.errors import DataBaseError, JWTError, PasswordError, SendError
+from src.errors import DataBaseError, JWTCreateError, PasswordError, SendError
 from src.routers import (router_authorization, router_data,
                          router_validate_jwt, router_vk, router_yandex)
 
@@ -51,10 +51,10 @@ async def password_error(
     )
 
 
-@app.exception_handler(JWTError)
+@app.exception_handler(JWTCreateError)
 async def jwt_error(
     request: Request,
-    exc: JWTError,
+    exc: JWTCreateError,
 ) -> JSONResponse:
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -65,7 +65,7 @@ async def jwt_error(
 @app.exception_handler(SendError)
 async def send_error(
     request: Request,
-    exc: JWTError,
+    exc: SendError,
 ) -> JSONResponse:
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
