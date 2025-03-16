@@ -1,3 +1,4 @@
+import logging
 from sqlalchemy import select
 
 from src.database.models import User, UserMailRu, UserVk, UserYandex
@@ -5,6 +6,7 @@ from src.errors import DataBaseError
 from src.interfaces import CRUDBase
 from src.services.db import DatabaseSessionService
 
+log = logging.getLogger(__name__)
 
 class ORMService(DatabaseSessionService, CRUDBase):
     def __init__(self) -> None:
@@ -27,6 +29,7 @@ class ORMService(DatabaseSessionService, CRUDBase):
     ) -> dict:
         async with self.session() as session:
             user = await session.execute(select(User).where(User.email == email))
+            log.warning(user)
             if (data := user.scalar()) is not None:
                 return data
             raise DataBaseError("get_user_email")
@@ -39,6 +42,7 @@ class ORMService(DatabaseSessionService, CRUDBase):
             user = await session.execute(
                 select(User).where(User.phone_number == phone_number)
             )
+            log.warning(user)
             if (data := user.scalar()) is not None:
                 return data
             raise DataBaseError("get_user_phone_number")
@@ -47,6 +51,7 @@ class ORMService(DatabaseSessionService, CRUDBase):
     async def get_user_email_vk(self, email: str) -> dict:
         async with self.session() as session:
             user = await session.execute(select(UserVk).where(UserVk.email == email))
+            log.warning(user)
             if (data := user.scalar()) is not None:
                 return data
             raise DataBaseError("get_user_email_vk")
@@ -56,6 +61,7 @@ class ORMService(DatabaseSessionService, CRUDBase):
             user = await session.execute(
                 select(UserMailRu).where(UserMailRu.email == email)
             )
+            log.warning(user)
             if (data := user.scalar()) is not None:
                 return data
             raise DataBaseError("get_user_email_mail_ru")
@@ -65,6 +71,7 @@ class ORMService(DatabaseSessionService, CRUDBase):
             user = await session.execute(
                 select(UserYandex).where(UserYandex.email == email)
             )
+            log.warning(user)
             if (data := user.scalar()) is not None:
                 return data
             raise DataBaseError("get_user_email_yandex")
@@ -72,6 +79,7 @@ class ORMService(DatabaseSessionService, CRUDBase):
     async def get_data(self, user_id: int) -> dict:
         async with self.session() as session:
             user = await session.execute(select(User).where(User.id == user_id))
+            log.warning(user)
             if (data := user.scalar()) is not None:
                 return data
             raise DataBaseError("get_data")
@@ -81,6 +89,7 @@ class ORMService(DatabaseSessionService, CRUDBase):
             user = await session.execute(
                 select(User).where(User.phone_number == phone_number)
             )
+            log.warning(user)
             try:
                 if user.scalar() is not None:
                     return True
