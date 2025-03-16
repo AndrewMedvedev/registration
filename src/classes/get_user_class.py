@@ -1,7 +1,10 @@
+import logging
+
 from fastapi.responses import JSONResponse
 
 from src.services.orm import ORMService
 
+log = logging.getLogger(__name__)
 
 class GetUserData:
 
@@ -18,12 +21,15 @@ class GetUserData:
             "last_name": data.last_name,
             "email": data.email,
         }
+        log.debug(data_dict)
         return JSONResponse(content=data_dict)
 
     async def get_number(
         self,
         phone_number: str,
     ) -> JSONResponse:
+        answer = await self.orm.get_number(phone_number)
+        log.debug(answer)
         return JSONResponse(
-            content={"message": await self.orm.get_number(phone_number)}
+            content={"message": answer}
         )

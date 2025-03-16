@@ -1,3 +1,5 @@
+import logging
+
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
@@ -7,6 +9,7 @@ from src.services.orm import ORMService
 from .controls import Send
 from .jwt_classes import JWTCreate
 
+log = logging.getLogger(__name__)
 
 class ReUse(AuthorizationsBase):
 

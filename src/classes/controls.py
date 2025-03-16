@@ -1,5 +1,6 @@
 import base64
 import hashlib
+import logging
 import os
 
 from aiohttp import ClientSession
@@ -10,6 +11,7 @@ from src.errors.errors import PasswordError
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+log = logging.getLogger(__name__)
 
 class HashPass:
 
@@ -41,6 +43,7 @@ class Send:
                 ssl=False,
             ) as data:
                     data_dict = await data.json()
+                    log.warning(data_dict)
                     if "error" in data_dict:
                         raise SendError("get_data")
                     return data_dict
@@ -58,6 +61,7 @@ class Send:
                 ssl=False,
             ) as data:
                 data_dict = await data.json()
+                log.warning(data_dict)
                 if "error" in data_dict:
                     raise SendError("post_data")
                 return data_dict
@@ -74,6 +78,7 @@ class Send:
                 ssl=False,
             ) as data:
                 data_dict = await data.json()
+                log.warning(data_dict)
                 if "error" in data_dict:
                     raise SendError("post_data_yandex")
                 return data_dict
@@ -93,6 +98,12 @@ async def create_codes() -> dict:
         "code_challenge": code_challenge,
     }
 
+def config_logging(level=logging.INFO):
+    logging.basicConfig(
+        level=level,
+        datefmt="%Y-%m-%d %H:%M:%S",
+        format="[%(asctime)s] %(module)10s:%(lineno)-3d %(levelname)-7s - %(message)s",
+    )
 
 # async def get_token_user_mail_ru(params: dict) -> dict:
 #     async with aiohttp.ClientSession() as session:

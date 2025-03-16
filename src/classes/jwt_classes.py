@@ -1,3 +1,4 @@
+import logging
 import uuid
 from datetime import datetime, timedelta
 
@@ -10,6 +11,7 @@ from src.errors import JWTCreateError
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+log = logging.getLogger(__name__)
 
 class JWTCreate:
 
