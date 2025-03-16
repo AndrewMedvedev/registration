@@ -81,7 +81,7 @@ class ValidateJWT:
 
             data = {"user_id": refresh.get("user_id")}
             return {
-                "access": await self.jwt_create().create_access(data=data),
+                "access": await self.jwt_create.create_access(data=data),
                 "user_id": refresh.get("user_id"),
             }
         except Exception:
