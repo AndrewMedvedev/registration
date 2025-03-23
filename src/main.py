@@ -10,8 +10,13 @@ from slowapi.util import get_remote_address
 
 from src.classes.controls import config_logging
 from src.errors import DataBaseError, JWTCreateError, PasswordError, SendError
-from src.routers import (router_authorization, router_data,
-                         router_validate_jwt, router_vk, router_yandex)
+from src.routers import (
+    router_authorization,
+    router_data,
+    router_validate_jwt,
+    router_vk,
+    router_yandex,
+)
 
 limiter = Limiter(key_func=get_remote_address, default_limits=["10/second"])
 
@@ -85,6 +90,7 @@ origins = [
     "https://register-666-ramzer.onrender.com",
     "https://frontend-project-production-6352.up.railway.app",
     "https://admin-panel-production-19ca.up.railway.app",
+    "https://online-service-for-applicants.onrender.com",
 ]
 
 app.add_middleware(
