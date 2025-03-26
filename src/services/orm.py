@@ -1,4 +1,5 @@
 import logging
+
 from sqlalchemy import select
 
 from src.database.models import User, UserMailRu, UserVk, UserYandex
