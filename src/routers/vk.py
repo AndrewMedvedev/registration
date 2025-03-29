@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 
 from src.classes.vk_class import VK
 from src.database.schemas import RegistrationVK
-
+from src.responses import CustomResponse
 router_vk = APIRouter(prefix="/api/v1/vk", tags=["vk"])
 
 
@@ -11,7 +11,7 @@ router_vk = APIRouter(prefix="/api/v1/vk", tags=["vk"])
     "/link",
     response_model=None,
 )
-async def vk_link() -> JSONResponse:
+async def vk_link() -> CustomResponse:
     return await VK().link()
 
 
@@ -23,7 +23,7 @@ async def vk_get_token(
     code: str,
     device_id: str,
     code_verifier: str,
-) -> JSONResponse:
+) -> CustomResponse:
     return await VK().get_token(
         code=code,
         device_id=device_id,
@@ -35,7 +35,7 @@ async def vk_get_token(
     "/registration/",
     response_model=RegistrationVK,
 )
-async def vk_registration(model: RegistrationVK) -> JSONResponse:
+async def vk_registration(model: RegistrationVK) -> CustomResponse:
     return await VK().registration(model=model)
 
 
@@ -43,5 +43,5 @@ async def vk_registration(model: RegistrationVK) -> JSONResponse:
     "/login/{access_token}",
     response_model=None,
 )
-async def vk_login(access_token: str) -> JSONResponse:
+async def vk_login(access_token: str) -> CustomResponse:
     return await VK().login(access_token=access_token)

@@ -2,6 +2,7 @@ import base64
 import hashlib
 import logging
 import os
+from typing import Any
 
 from aiohttp import ClientSession
 from passlib.context import CryptContext
@@ -13,6 +14,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 log = logging.getLogger(__name__)
 
+
 class HashPass:
 
     def get_password_hash(password: str) -> str:
@@ -22,8 +24,6 @@ class HashPass:
         if answer := pwd_context.verify(plain_password, hashed_password):
             return answer
         raise PasswordError("verify_password")
-
-            
 
 
 class Send:
@@ -42,12 +42,7 @@ class Send:
                 params=params,
                 ssl=False,
             ) as data:
-                    data_dict = await data.json()
-                    log.warning(data_dict)
-                    if "error" in data_dict:
-                        raise SendError("get_data")
-                    return data_dict
-
+                return await valid_answer(response=data, name_func="get_data")
 
     async def post_data(
         self,
@@ -60,11 +55,7 @@ class Send:
                 json=params,
                 ssl=False,
             ) as data:
-                data_dict = await data.json()
-                log.warning(data_dict)
-                if "error" in data_dict:
-                    raise SendError("post_data")
-                return data_dict
+                return await valid_answer(response=data, name_func="post_data")
 
     async def post_data_yandex(
         self,
@@ -77,11 +68,7 @@ class Send:
                 data=params,
                 ssl=False,
             ) as data:
-                data_dict = await data.json()
-                log.warning(data_dict)
-                if "error" in data_dict:
-                    raise SendError("post_data_yandex")
-                return data_dict
+                return await valid_answer(response=data, name_func="post_data_yandex")
 
 
 async def create_codes() -> dict:
@@ -98,12 +85,30 @@ async def create_codes() -> dict:
         "code_challenge": code_challenge,
     }
 
+
+async def valid_answer(
+    response: Any,
+    name_func: str,
+):
+    try:
+        log.warning(await response.text())
+        if response.status == 200:
+            data_dict = await response.json()
+            log.warning(data_dict)
+            return data_dict
+        else:
+            raise SendError(detail=f"Ошибка получения данных в функции {name_func}")
+    except Exception:
+        raise SendError(detail=f"Ошибка получения данных в функции {name_func}")
+
+
 def config_logging(level=logging.INFO):
     logging.basicConfig(
         level=level,
         datefmt="%Y-%m-%d %H:%M:%S",
         format="[%(asctime)s] %(module)10s:%(lineno)-3d %(levelname)-7s - %(message)s",
     )
+
 
 # async def get_token_user_mail_ru(params: dict) -> dict:
 #     async with aiohttp.ClientSession() as session:

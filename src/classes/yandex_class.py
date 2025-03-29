@@ -5,7 +5,7 @@ from src.database.models import UserYandex
 from src.database.schemas import (DictGetDataTokenYandex, DictGetDataYandex,
                                   DictLinkYandex, RegistrationYandex)
 from src.interfaces import AuthorizationsBase
-
+from src.responses import CustomResponse
 from .controls import create_codes
 from .reuse_class import ReUse
 
@@ -19,7 +19,7 @@ class Yandex(AuthorizationsBase):
 
     async def link(
         self,
-    ) -> JSONResponse:
+    ) -> CustomResponse:
         codes = await create_codes()
         return await self.reuse.link(
             setting=self.settings.YANDEX_AUTH_URL,
@@ -33,7 +33,7 @@ class Yandex(AuthorizationsBase):
         self,
         code: str,
         code_verifier: str,
-    ) -> JSONResponse:
+    ) -> CustomResponse:
         return await self.reuse.get_token(
             dictgetdata=DictGetDataYandex(
                 code=code,
@@ -43,7 +43,7 @@ class Yandex(AuthorizationsBase):
             service="yandex",
         )
 
-    async def registration(self, model: RegistrationYandex) -> JSONResponse:
+    async def registration(self, model: RegistrationYandex) -> CustomResponse:
         user_model = self.user(
             user_id=model.user_id,
             first_name=model.first_name,
@@ -56,7 +56,7 @@ class Yandex(AuthorizationsBase):
             user_model=user_model,
         )
 
-    async def login(self, access_token: str) -> JSONResponse:
+    async def login(self, access_token: str) -> CustomResponse:
         return await self.reuse.login(
             dictgetdatatoken=DictGetDataTokenYandex(
                 oauth_token=access_token

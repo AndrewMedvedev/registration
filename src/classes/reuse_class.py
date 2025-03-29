@@ -1,15 +1,16 @@
 import logging
 
-from fastapi.responses import JSONResponse
+from fastapi import status
 from pydantic import BaseModel
 
 from src.interfaces import AuthorizationsBase
 from src.services.orm import ORMService
-
+from src.responses import CustomResponse
 from .controls import Send
 from .jwt_classes import JWTCreate
 
 log = logging.getLogger(__name__)
+
 
 class ReUse(AuthorizationsBase):
 
@@ -19,42 +20,54 @@ class ReUse(AuthorizationsBase):
         self.send = Send()
 
     @staticmethod
-    async def link(setting: str, dictlink: dict, code_verifier: str) -> JSONResponse:
+    async def link(
+        setting: str,
+        dictlink: dict,
+        code_verifier: str,
+    ) -> CustomResponse:
         url = f"{setting}?{'&'.join([f'{k}={v}' for k, v in dictlink.items()])}"
-        return JSONResponse(content={"url": url, "code_verifier": code_verifier})
+        return CustomResponse(
+            body={"url": url, "code_verifier": code_verifier},
+            status_code=status.HTTP_200_OK,
+        )
 
     async def get_token(
         self,
         dictgetdata: dict,
         setting: str,
         service: str,
-    ) -> JSONResponse:
+    ) -> CustomResponse:
         match service:
             case "vk":
-                return JSONResponse(
-                    content=await self.send.post_data(
+                return CustomResponse(
+                    body=await self.send.post_data(
                         params=dictgetdata,
                         setting=setting,
-                    )
+                    ),
+                    status_code=status.HTTP_200_OK,
                 )
             case "yandex":
-                return JSONResponse(
-                    content=await self.send.post_data_yandex(
+                return CustomResponse(
+                    body=await self.send.post_data_yandex(
                         params=dictgetdata,
                         setting=setting,
-                    )
+                    ),
+                    status_code=status.HTTP_200_OK,
                 )
 
-    async def registration(self, user_model: BaseModel) -> JSONResponse:
+    async def registration(self, user_model: BaseModel) -> CustomResponse:
         await self.orm.add_user(user_model)
-        return JSONResponse(content={"message": 200})
+        return CustomResponse(
+            body={"message": 200},
+            status_code=status.HTTP_200_OK,
+        )
 
     async def login(
         self,
         dictgetdatatoken: dict,
         setting: str,
         service: str,
-    ) -> JSONResponse:
+    ) -> CustomResponse:
         match service:
             case "vk":
                 user = (
@@ -65,7 +78,10 @@ class ReUse(AuthorizationsBase):
                 ).get("user")
                 stmt = await self.orm.get_user_email_vk(user.get("email").lower())
                 if stmt.email == user.get("email").lower():
-                    return await self.jwt_create.create_tokens(stmt.user_id)
+                    return CustomResponse(
+                        body=await self.jwt_create.create_tokens(stmt.user_id),
+                        status_code=status.HTTP_200_OK,
+                    )
             case "yandex":
                 user = await self.send.get_data(
                     params=dictgetdatatoken,
@@ -75,4 +91,7 @@ class ReUse(AuthorizationsBase):
                     user.get("default_email").lower()
                 )
                 if stmt.email == user.get("default_email").lower():
-                    return await self.jwt_create.create_tokens(stmt.user_id)
+                    return CustomResponse(
+                        body=await self.jwt_create.create_tokens(stmt.user_id),
+                        status_code=status.HTTP_200_OK,
+                    )

@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 
 from src.classes.yandex_class import Yandex
 from src.database.schemas import RegistrationYandex
+from src.responses import CustomResponse
 
 router_yandex = APIRouter(prefix="/api/v1/yandex", tags=["yandex"])
 
@@ -11,7 +12,7 @@ router_yandex = APIRouter(prefix="/api/v1/yandex", tags=["yandex"])
     "/link",
     response_model=None,
 )
-async def yandex_link() -> JSONResponse:
+async def yandex_link() -> CustomResponse:
     return await Yandex().link()
 
 
@@ -19,7 +20,7 @@ async def yandex_link() -> JSONResponse:
     "/get/token/{code}/{code_verifier}",
     response_model=None,
 )
-async def yandex_get_token(code: str, code_verifier: str) -> JSONResponse:
+async def yandex_get_token(code: str, code_verifier: str) -> CustomResponse:
     return await Yandex().get_token(
         code=code,
         code_verifier=code_verifier,
@@ -30,7 +31,7 @@ async def yandex_get_token(code: str, code_verifier: str) -> JSONResponse:
     "/registration/",
     response_model=RegistrationYandex,
 )
-async def yandex_registration(model: RegistrationYandex) -> JSONResponse:
+async def yandex_registration(model: RegistrationYandex) -> CustomResponse:
     return await Yandex().registration(model=model)
 
 
@@ -38,5 +39,5 @@ async def yandex_registration(model: RegistrationYandex) -> JSONResponse:
     "/login/{access_token}",
     response_model=None,
 )
-async def yandex_login(access_token: str) -> JSONResponse:
+async def yandex_login(access_token: str) -> CustomResponse:
     return await Yandex().login(access_token=access_token)

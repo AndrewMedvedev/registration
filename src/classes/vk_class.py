@@ -5,7 +5,7 @@ from src.database.models import UserVk
 from src.database.schemas import (DictGetDataTokenVK, DictGetDataVK,
                                   DictLinkVK, RegistrationVK)
 from src.interfaces import AuthorizationsBase
-
+from src.responses import CustomResponse
 from .controls import create_codes
 from .reuse_class import ReUse
 
@@ -19,7 +19,7 @@ class VK(AuthorizationsBase):
 
     async def link(
         self,
-    ) -> JSONResponse:
+    ) -> CustomResponse:
         codes = await create_codes()
         return await self.reuse.link(
             setting=self.settings.VK_AUTH_URL,
@@ -34,7 +34,7 @@ class VK(AuthorizationsBase):
         code: str,
         device_id: str,
         code_verifier: str,
-    ) -> JSONResponse:
+    ) -> CustomResponse:
         return await self.reuse.get_token(
             dictgetdata=DictGetDataVK(
                 code=code,
@@ -45,7 +45,7 @@ class VK(AuthorizationsBase):
             service="vk",
         )
 
-    async def registration(self, model: RegistrationVK) -> JSONResponse:
+    async def registration(self, model: RegistrationVK) -> CustomResponse:
         user_model = self.user(
             user_id=model.user_id,
             first_name=model.first_name,
@@ -57,7 +57,7 @@ class VK(AuthorizationsBase):
             user_model=user_model,
         )
 
-    async def login(self, access_token: str) -> JSONResponse:
+    async def login(self, access_token: str) -> CustomResponse:
         return await self.reuse.login(
             dictgetdatatoken=DictGetDataTokenVK(access_token=access_token).model_dump(),
             setting=self.settings.VK_API_URL,

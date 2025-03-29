@@ -8,11 +8,27 @@ from slowapi.middleware import SlowAPIMiddleware
 from slowapi.util import get_remote_address
 
 from src.classes.controls import config_logging
-from src.errors import (DataBaseError, JWTCreateError, PasswordError,
-                        SendError, db_error, jwt_error, password_error,
-                        send_error)
-from src.routers import (router_authorization, router_data,
-                         router_validate_jwt, router_vk, router_yandex)
+from src.errors import (
+    DataBaseError,
+    JWTCreateError,
+    PasswordError,
+    SendError,
+    EmailError,
+    PhoneNumberError,
+    db_error,
+    jwt_error,
+    password_error,
+    send_error,
+    email_error,
+    phone_number_error,
+)
+from src.routers import (
+    router_authorization,
+    router_data,
+    router_validate_jwt,
+    router_vk,
+    router_yandex,
+)
 
 limiter = Limiter(key_func=get_remote_address, default_limits=["10/second"])
 
@@ -45,6 +61,10 @@ app.add_exception_handler(JWTCreateError, jwt_error)
 
 app.add_exception_handler(SendError, send_error)
 
+app.add_exception_handler(EmailError, email_error)
+
+app.add_exception_handler(PhoneNumberError, phone_number_error)
+
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 
@@ -61,4 +81,3 @@ app.include_router(router_validate_jwt)
 app.include_router(router_data)
 
 app.state.limiter = limiter
-

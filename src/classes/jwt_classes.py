@@ -13,6 +13,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 log = logging.getLogger(__name__)
 
+
 class JWTCreate:
 
     def __init__(self) -> None:
@@ -45,17 +46,16 @@ class JWTCreate:
     async def create_tokens(
         self,
         user_id: int,
-    ) -> JSONResponse:
-        try: 
+    ):
+        try:
             data = {"user_id": user_id}
             access = await self.create_access(data)
             refresh = await self.create_access(data)
-            return JSONResponse(
-                content={
-                    "access": access,
-                    "refresh": refresh,
-                }
-            )
+            return {
+                "access": access,
+                "refresh": refresh,
+            }
+
         except JWTCreateError:
             raise JWTCreateError("create_tokens")
 

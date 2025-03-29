@@ -1,7 +1,7 @@
 import phonenumbers
 from email_validator import validate_email
-from fastapi import HTTPException, status
 from pydantic import BaseModel, Field, field_validator
+from src.errors import EmailError, PhoneNumberError
 
 
 class UserModel(BaseModel):
@@ -14,12 +14,12 @@ class UserModel(BaseModel):
     @field_validator("phone_number")
     @classmethod
     def validate_phone_number(cls, values: str) -> str:
-        parsed_number = phonenumbers.parse(values)
-        if phonenumbers.is_valid_number(parsed_number):
-            return values
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+        try:
+            parsed_number = phonenumbers.parse(values)
+            if phonenumbers.is_valid_number(parsed_number):
+                return values
+        except Exception:
+            raise PhoneNumberError(
                 detail="Номер телефона должен начинаться с "
                 + " и содержать от 1 до 15 цифр",
             )
@@ -27,11 +27,11 @@ class UserModel(BaseModel):
     @field_validator("email")
     @classmethod
     def validate_email(cls, value: str) -> str:
-        if validate_email(value):
-            return value.lower()
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+        try:
+            if validate_email(value):
+                return value.lower()
+        except Exception:
+            raise EmailError(
                 detail="email не соответствует формату",
             )
 
@@ -45,11 +45,11 @@ class GetUserEmail(BaseModel):
     @field_validator("email")
     @classmethod
     def validate_email(cls, value: str) -> str:
-        if validate_email(value):
-            return value.lower()
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+        try:
+            if validate_email(value):
+                return value.lower()
+        except Exception:
+            raise EmailError(
                 detail="email не соответствует формату",
             )
 
@@ -63,12 +63,12 @@ class GetUserPhoneNumber(BaseModel):
     @field_validator("phone_number")
     @classmethod
     def validate_phone_number(cls, values: str) -> str:
-        parsed_number = phonenumbers.parse(values)
-        if phonenumbers.is_valid_number(parsed_number):
-            return values
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+        try:
+            parsed_number = phonenumbers.parse(values)
+            if phonenumbers.is_valid_number(parsed_number):
+                return values
+        except Exception:
+            raise PhoneNumberError(
                 detail="Номер телефона должен начинаться с "
                 + " и содержать от 1 до 15 цифр",
             )
