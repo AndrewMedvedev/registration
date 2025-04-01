@@ -47,7 +47,7 @@ class Authorization(BasicAuthorizationBase):
             tokens = await self.jwt_create.create_tokens(stmt.id)
             return CustomResponse(
                 body=tokens,
-                status_code=status.HTTP_201_CREATED,
+                status_code=status.HTTP_200_OK,
             )
 
     async def login_phone(self, model: GetUserPhoneNumber) -> CustomResponse:
@@ -60,5 +60,5 @@ class Authorization(BasicAuthorizationBase):
         ):
             return CustomResponse(
                 body=await self.jwt_create.create_tokens(stmt.id),
-                status_code=status.HTTP_201_CREATED,
+                status_code=status.HTTP_200_OK,
             )
