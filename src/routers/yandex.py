@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-from fastapi.responses import JSONResponse
 
 from src.classes.yandex_class import Yandex
 from src.database.schemas import RegistrationYandex

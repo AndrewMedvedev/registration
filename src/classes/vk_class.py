@@ -1,11 +1,10 @@
-from fastapi.responses import JSONResponse
 
 from src.config import Settings
 from src.database.models import UserVk
-from src.database.schemas import (DictGetDataTokenVK, DictGetDataVK,
-                                  DictLinkVK, RegistrationVK)
+from src.database.schemas import DictGetDataTokenVK, DictGetDataVK, DictLinkVK, RegistrationVK
 from src.interfaces import AuthorizationsBase
 from src.responses import CustomResponse
+
 from .controls import create_codes
 from .reuse_class import ReUse
 

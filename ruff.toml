@@ -1,0 +1,88 @@
+line-length = 300
+preview = true
+exclude = [
+    "migration",
+    "alembic.ini",
+]
+
+
+[lint]
+select = [
+    "F",
+    "E",
+    "W",
+    "C90",
+    "I",
+    "N",
+    "UP",
+    "YTT",
+    "ASYNC",
+    "TRIO",
+    "S",
+    "BLE",
+    "B",
+    "A",
+    "COM",
+    "C4",
+    "DTZ",
+    "T10",
+    "DJ",
+    "EXE",
+    "ISC",
+    "ICN",
+    "G",
+    "INP",
+    "PIE",
+    "T20",
+    "PYI",
+    "PT",
+    "Q",
+    "RSE",
+    "RET",
+    "SLF",
+    "SLOT",
+    "SIM",
+    "TID",
+    "INT",
+    "ARG",
+    "PTH",
+    "TD",
+    "FIX",
+    "ERA",
+    "PD",
+    "PGH",
+    "PL",
+    "TRY",
+    "FLY",
+    "NPY",
+    "AIR",
+    "PERF",
+    "FURB",
+    "LOG",
+    "RUF",
+]
+ignore = [
+    "COM812",
+    "ISC001",
+    "TRY003",
+    "PT013",
+    "TID252",
+    "RUF001",
+    "RUF002",
+    "RUF003",
+    "ASYNC109",
+]
+
+[lint.isort]
+section-order = [
+    "future",
+    "typings",
+    "standard-library",
+    "third-party",
+    "first-party",
+    "local-folder",
+]
+
+[lint.isort.sections]
+"typings" = ['typing']
+

@@ -10,7 +10,7 @@ class DictLinkMailRu(BaseModel):
     response_type: Literal["code"] = "code"
     scope: str = settings.SCOPE
     redirect_uri: str = settings.MAIL_RU_REDIRECT_URI
-    state: str 
+    state: str
     prompt_force: str = settings.PROMPT_FORCE
 
 

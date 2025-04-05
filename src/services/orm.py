@@ -9,6 +9,7 @@ from src.services.db import DatabaseSessionService
 
 log = logging.getLogger(__name__)
 
+
 class ORMService(DatabaseSessionService, CRUDBase):
     def __init__(self) -> None:
         super().__init__()
@@ -47,7 +48,6 @@ class ORMService(DatabaseSessionService, CRUDBase):
             if (data := user.scalar()) is not None:
                 return data
             raise DataBaseError("get_user_phone_number")
-        
 
     async def get_user_email_vk(self, email: str) -> dict:
         async with self.session() as session:

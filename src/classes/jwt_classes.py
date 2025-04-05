@@ -2,7 +2,6 @@ import logging
 import uuid
 from datetime import datetime, timedelta
 
-from fastapi.responses import JSONResponse
 from jose import jwt
 from passlib.context import CryptContext
 

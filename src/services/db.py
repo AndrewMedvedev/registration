@@ -1,8 +1,9 @@
-import contextlib
-from typing import AsyncIterator, Optional
+from typing import Optional
 
-from sqlalchemy.ext.asyncio import (AsyncConnection, AsyncEngine, AsyncSession,
-                                    async_sessionmaker, create_async_engine)
+import contextlib
+from collections.abc import AsyncIterator
+
+from sqlalchemy.ext.asyncio import AsyncConnection, AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 
 from src.config import get_db_url
 
@@ -37,7 +38,7 @@ class DatabaseSessionService:
     @contextlib.asynccontextmanager
     async def connect(self) -> AsyncIterator[AsyncConnection]:
         if self._engine is None:
-            raise IOError("DatabaseSessionManager is not initialized")
+            raise OSError("DatabaseSessionManager is not initialized")
         async with self._engine.begin() as connection:
             try:
                 yield connection

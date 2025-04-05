@@ -9,7 +9,3 @@ class CustomResponse(BaseModel):
     status_code: int
     status: str = "success"
     body: Any
-
-
-    
-

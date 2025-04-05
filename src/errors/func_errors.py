@@ -1,15 +1,15 @@
 from fastapi import Request, status
-from fastapi.responses import JSONResponse
+
+from src.responses import CustomBadResponse
 
 from .errors import (
     DataBaseError,
+    EmailError,
     JWTCreateError,
     PasswordError,
-    SendError,
-    EmailError,
     PhoneNumberError,
+    SendError,
 )
-from src.responses import CustomBadResponse
 
 
 async def db_error(

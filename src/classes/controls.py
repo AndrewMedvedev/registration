@@ -1,8 +1,9 @@
+from typing import Any
+
 import base64
 import hashlib
 import logging
 import os
-from typing import Any
 
 from aiohttp import ClientSession
 from passlib.context import CryptContext
@@ -96,8 +97,7 @@ async def valid_answer(
             data_dict = await response.json()
             log.warning(data_dict)
             return data_dict
-        else:
-            raise SendError(detail=f"Ошибка получения данных в функции {name_func}")
+        raise SendError(detail=f"Ошибка получения данных в функции {name_func}")
     except Exception:
         raise SendError(detail=f"Ошибка получения данных в функции {name_func}")
 

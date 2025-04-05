@@ -1,31 +1,31 @@
 __all__ = (
     "DataBaseError",
-    "SendError",
+    "EmailError",
     "JWTCreateError",
     "PasswordError",
-    "EmailError",
     "PhoneNumberError",
+    "SendError",
     "db_error",
-    "send_error",
+    "email_error",
     "jwt_error",
     "password_error",
-    "email_error",
     "phone_number_error",
+    "send_error",
 )
 
 from .errors import (
     DataBaseError,
+    EmailError,
     JWTCreateError,
     PasswordError,
-    SendError,
-    EmailError,
     PhoneNumberError,
+    SendError,
 )
 from .func_errors import (
     db_error,
+    email_error,
     jwt_error,
     password_error,
-    send_error,
-    email_error,
     phone_number_error,
+    send_error,
 )

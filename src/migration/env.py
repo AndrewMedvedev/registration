@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
 
 from src.database.data import DATABASE_URL, Base
-from src.database.models import User, UserMailRu, UserVk, UserYandex
+from src.database.models import User, UserVk, UserYandex
 
 config = context.config
 config.set_main_option("sqlalchemy.url", DATABASE_URL)

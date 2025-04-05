@@ -1,7 +1,7 @@
 __all__ = (
-    "CRUDBase",
-    "BasicAuthorizationBase",
     "AuthorizationsBase",
+    "BasicAuthorizationBase",
+    "CRUDBase",
 )
 
 from .basic_authorization_interface import BasicAuthorizationBase

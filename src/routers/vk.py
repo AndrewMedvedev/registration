@@ -1,9 +1,9 @@
 from fastapi import APIRouter
-from fastapi.responses import JSONResponse
 
 from src.classes.vk_class import VK
 from src.database.schemas import RegistrationVK
 from src.responses import CustomResponse
+
 router_vk = APIRouter(prefix="/api/v1/vk", tags=["vk"])
 
 

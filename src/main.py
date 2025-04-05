@@ -10,17 +10,17 @@ from slowapi.util import get_remote_address
 from src.classes.controls import config_logging
 from src.errors import (
     DataBaseError,
+    EmailError,
     JWTCreateError,
     PasswordError,
-    SendError,
-    EmailError,
     PhoneNumberError,
+    SendError,
     db_error,
+    email_error,
     jwt_error,
     password_error,
-    send_error,
-    email_error,
     phone_number_error,
+    send_error,
 )
 from src.routers import (
     router_authorization,
