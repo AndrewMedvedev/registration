@@ -13,6 +13,12 @@ class Settings:
     DB_USER: str = config["DB_USER"]
     DB_PASSWORD: str = config["DB_PASSWORD"]
 
+    POSTGRES_HOST: str = config["POSTGRES_HOST"]
+    POSTGRES_PORT: str = config["POSTGRES_PORT"]
+    POSTGRES_PASSWORD: str = config["POSTGRES_PASSWORD"]
+    POSTGRES_USER: str = config["POSTGRES_USER"]
+    POSTGRES_DB: str = config["POSTGRES_DB"]
+
     SECRET_KEY: str = config["SECRET_KEY"]
     ALGORITHM: str = config["ALGORITHM"]
 

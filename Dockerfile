@@ -1,6 +1,6 @@
 FROM python:3.12
 
-WORKDIR /auth
+WORKDIR /auth-service
 
 COPY requirements.txt .
 
