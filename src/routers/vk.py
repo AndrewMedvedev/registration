@@ -33,7 +33,6 @@ async def vk_get_token(
 
 @router_vk.post(
     "/registration/",
-    response_model=RegistrationVK,
 )
 async def vk_registration(model: RegistrationVK) -> CustomResponse:
     return await VK().registration(model=model)

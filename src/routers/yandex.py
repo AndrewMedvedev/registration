@@ -28,7 +28,6 @@ async def yandex_get_token(code: str, code_verifier: str) -> CustomResponse:
 
 @router_yandex.post(
     "/registration/",
-    response_model=RegistrationYandex,
 )
 async def yandex_registration(model: RegistrationYandex) -> CustomResponse:
     return await Yandex().registration(model=model)

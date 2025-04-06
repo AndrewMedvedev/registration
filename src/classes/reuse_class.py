@@ -59,7 +59,7 @@ class ReUse(AuthorizationsBase):
     async def registration(self, user_model: BaseModel) -> CustomResponse:
         await self.orm.add_user(user_model)
         return CustomResponse(
-            body={"message": 200},
+            body="done",
             status_code=status.HTTP_201_CREATED,
         )
 
