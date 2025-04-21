@@ -1,10 +1,12 @@
 from typing import Annotated
 
-from sqlalchemy import BIGINT
+from datetime import datetime
+
+from sqlalchemy import BIGINT, func
 from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, declared_attr, mapped_column
 
-from src.config import get_db_url
+from config import get_db_url
 
 DATABASE_URL = get_db_url()
 
@@ -12,7 +14,7 @@ DATABASE_URL = get_db_url()
 engine = create_async_engine(DATABASE_URL)
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
-
+created_at = Annotated[datetime, mapped_column(server_default=func.now())]
 int_pk = Annotated[int, mapped_column(primary_key=True)]
 int_null = Annotated[int, mapped_column(nullable=False, unique=True)]
 big_int_uniq = Annotated[int, mapped_column(BIGINT, nullable=True, unique=True)]
@@ -28,4 +30,4 @@ class Base(AsyncAttrs, DeclarativeBase):
 
     @declared_attr.directive
     def __tablename__(cls) -> str:
-        return f"{cls.__name__.lower()}s"
+        return f"{cls.__name__.lower()}"

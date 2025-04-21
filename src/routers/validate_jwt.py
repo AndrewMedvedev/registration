@@ -1,25 +1,22 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, status
+from fastapi.responses import JSONResponse
 
-from src.classes.jwt_classes import ValidateJWT
+from ..jwt import ValidateJWT
 
-router_validate_jwt = APIRouter(prefix="/validate/jwt", tags=["validate/jwt"])
+validate_jwt = APIRouter(prefix="/validate/jwt", tags=["validate/jwt"])
 
 
-@router_validate_jwt.get(
-    "/refresh/{refresh}",
-    response_model=None,
-)
+@validate_jwt.get("/refresh/{refresh}")
 async def validate_refresh(
     refresh: str,
-) -> dict | bool:
-    return await ValidateJWT().validate_refresh(refresh)
+) -> JSONResponse:
+    content = await ValidateJWT().validate_refresh(refresh)
+    return JSONResponse(status_code=status.HTTP_200_OK, content=content)
 
 
-@router_validate_jwt.get(
-    "/access/{access}",
-    response_model=None,
-)
+@validate_jwt.get("/access/{access}")
 async def validate_access(
     access: str,
-) -> dict | bool:
-    return await ValidateJWT().validate_access(access)
+) -> JSONResponse:
+    content = await ValidateJWT().validate_access(access)
+    return JSONResponse(status_code=status.HTTP_200_OK, content=content)

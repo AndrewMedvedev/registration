@@ -3,9 +3,15 @@ from typing import Optional
 import contextlib
 from collections.abc import AsyncIterator
 
-from sqlalchemy.ext.asyncio import AsyncConnection, AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import (
+    AsyncConnection,
+    AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 
-from src.config import get_db_url
+from config import get_db_url
 
 
 class DatabaseSessionService:
@@ -15,9 +21,7 @@ class DatabaseSessionService:
 
     def init(self) -> None:
         self._engine = create_async_engine(url=get_db_url(), echo=True)
-        self._sessionmaker = async_sessionmaker(
-            bind=self._engine, expire_on_commit=False
-        )
+        self._sessionmaker = async_sessionmaker(bind=self._engine, expire_on_commit=False)
 
     async def close(self) -> None:
         if self._engine is None:

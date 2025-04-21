@@ -51,11 +51,8 @@ class Settings:
     YANDEX_SCOPE: str = config["YANDEX_SCOPE"]
 
 
-settings = Settings()
-
-
 def get_db_url() -> str:
     return (
-        f"postgresql+asyncpg://{settings.DB_USER}:{settings.DB_PASSWORD}@"
-        f"{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}"
+        f"postgresql+asyncpg://{Settings.DB_USER}:{Settings.DB_PASSWORD}@"
+        f"{Settings.DB_HOST}:{Settings.DB_PORT}/{Settings.DB_NAME}"
     )

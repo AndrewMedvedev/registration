@@ -1,41 +1,34 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Response, status
+from fastapi.responses import JSONResponse
 
-from src.classes.yandex_class import Yandex
-from src.database.schemas import RegistrationYandex
-from src.responses import CustomResponse
+from ..constants import PATH_ENDPOINT
+from ..controllers import YandexControl
+from ..schemas import RegistrationYandex
 
-router_yandex = APIRouter(prefix="/api/v1/yandex", tags=["yandex"])
-
-
-@router_yandex.get(
-    "/link",
-    response_model=None,
-)
-async def yandex_link() -> CustomResponse:
-    return await Yandex().link()
+yandex = APIRouter(prefix=f"{PATH_ENDPOINT}yandex", tags=["yandex"])
 
 
-@router_yandex.get(
-    "/get/token/{code}/{code_verifier}",
-    response_model=None,
-)
-async def yandex_get_token(code: str, code_verifier: str) -> CustomResponse:
-    return await Yandex().get_token(
-        code=code,
-        code_verifier=code_verifier,
-    )
+@yandex.get("/link")
+async def yandex_link() -> JSONResponse:
+    content = await YandexControl().link()
+    return JSONResponse(status_code=status.HTTP_200_OK, content=content)
 
 
-@router_yandex.post(
+@yandex.get("/get/token/{code}/{code_verifier}")
+async def yandex_get_token(code: str, code_verifier: str) -> JSONResponse:
+    content = await YandexControl().get_token(code=code, code_verifier=code_verifier)
+    return JSONResponse(status_code=status.HTTP_200_OK, content=content)
+
+
+@yandex.post(
     "/registration/",
 )
-async def yandex_registration(model: RegistrationYandex) -> CustomResponse:
-    return await Yandex().registration(model=model)
+async def yandex_registration(model: RegistrationYandex) -> Response:
+    await YandexControl().registration(model=model)
+    return Response(status_code=status.HTTP_201_CREATED)
 
 
-@router_yandex.post(
-    "/login/{access_token}",
-    response_model=None,
-)
-async def yandex_login(access_token: str) -> CustomResponse:
-    return await Yandex().login(access_token=access_token)
+@yandex.post("/login/{access_token}")
+async def yandex_login(access_token: str) -> JSONResponse:
+    content = await YandexControl().login(access_token=access_token)
+    return JSONResponse(status_code=status.HTTP_200_OK, content=content)

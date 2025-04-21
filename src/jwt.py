@@ -1,12 +1,11 @@
 import logging
 import uuid
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 
-from jose import jwt
+from jose import JWTError, jwt
 from passlib.context import CryptContext
 
-from src.config import Settings
-from src.errors import JWTCreateError
+from config import Settings
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -14,7 +13,6 @@ log = logging.getLogger(__name__)
 
 
 class JWTCreate:
-
     def __init__(self) -> None:
         self.settings = Settings
 
@@ -22,45 +20,34 @@ class JWTCreate:
         self,
         data: dict,
     ) -> str:
-        try:
-            data["header"] = {"alg": "HS256", "typ": "JWT", "uuid": str(uuid.uuid4())}
-            data["exp"] = timedelta(hours=2) + datetime.now()
-            data["mode"] = "access_token"
-            return jwt.encode(data, self.settings.SECRET_KEY, self.settings.ALGORITHM)
-        except JWTCreateError:
-            raise JWTCreateError("create_access")
+        data["header"] = {"alg": "HS256", "typ": "JWT", "uuid": str(uuid.uuid4())}
+        data["exp"] = timedelta(hours=2) + datetime.now(tz=UTC)
+        data["mode"] = "access_token"
+        return jwt.encode(data, self.settings.SECRET_KEY, self.settings.ALGORITHM)
 
     async def create_refresh(
         self,
         data: dict,
     ) -> str:
-        try:
-            data["header"] = {"alg": "HS256", "typ": "JWT", "uuid": str(uuid.uuid4())}
-            data["exp"] = timedelta(hours=5) + datetime.now()
-            data["mode"] = "refresh_token"
-            return jwt.encode(data, self.settings.SECRET_KEY, self.settings.ALGORITHM)
-        except JWTCreateError:
-            raise JWTCreateError("create_refresh")
+        data["header"] = {"alg": "HS256", "typ": "JWT", "uuid": str(uuid.uuid4())}
+        data["exp"] = timedelta(hours=5) + datetime.now(tz=UTC)
+        data["mode"] = "refresh_token"
+        return jwt.encode(data, self.settings.SECRET_KEY, self.settings.ALGORITHM)
 
     async def create_tokens(
         self,
         user_id: int,
     ):
-        try:
-            data = {"user_id": user_id}
-            access = await self.create_access(data)
-            refresh = await self.create_access(data)
-            return {
-                "access": access,
-                "refresh": refresh,
-            }
-
-        except JWTCreateError:
-            raise JWTCreateError("create_tokens")
+        data = {"user_id": user_id}
+        access = await self.create_access(data)
+        refresh = await self.create_access(data)
+        return {
+            "access": access,
+            "refresh": refresh,
+        }
 
 
 class ValidateJWT:
-
     def __init__(self) -> None:
         self.settings = Settings
         self.jwt_create = JWTCreate()
@@ -83,7 +70,7 @@ class ValidateJWT:
                 "access": await self.jwt_create.create_access(data=data),
                 "user_id": refresh.get("user_id"),
             }
-        except Exception:
+        except JWTError:
             return False
 
     async def validate_access(self, token: str) -> dict | bool:
@@ -96,5 +83,5 @@ class ValidateJWT:
             if "user_id" not in access and access.get("mode") != "access_token":
                 return False
             return {"user_id": access.get("user_id")}
-        except Exception:
+        except JWTError:
             return False

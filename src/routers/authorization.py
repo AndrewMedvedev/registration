@@ -1,37 +1,33 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, status
+from fastapi.responses import JSONResponse
 
-from src.classes.authorization_class import Authorization
-from src.database.schemas.auth_schemas import (
-    GetUserEmail,
-    GetUserPhoneNumber,
-    UserModel,
-)
-from src.responses import CustomResponse
+from ..constants import PATH_ENDPOINT
+from ..controllers import AuthorizationControl
+from ..schemas import GetUserEmailSchema, GetUserPhoneNumberSchema, UserSchema
 
-router_authorization = APIRouter(
-    prefix="/api/v1/authorizations", tags=["authorization"]
-)
+authorization = APIRouter(prefix=f"{PATH_ENDPOINT}authorizations", tags=["authorization"])
 
 
-@router_authorization.post(
+@authorization.post(
     "/registration",
-    response_model=None,
 )
-async def registration(user: UserModel) -> CustomResponse:
-    return await Authorization().registration(model=user)
+async def registration(model: UserSchema) -> JSONResponse:
+    content = await AuthorizationControl().registration(model=model)
+    return JSONResponse(content=content, status_code=status.HTTP_201_CREATED)
 
 
-@router_authorization.post(
+@authorization.post(
     "/login/email",
-    response_model=None,
 )
-async def login(user: GetUserEmail) -> CustomResponse:
-    return await Authorization().login_email(model=user)
+async def login(model: GetUserEmailSchema) -> JSONResponse:
+    content = await AuthorizationControl().login_email(model=model)
+    return JSONResponse(status_code=status.HTTP_200_OK, content=content)
 
 
-@router_authorization.post(
+@authorization.post(
     "/login/phone/number",
     response_model=None,
 )
-async def login_phone(user: GetUserPhoneNumber) -> CustomResponse:
-    return await Authorization().login_phone(model=user)
+async def login_phone(model: GetUserPhoneNumberSchema) -> JSONResponse:
+    content = await AuthorizationControl().login_phone(model=model)
+    return JSONResponse(status_code=status.HTTP_200_OK, content=content)
