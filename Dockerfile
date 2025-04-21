@@ -1,4 +1,4 @@
-FROM python:3.12
+FROM python:3.13-alpine
 
 WORKDIR /auth-service
 
@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
