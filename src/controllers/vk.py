@@ -42,5 +42,5 @@ class VKControl:
     async def login(self, access_token: str) -> dict:
         params = DictGetDataTokenVK(access_token=access_token).model_dump()
         user = await self.vk_api.get_data(params=params)
-        user_id = await self.sql_vk.get_user_email(email=user.get("email").lower())
+        user_id = await self.sql_vk.get_user_email(email=user.get("email"))
         return await self.jwt_create.create_tokens(user_id=user_id)
