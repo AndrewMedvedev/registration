@@ -21,7 +21,7 @@ class VKApi:
             self.clientsession() as session,
             session.post(url=Settings.VK_API_URL, json=params, ssl=False) as data,
         ):
-            return await valid_answer(response=data)
+            return (await valid_answer(response=data))["user"]
 
 
 class YandexApi:

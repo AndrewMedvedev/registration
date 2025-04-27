@@ -45,5 +45,5 @@ class YandexControl:
     async def login(self, access_token: str) -> dict:
         params = DictGetDataTokenYandex(oauth_token=access_token).model_dump()
         user = await self.yandex_api.get_data(params=params)
-        user_id = await self.sql_yandex.get_user_email(email=user.get("default_email"))
+        user_id = await self.sql_yandex.get_user_email(email=user["default_email"])
         return await self.jwt_create.create_tokens(user_id=user_id)

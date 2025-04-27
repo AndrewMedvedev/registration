@@ -1,7 +1,9 @@
-from sqlalchemy import select
-from sqlalchemy.exc import DataError, IntegrityError
+from uuid import UUID
 
-from ..exeptions import BadRequestHTTPError, ExistsHTTPError
+from sqlalchemy import select
+from sqlalchemy.exc import DataError, IntegrityError, NoResultFound
+
+from ..exeptions import BadRequestHTTPError, ExistsHTTPError, NotFoundHTTPError
 from ..schemas import GetUserResponse, UserDataResponse
 from .models import UserModel, UserVkModel, UserYandexModel
 from .session import DatabaseSessionService
@@ -98,15 +100,15 @@ class SQLVK(DatabaseSessionService):
         except IntegrityError:
             raise ExistsHTTPError from None
 
-    async def get_user_email(self, email: str) -> dict:
+    async def get_user_email(self, email: str) -> UUID:
         try:
             async with self.session() as session:
                 result = await session.execute(
                     select(UserVkModel.user_id).where(UserVkModel.email == email)
                 )
-                if result is not None:
-                    return result.scalar()
-                raise BadRequestHTTPError
+                result.scalar_one()
+        except NoResultFound:
+            raise NotFoundHTTPError from None
         except DataError:
             raise BadRequestHTTPError from None
 
@@ -127,14 +129,14 @@ class SQLYandex(DatabaseSessionService):
         except IntegrityError:
             raise ExistsHTTPError from None
 
-    async def get_user_email(self, email: str) -> dict:
+    async def get_user_email(self, email: str) -> UUID:
         try:
             async with self.session() as session:
                 result = await session.execute(
                     select(UserYandexModel.user_id).where(UserYandexModel.email == email)
                 )
-                if result is not None:
-                    return result.scalar()
-                raise BadRequestHTTPError
+                return result.scalar_one()
+        except NoResultFound:
+            raise NotFoundHTTPError from None
         except DataError:
             raise BadRequestHTTPError from None

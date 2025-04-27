@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -30,7 +32,7 @@ class UserVkModel(Base):
     __tablename__ = "users_vk"
     id: Mapped[int_pk]
     created_at: Mapped[created_at]
-    user_id: Mapped[int] = mapped_column(
+    user_id: Mapped[UUID] = mapped_column(
         ForeignKey("users.id"),
         unique=True,
     )
@@ -49,7 +51,7 @@ class UserYandexModel(Base):
     __tablename__ = "users_yandex"
     id: Mapped[int_pk]
     created_at: Mapped[created_at]
-    user_id: Mapped[int] = mapped_column(
+    user_id: Mapped[UUID] = mapped_column(
         ForeignKey("users.id"),
         unique=True,
     )
