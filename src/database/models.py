@@ -1,13 +1,13 @@
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .base import Base, created_at, int_null, int_pk, str_nullable, str_uniq
+from .base import Base, created_at, int_null, int_pk, str_nullable, str_uniq, uuid_pk
 
 
 class UserModel(Base):
     __tablename__ = "users"
 
-    id: Mapped[int_pk]
+    id: Mapped[uuid_pk]
     created_at: Mapped[created_at]
     first_name: Mapped[str_nullable]
     last_name: Mapped[str_nullable]

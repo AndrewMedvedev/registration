@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Literal
 
+from uuid import UUID
+
 import phonenumbers
 from email_validator import validate_email
 from pydantic import BaseModel, field_validator
@@ -84,7 +86,7 @@ class UserDataResponse(BaseModel):
 
 
 class GetUserResponse(BaseModel):
-    id: int
+    id: UUID
     hash_password: str
 
     def to_dict(self) -> dict:
@@ -95,7 +97,7 @@ class GetUserResponse(BaseModel):
 
 
 class RegistrationVKSchema(BaseModel):
-    user_id: int
+    user_id: UUID
     first_name: str
     last_name: str
     id_vk: int
@@ -112,7 +114,7 @@ class RegistrationVKSchema(BaseModel):
 
 
 class RegistrationYandex(BaseModel):
-    user_id: int
+    user_id: UUID
     first_name: str
     last_name: str
     id_yandex: str

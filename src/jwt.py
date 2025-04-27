@@ -1,6 +1,7 @@
 import logging
 import uuid
 from datetime import UTC, datetime, timedelta
+from uuid import UUID
 
 from jose import JWTError, jwt
 from passlib.context import CryptContext
@@ -36,9 +37,9 @@ class JWTCreate:
 
     async def create_tokens(
         self,
-        user_id: int,
+        user_id: UUID,
     ):
-        data = {"user_id": user_id}
+        data = {"user_id": str(user_id)}
         access = await self.create_access(data)
         refresh = await self.create_access(data)
         return {
