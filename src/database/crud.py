@@ -69,19 +69,17 @@ class SQLAuthorization(DatabaseSessionService):
         except DataError:
             raise BadRequestHTTPError from None
 
-    async def get_number(self, phone_number: str) -> bool:
+    async def get_number(self, phone_number: str) -> str:
         try:
             async with self.session() as session:
                 result = await session.execute(
-                    select(UserModel.phone_number).where(UserModel.phone_number == phone_number)
+                    select(UserModel.id).where(UserModel.phone_number == phone_number)
                 )
-                number = result.scalar()
-                if isinstance(number, str):
-                    return True
+                return str(result.scalar_one())
+        except NoResultFound:
+            raise NotFoundHTTPError from None
         except DataError:
-            return False
-        else:
-            return False
+            raise BadRequestHTTPError from None
 
 
 class SQLVK(DatabaseSessionService):
