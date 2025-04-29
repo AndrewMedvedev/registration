@@ -53,6 +53,13 @@ class ValidateJWT:
         self.settings = Settings
         self.jwt_create = JWTCreate()
 
+    async def valid_tokens(self, access: str, refresh: str) -> dict:
+        v_refresh = await self.validate_refresh(refresh)
+        v_access = await self.validate_access(access)
+        if isinstance(v_access, bool):
+            return v_refresh
+        return v_access
+
     async def validate_refresh(
         self,
         token: str,
@@ -63,7 +70,7 @@ class ValidateJWT:
                 self.settings.SECRET_KEY,
                 self.settings.ALGORITHM,
             )
-            if "user_id" not in refresh and refresh.get("mode") != "refresh_token":
+            if "user_id" not in refresh and refresh["mode"] != "refresh_token":
                 return False
 
             data = {"user_id": refresh.get("user_id")}
@@ -81,7 +88,7 @@ class ValidateJWT:
                 self.settings.SECRET_KEY,
                 self.settings.ALGORITHM,
             )
-            if "user_id" not in access and access.get("mode") != "access_token":
+            if "user_id" not in access and access["mode"] != "access_token":
                 return False
             return {"user_id": access.get("user_id")}
         except JWTError:

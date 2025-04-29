@@ -6,17 +6,10 @@ from ..jwt import ValidateJWT
 validate_jwt = APIRouter(prefix="/validate/jwt", tags=["validate/jwt"])
 
 
-@validate_jwt.get("/refresh/{refresh}")
-async def validate_refresh(
+@validate_jwt.get("/{access}/{refresh}")
+async def validate(
+    access: str,
     refresh: str,
 ) -> JSONResponse:
-    content = await ValidateJWT().validate_refresh(refresh)
-    return JSONResponse(status_code=status.HTTP_200_OK, content=content)
-
-
-@validate_jwt.get("/access/{access}")
-async def validate_access(
-    access: str,
-) -> JSONResponse:
-    content = await ValidateJWT().validate_access(access)
+    content = await ValidateJWT().valid_tokens(access=access, refresh=refresh)
     return JSONResponse(status_code=status.HTTP_200_OK, content=content)
