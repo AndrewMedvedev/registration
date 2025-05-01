@@ -10,58 +10,32 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-        DB_VARS: >
-          POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}
-          POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
-          POSTGRES_DB=${{ secrets.POSTGRES_DB }}
-          POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-      
-        ALGORITHM_AND_SECRET_KEY_VARS: >
-          ALGORITHM=${{ secrets.ALGORITHM }}
-          SECRET_KEY=${{ secrets.SECRET_KEY }}
-
-        VK_VARS: >
-          VK_APP_ID=${{ secrets.VK_APP_ID }}
-          VK_APP_SECRET=${{ secrets.VK_APP_SECRET }}
-          VK_REDIRECT_URI=${{ secrets.VK_REDIRECT_URI }}
-          VK_AUTH_URL=${{ secrets.VK_AUTH_URL }}
-          VK_TOKEN_URL=${{ secrets.VK_TOKEN_URL }}
-          VK_API_URL=${{ secrets.VK_API_URL }}
-          STATE_VK=${{ secrets.STATE_VK }}
-          CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
-      
-        YANDEX_VARS: >
-          YANDEX_APP_ID=${{ secrets.YANDEX_APP_ID }}
-          YANDEX_APP_SECRET=${{ secrets.YANDEX_APP_SECRET }}
-          YANDEX_REDIRECT_URI=${{ secrets.YANDEX_REDIRECT_URI }}
-          YANDEX_AUTH_URL=${{ secrets.YANDEX_AUTH_URL }}
-          YANDEX_TOKEN_URL=${{ secrets.YANDEX_TOKEN_URL }}
-          YANDEX_API_URL=${{ secrets.YANDEX_API_URL }}
-          STATE_YANDEX=${{ secrets.STATE_YANDEX }}
-          YANDEX_SCOPE=${{ secrets.YANDEX_SCOPE }}
-
     steps:
       - 
         name: Checkout code
         uses: actions/checkout@v4
-
       - 
-        name: Create .env file
+        name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: ${{ runner.os }}-pip-
+      - 
+        name: Install requirements
         run: |
-          echo "$DB_VARS" >> .env
-          echo "$ALGORITHM_AND_SECRET_KEY_VARS" >> .env
-          echo "$VK_VARS" >> .env
-          echo "$YANDEX_VARS" >> .env
-
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - 
+        name: Run lint
+        run:
+          ruff check . --config=ruff.toml
       - 
         name: Login in to Docker Hub
         uses: docker/login-action@v3
         with:
             username: ${{ secrets.DOCKER_LOGIN}}
             password: ${{ secrets.DOCKER_PASSWORD }}
-      
       - 
         name: Build and push
         uses: docker/build-push-action@v6
