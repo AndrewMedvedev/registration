@@ -1,4 +1,4 @@
-from config import Settings
+from config import settings
 
 from ..database.crud import SQLVK
 from ..jwt import JWTCreate
@@ -22,7 +22,7 @@ class VKControl:
     async def link() -> dict:
         codes = create_codes()
         dict_link = DictLinkVK(code_challenge=codes["code_challenge"]).model_dump().items()
-        url = f"{Settings.VK_AUTH_URL}?{'&'.join([f'{k}={v}' for k, v in dict_link])}"
+        url = f"{settings.VK_AUTH_URL}?{'&'.join([f'{k}={v}' for k, v in dict_link])}"
         return {
             "link": url,
             "code_verifier": codes["code_verifier"],

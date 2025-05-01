@@ -2,14 +2,14 @@ from ..database.crud import SQLAuthorization
 from ..exeptions import BadRequestHTTPError
 from ..jwt import JWTCreate
 from ..schemas import GetUserEmailSchema, GetUserPhoneNumberSchema, UserSchema
-from ..utils import HashPass
+from ..utils import Hash
 
 
 class AuthorizationControl:
     def __init__(self):
         self.sql_authorization = SQLAuthorization()
         self.jwt_create = JWTCreate()
-        self.hash = HashPass
+        self.hash = Hash
 
     async def registration(self, model: UserSchema) -> dict:
         user_id = await self.sql_authorization.create_user(model.to_model())

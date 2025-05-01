@@ -29,42 +29,42 @@ class SQLAuthorization(DatabaseSessionService):
     async def get_user_email(self, email: str) -> dict:
         try:
             async with self.session() as session:
-                result = await session.execute(
+                data = await session.execute(
                     select(UserModel.hash_password, UserModel.id).where(UserModel.email == email)
                 )
-                if result is not None:
-                    return GetUserResponse(**result.mappings().first()).to_dict()
-                raise BadRequestHTTPError
+                result = data.mappings().first()
+                if result is None:
+                    raise BadRequestHTTPError("wrong email")
+                return GetUserResponse(**result).to_dict()
         except DataError:
             raise BadRequestHTTPError from None
 
-    async def get_user_phone_number(
-        self,
-        phone_number: str,
-    ) -> dict:
+    async def get_user_phone_number(self, phone_number: str) -> dict:
         try:
             async with self.session() as session:
-                result = await session.execute(
+                data = await session.execute(
                     select(UserModel.hash_password, UserModel.id).where(
                         UserModel.phone_number == phone_number
                     )
                 )
-                if result is not None:
-                    return GetUserResponse(**result.mappings().first()).to_dict()
-                raise BadRequestHTTPError
+                result = data.mappings().first()
+                if result is None:
+                    raise BadRequestHTTPError("wrong phone number")
+                return GetUserResponse(**result).to_dict()
         except DataError:
             raise BadRequestHTTPError from None
 
     async def get_data(self, user_id: int) -> dict:
         try:
             async with self.session() as session:
-                result = await session.execute(
+                data = await session.execute(
                     select(UserModel.first_name, UserModel.last_name, UserModel.email).where(
                         UserModel.id == user_id
                     )
                 )
+                result = data.mappings().first()
                 if result is not None:
-                    return UserDataResponse(**result.mappings().first()).to_dict()
+                    return UserDataResponse(**result).to_dict()
                 raise BadRequestHTTPError
         except DataError:
             raise BadRequestHTTPError from None

@@ -22,6 +22,8 @@ class Settings:
     SECRET_KEY: str = config["SECRET_KEY"]
     ALGORITHM: str = config["ALGORITHM"]
 
+    SECRET_KEY_HASH: str = config["SECRET_KEY_HASH"]
+
     VK_APP_ID: int = config["VK_APP_ID"]
     VK_APP_SECRET: str = config["VK_APP_SECRET"]
     VK_REDIRECT_URI: str = config["VK_REDIRECT_URI"]
@@ -49,6 +51,9 @@ class Settings:
     YANDEX_API_URL: str = config["YANDEX_API_URL"]
     STATE_YANDEX: str = config["STATE_YANDEX"]
     YANDEX_SCOPE: str = config["YANDEX_SCOPE"]
+
+
+settings = Settings()
 
 
 def get_db_url() -> str:

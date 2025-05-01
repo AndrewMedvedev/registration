@@ -6,7 +6,7 @@ from uuid import UUID
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 
-from config import Settings
+from config import settings
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 
 class JWTCreate:
     def __init__(self) -> None:
-        self.settings = Settings
+        self.settings = settings
 
     async def create_access(
         self,
@@ -50,7 +50,7 @@ class JWTCreate:
 
 class ValidateJWT:
     def __init__(self) -> None:
-        self.settings = Settings
+        self.settings = settings
         self.jwt_create = JWTCreate()
 
     async def valid_tokens(self, access: str, refresh: str) -> dict:

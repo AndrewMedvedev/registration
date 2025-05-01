@@ -12,7 +12,7 @@ from config import Settings
 
 from .database.models import UserModel, UserVkModel, UserYandexModel
 from .exeptions import BadRequestHTTPError
-from .utils import HashPass
+from .utils import Hash
 
 
 class UserSchema(BaseModel):
@@ -43,7 +43,7 @@ class UserSchema(BaseModel):
             last_name=self.last_name,
             phone_number=self.phone_number,
             email=self.email,
-            hash_password=HashPass.get_password_hash(self.hash_password),
+            hash_password=Hash.get_password_hash(self.hash_password),
         )
 
 

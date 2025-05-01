@@ -1,4 +1,4 @@
-from config import Settings
+from config import settings
 
 from ..database.crud import SQLYandex
 from ..jwt import JWTCreate
@@ -22,7 +22,7 @@ class YandexControl:
     async def link() -> dict:
         codes = create_codes()
         dict_link = DictLinkYandex(code_challenge=codes["code_challenge"]).model_dump().items()
-        url = f"{Settings.YANDEX_AUTH_URL}?{'&'.join([f'{k}={v}' for k, v in dict_link])}"
+        url = f"{settings.YANDEX_AUTH_URL}?{'&'.join([f'{k}={v}' for k, v in dict_link])}"
         return {
             "link": url,
             "code_verifier": codes["code_verifier"],

@@ -2,27 +2,32 @@ from typing import Any
 
 import base64
 import hashlib
+import hmac
 import logging
 import os
 
-from passlib.context import CryptContext
+import bcrypt
 
-from .constants import STATUS_OK
-from .exeptions import BadRequestHTTPError, NotFoundHTTPError
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+from .constants import BYTES_SECRET_KEY_HASH, STATUS_OK
+from .exeptions import NotFoundHTTPError
 
 log = logging.getLogger(__name__)
 
 
-class HashPass:
+class Hash:
     def get_password_hash(password: str) -> str:
-        return pwd_context.hash(password)
+        peppered_password = hmac.new(
+            BYTES_SECRET_KEY_HASH, password.encode("utf-8"), hashlib.sha256
+        ).digest()
+        salt = bcrypt.gensalt()
+        hashed = bcrypt.hashpw(peppered_password, salt)
+        return hashed.decode("utf-8")
 
-    def verify_password(plain_password: str, hashed_password: str) -> bool:
-        if answer := pwd_context.verify(plain_password, hashed_password):
-            return answer
-        raise BadRequestHTTPError(message="wrong password")
+    def verify_password(password: str, hashed_password: str) -> bool:
+        peppered_password = hmac.new(
+            BYTES_SECRET_KEY_HASH, password.encode("utf-8"), hashlib.sha256
+        ).digest()
+        return bcrypt.checkpw(peppered_password, hashed_password.encode("utf-8"))
 
 
 def create_codes() -> dict:
