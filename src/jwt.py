@@ -17,31 +17,22 @@ class JWTCreate:
     def __init__(self) -> None:
         self.settings = settings
 
-    async def create_access(
-        self,
-        data: dict,
-    ) -> str:
+    async def create_access(self, data: dict) -> str:
         data["header"] = {"alg": "HS256", "typ": "JWT", "uuid": str(uuid.uuid4())}
         data["exp"] = timedelta(hours=2) + datetime.now(tz=UTC)
         data["mode"] = "access_token"
         return jwt.encode(data, self.settings.SECRET_KEY, self.settings.ALGORITHM)
 
-    async def create_refresh(
-        self,
-        data: dict,
-    ) -> str:
+    async def create_refresh(self, data: dict) -> str:
         data["header"] = {"alg": "HS256", "typ": "JWT", "uuid": str(uuid.uuid4())}
         data["exp"] = timedelta(hours=5) + datetime.now(tz=UTC)
         data["mode"] = "refresh_token"
         return jwt.encode(data, self.settings.SECRET_KEY, self.settings.ALGORITHM)
 
-    async def create_tokens(
-        self,
-        user_id: UUID,
-    ):
+    async def create_tokens(self, user_id: UUID):
         data = {"user_id": str(user_id)}
         access = await self.create_access(data)
-        refresh = await self.create_access(data)
+        refresh = await self.create_refresh(data)
         return {
             "access": access,
             "refresh": refresh,
@@ -60,10 +51,7 @@ class ValidateJWT:
             return v_refresh
         return v_access
 
-    async def validate_refresh(
-        self,
-        token: str,
-    ) -> dict | bool:
+    async def validate_refresh(self, token: str) -> dict | bool:
         try:
             refresh = jwt.decode(
                 token,

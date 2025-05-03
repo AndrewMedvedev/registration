@@ -5,15 +5,21 @@ from ..schemas import GetUserEmailSchema, GetUserPhoneNumberSchema, UserSchema
 from ..utils import Hash
 
 
+class RegistrationControl:
+    def __init__(self):
+        self.sql_authorization = SQLAuthorization()
+        self.jwt_create = JWTCreate()
+
+    async def registration(self, model: UserSchema) -> dict:
+        user_id = await self.sql_authorization.create_user(model.to_model())
+        return await self.jwt_create.create_tokens(user_id=user_id)
+
+
 class AuthorizationControl:
     def __init__(self):
         self.sql_authorization = SQLAuthorization()
         self.jwt_create = JWTCreate()
         self.hash = Hash
-
-    async def registration(self, model: UserSchema) -> dict:
-        user_id = await self.sql_authorization.create_user(model.to_model())
-        return await self.jwt_create.create_tokens(user_id=user_id)
 
     async def login_email(self, model: GetUserEmailSchema) -> dict:
         stmt = await self.sql_authorization.get_user_email(email=model.email)

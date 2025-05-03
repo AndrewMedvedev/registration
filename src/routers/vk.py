@@ -15,11 +15,7 @@ async def vk_link() -> JSONResponse:
 
 
 @vk.get("/get/token/{code}/{device_id}/{code_verifier}")
-async def vk_get_token(
-    code: str,
-    device_id: str,
-    code_verifier: str,
-) -> JSONResponse:
+async def vk_get_token(code: str, device_id: str, code_verifier: str) -> JSONResponse:
     content = await VKControl().get_token(
         code=code, device_id=device_id, code_verifier=code_verifier
     )
