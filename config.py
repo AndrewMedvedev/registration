@@ -3,16 +3,19 @@ from dotenv import dotenv_values, find_dotenv
 env_path = find_dotenv()
 
 
-config = dotenv_values(env_path)
+def load_config() -> dict:
+    env_path = find_dotenv(".env")
+
+    if not env_path:
+        env_path = find_dotenv(".test.env")
+
+    return dotenv_values(env_path)
+
+
+config = load_config()
 
 
 class Settings:
-    DB_HOST: str = config["DB_HOST"]
-    DB_PORT: int = config["DB_PORT"]
-    DB_NAME: str = config["DB_NAME"]
-    DB_USER: str = config["DB_USER"]
-    DB_PASSWORD: str = config["DB_PASSWORD"]
-
     POSTGRES_HOST: str = config["POSTGRES_HOST"]
     POSTGRES_PORT: str = config["POSTGRES_PORT"]
     POSTGRES_PASSWORD: str = config["POSTGRES_PASSWORD"]
@@ -57,7 +60,4 @@ settings = Settings()
 
 
 def get_db_url() -> str:
-    return (
-        f"postgresql+asyncpg://{Settings.DB_USER}:{Settings.DB_PASSWORD}@"
-        f"{Settings.DB_HOST}:{Settings.DB_PORT}/{Settings.DB_NAME}"
-    )
+    return f"postgresql+asyncpg://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_DB}"
