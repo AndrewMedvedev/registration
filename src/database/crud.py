@@ -4,8 +4,8 @@ from sqlalchemy import select
 from sqlalchemy.exc import DataError, IntegrityError, NoResultFound
 
 from ..exeptions import BadRequestHTTPError, ExistsHTTPError, NotFoundHTTPError
-from ..schemas import GetUserResponse, UserDataResponse
-from .models import UserModel, UserVkModel, UserYandexModel
+from ..schemas import GetAdminResponse, GetUserResponse, UserDataResponse
+from .models import AdminModel, UserModel, UserVkModel, UserYandexModel
 from .session import DatabaseSessionService
 
 
@@ -15,6 +15,18 @@ class SQLAuthorization(DatabaseSessionService):
         self.init()
 
     async def create_user(self, model: UserModel) -> int:
+        try:
+            async with self.session() as session:
+                session.add(model)
+                await session.commit()
+                await session.refresh(model)
+                return model.id
+        except DataError:
+            raise BadRequestHTTPError from None
+        except IntegrityError:
+            raise ExistsHTTPError from None
+
+    async def create_admin(self, model: AdminModel) -> int:
         try:
             async with self.session() as session:
                 session.add(model)
@@ -36,6 +48,21 @@ class SQLAuthorization(DatabaseSessionService):
                 if result is None:
                     raise BadRequestHTTPError("wrong email")
                 return GetUserResponse(**result).to_dict()
+        except DataError:
+            raise BadRequestHTTPError from None
+
+    async def get_admin_email(self, email: str) -> dict:
+        try:
+            async with self.session() as session:
+                data = await session.execute(
+                    select(AdminModel.hash_password, AdminModel.id).where(
+                        AdminModel.email == email
+                    )
+                )
+                result = data.mappings().first()
+                if result is None:
+                    raise BadRequestHTTPError("wrong email")
+                return GetAdminResponse(**result).to_dict()
         except DataError:
             raise BadRequestHTTPError from None
 

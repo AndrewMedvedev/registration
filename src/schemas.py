@@ -10,9 +10,27 @@ from pydantic import BaseModel, field_validator
 
 from config import Settings
 
-from .database.models import UserModel, UserVkModel, UserYandexModel
+from .database.models import AdminModel, UserModel, UserVkModel, UserYandexModel
 from .exeptions import BadRequestHTTPError
 from .utils import Hash
+
+
+class AdminSchema(BaseModel):
+    email: str
+    hash_password: str
+
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, value: str) -> str:
+        if validate_email(value):
+            return value.lower()
+        raise BadRequestHTTPError(message="wrong email")
+
+    def to_model(self) -> AdminModel:
+        return AdminModel(
+            email=self.email,
+            hash_password=Hash.get_password_hash(self.hash_password),
+        )
 
 
 class UserSchema(BaseModel):
@@ -82,6 +100,17 @@ class UserDataResponse(BaseModel):
             "first_name": self.first_name,
             "last_name": self.last_name,
             "email": self.email,
+        }
+
+
+class GetAdminResponse(BaseModel):
+    id: UUID
+    hash_password: str
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "hash_password": self.hash_password,
         }
 
 

@@ -6,6 +6,15 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base, created_at, int_null, int_pk, str_nullable, str_uniq, uuid_pk
 
 
+class AdminModel(Base):
+    __tablename__ = "admins"
+
+    id: Mapped[uuid_pk]
+    created_at: Mapped[created_at]
+    email: Mapped[str_uniq]
+    hash_password: Mapped[str_nullable]
+
+
 class UserModel(Base):
     __tablename__ = "users"
 

@@ -1,5 +1,6 @@
 import logging
 import uuid
+from abc import ABC, abstractmethod
 from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
@@ -29,8 +30,10 @@ class JWTCreate:
         data["mode"] = "refresh_token"
         return jwt.encode(data, self.settings.SECRET_KEY, self.settings.ALGORITHM)
 
-    async def create_tokens(self, user_id: UUID):
-        data = {"user_id": str(user_id)}
+    async def create_tokens(self, user_id: UUID, role: str = "user"):
+        if role != "user":
+            data = {"admin": str(user_id), "role": role}
+        data = {"user_id": str(user_id), "role": role}
         access = await self.create_access(data)
         refresh = await self.create_refresh(data)
         return {
@@ -39,10 +42,18 @@ class JWTCreate:
         }
 
 
-class ValidateJWT:
+class BaseJWT(ABC):
     def __init__(self) -> None:
         self.settings = settings
         self.jwt_create = JWTCreate()
+
+    @abstractmethod
+    async def validate_refresh(self, token: str) -> dict | bool:
+        raise NotImplementedError
+
+    @abstractmethod
+    async def validate_access(self, token: str) -> dict | bool:
+        raise NotImplementedError
 
     async def valid_tokens(self, access: str, refresh: str) -> dict:
         v_refresh = await self.validate_refresh(refresh)
@@ -51,6 +62,8 @@ class ValidateJWT:
             return v_refresh
         return v_access
 
+
+class ValidateJWTUser(BaseJWT):
     async def validate_refresh(self, token: str) -> dict | bool:
         try:
             refresh = jwt.decode(
@@ -58,13 +71,17 @@ class ValidateJWT:
                 self.settings.SECRET_KEY,
                 self.settings.ALGORITHM,
             )
-            if "user_id" not in refresh and refresh["mode"] != "refresh_token":
+            if refresh["mode"] != "refresh_token":
+                return False
+            if refresh["role"] != "user":
+                return False
+            if "user_id" not in refresh:
                 return False
 
-            data = {"user_id": refresh.get("user_id")}
+            data = {"user_id": refresh["user_id"], "role": refresh["role"]}
             return {
                 "access": await self.jwt_create.create_access(data=data),
-                "user_id": refresh.get("user_id"),
+                "user_id": refresh["user_id"],
             }
         except JWTError:
             return False
@@ -76,7 +93,52 @@ class ValidateJWT:
                 self.settings.SECRET_KEY,
                 self.settings.ALGORITHM,
             )
-            if "user_id" not in access and access["mode"] != "access_token":
+            if access["mode"] != "access_token":
+                return False
+            if access["role"] != "user":
+                return False
+            if "user_id" not in access:
+                return False
+            return {"user_id": access.get("user_id")}
+        except JWTError:
+            return False
+
+
+class ValidateJWTAdmin(BaseJWT):
+    async def validate_refresh(self, token: str) -> dict | bool:
+        try:
+            refresh = jwt.decode(
+                token,
+                self.settings.SECRET_KEY,
+                self.settings.ALGORITHM,
+            )
+            if refresh["mode"] != "refresh_token":
+                return False
+            if refresh["role"] != "admin":
+                return False
+            if "user_id" not in refresh:
+                return False
+
+            data = {"user_id": refresh["user_id"], "role": refresh["role"]}
+            return {
+                "access": await self.jwt_create.create_access(data=data),
+                "user_id": refresh["user_id"],
+            }
+        except JWTError:
+            return False
+
+    async def validate_access(self, token: str) -> dict | bool:
+        try:
+            access = jwt.decode(
+                token,
+                self.settings.SECRET_KEY,
+                self.settings.ALGORITHM,
+            )
+            if access["mode"] != "access_token":
+                return False
+            if access["role"] != "admin":
+                return False
+            if "user_id" not in access:
                 return False
             return {"user_id": access.get("user_id")}
         except JWTError:
