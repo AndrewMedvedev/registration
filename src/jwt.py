@@ -1,3 +1,5 @@
+from typing import Any
+
 import logging
 import uuid
 from abc import ABC, abstractmethod
@@ -48,14 +50,14 @@ class BaseJWT(ABC):
         self.jwt_create = JWTCreate()
 
     @abstractmethod
-    async def validate_refresh(self, token: str) -> dict | bool:
+    async def validate_refresh(self, token: str) -> dict[Any, Any] | bool:
         raise NotImplementedError
 
     @abstractmethod
-    async def validate_access(self, token: str) -> dict | bool:
+    async def validate_access(self, token: str) -> dict[Any, Any] | bool:
         raise NotImplementedError
 
-    async def valid_tokens(self, access: str, refresh: str) -> dict:
+    async def valid_tokens(self, access: str, refresh: str) -> dict[Any, Any] | bool:
         v_refresh = await self.validate_refresh(refresh)
         v_access = await self.validate_access(access)
         if isinstance(v_access, bool):
@@ -64,7 +66,7 @@ class BaseJWT(ABC):
 
 
 class ValidateJWTUser(BaseJWT):
-    async def validate_refresh(self, token: str) -> dict | bool:
+    async def validate_refresh(self, token: str) -> dict[Any, Any] | bool:
         try:
             refresh = jwt.decode(
                 token,
@@ -86,7 +88,7 @@ class ValidateJWTUser(BaseJWT):
         except JWTError:
             return False
 
-    async def validate_access(self, token: str) -> dict | bool:
+    async def validate_access(self, token: str) -> dict[Any, Any] | bool:
         try:
             access = jwt.decode(
                 token,
@@ -105,7 +107,7 @@ class ValidateJWTUser(BaseJWT):
 
 
 class ValidateJWTAdmin(BaseJWT):
-    async def validate_refresh(self, token: str) -> dict | bool:
+    async def validate_refresh(self, token: str) -> dict[Any, Any] | bool:
         try:
             refresh = jwt.decode(
                 token,
@@ -127,7 +129,7 @@ class ValidateJWTAdmin(BaseJWT):
         except JWTError:
             return False
 
-    async def validate_access(self, token: str) -> dict | bool:
+    async def validate_access(self, token: str) -> dict[Any, Any] | bool:
         try:
             access = jwt.decode(
                 token,

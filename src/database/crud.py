@@ -14,7 +14,7 @@ class SQLAuthorization(DatabaseSessionService):
         super().__init__()
         self.init()
 
-    async def create_user(self, model: UserModel) -> int:
+    async def create_user(self, model: UserModel) -> UUID:
         try:
             async with self.session() as session:
                 session.add(model)
@@ -26,7 +26,7 @@ class SQLAuthorization(DatabaseSessionService):
         except IntegrityError:
             raise ExistsHTTPError from None
 
-    async def create_admin(self, model: AdminModel) -> int:
+    async def create_admin(self, model: AdminModel) -> UUID:
         try:
             async with self.session() as session:
                 session.add(model)
@@ -81,7 +81,7 @@ class SQLAuthorization(DatabaseSessionService):
         except DataError:
             raise BadRequestHTTPError from None
 
-    async def get_data(self, user_id: int) -> dict:
+    async def get_data(self, user_id: UUID) -> dict:
         try:
             async with self.session() as session:
                 data = await session.execute(
@@ -131,7 +131,7 @@ class SQLVK(DatabaseSessionService):
                 result = await session.execute(
                     select(UserVkModel.user_id).where(UserVkModel.email == email)
                 )
-                result.scalar_one()
+                return result.scalar_one()
         except NoResultFound:
             raise NotFoundHTTPError from None
         except DataError:

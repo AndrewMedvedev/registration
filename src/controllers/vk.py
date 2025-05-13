@@ -1,6 +1,6 @@
 from config import settings
 
-from ..database.crud import SQLVK
+from ..database import SQLVK
 from ..jwt import JWTCreate
 from ..rest import VKApi
 from ..schemas import (

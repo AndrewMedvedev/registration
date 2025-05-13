@@ -5,16 +5,18 @@ import hashlib
 import hmac
 import logging
 import os
+import re
 
 import bcrypt
 
-from .constants import BYTES_SECRET_KEY_HASH, STATUS_OK
+from .constants import BYTES_SECRET_KEY_HASH, CONST_10, CONST_11, STATUS_OK
 from .exeptions import NotFoundHTTPError
 
 log = logging.getLogger(__name__)
 
 
 class Hash:
+    @staticmethod
     def get_password_hash(password: str) -> str:
         peppered_password = hmac.new(
             BYTES_SECRET_KEY_HASH, password.encode("utf-8"), hashlib.sha256
@@ -23,6 +25,7 @@ class Hash:
         hashed = bcrypt.hashpw(peppered_password, salt)
         return hashed.decode("utf-8")
 
+    @staticmethod
     def verify_password(password: str, hashed_password: str) -> bool:
         peppered_password = hmac.new(
             BYTES_SECRET_KEY_HASH, password.encode("utf-8"), hashlib.sha256
@@ -47,6 +50,15 @@ async def valid_answer(response: Any) -> dict:
     if response.status != STATUS_OK:
         raise NotFoundHTTPError
     return await response.json()
+
+
+def format_phone_number(phone_number: str) -> str:
+    digits = re.sub(pattern=r"\D", repl="", string=phone_number)
+    if len(digits) == CONST_11 and digits.startswith("8"):
+        digits = "7" + digits[1:]
+    elif len(digits) == CONST_10 and digits.startswith("9"):
+        digits = "7" + digits
+    return f"+{digits[0]}({digits[1:4]}){digits[4:7]}-{digits[7:9]}-{digits[9:11]}"
 
 
 def config_logging(level=logging.INFO):

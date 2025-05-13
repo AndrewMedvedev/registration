@@ -3,7 +3,7 @@ from uuid import UUID
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .base import Base, created_at, int_null, int_pk, str_nullable, str_uniq, uuid_pk
+from .database_configs import Base, created_at, int_null, int_pk, str_nullable, str_uniq, uuid_pk
 
 
 class AdminModel(Base):

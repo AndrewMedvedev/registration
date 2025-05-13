@@ -2,17 +2,18 @@ from __future__ import annotations
 
 from typing import Literal
 
+import re
 from uuid import UUID
 
-import phonenumbers
 from email_validator import validate_email
 from pydantic import BaseModel, field_validator
 
 from config import Settings
 
-from .database.models import AdminModel, UserModel, UserVkModel, UserYandexModel
+from .constants import CONST_10, CONST_11
+from .database import AdminModel, UserModel, UserVkModel, UserYandexModel
 from .exeptions import BadRequestHTTPError
-from .utils import Hash
+from .utils import Hash, format_phone_number
 
 
 class AdminSchema(BaseModel):
@@ -42,11 +43,11 @@ class UserSchema(BaseModel):
 
     @field_validator("phone_number")
     @classmethod
-    def validate_phone_number(cls, values: str) -> str:
-        parsed_number = phonenumbers.parse(values)
-        if phonenumbers.is_valid_number(parsed_number):
-            return values
-        raise BadRequestHTTPError(message="wrong number")
+    def validate_phone_number(cls, value: str) -> str:
+        format_ph = format_phone_number(value)
+        if not format_ph:
+            raise BadRequestHTTPError(message="wrong phone number")
+        return format_ph
 
     @field_validator("email")
     @classmethod
@@ -83,11 +84,13 @@ class GetUserPhoneNumberSchema(BaseModel):
 
     @field_validator("phone_number")
     @classmethod
-    def validate_phone_number(cls, values: str) -> str:
-        parsed_number = phonenumbers.parse(values)
-        if phonenumbers.is_valid_number(parsed_number):
-            return values
-        raise BadRequestHTTPError(message="wrong number")
+    def validate_phone_number(cls, phone_number: str) -> str:
+        digits = re.sub(pattern=r"\D", repl="", string=phone_number)
+        if len(digits) == CONST_11 and digits.startswith("8"):
+            digits = "7" + digits[1:]
+        elif len(digits) == CONST_10 and digits.startswith("9"):
+            digits = "7" + digits
+        return f"+{digits[0]}({digits[1:4]}){digits[4:7]}-{digits[7:9]}-{digits[9:11]}"
 
 
 class UserDataResponse(BaseModel):

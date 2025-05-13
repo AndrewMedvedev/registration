@@ -1,6 +1,6 @@
 from config import settings
 
-from ..database.crud import SQLYandex
+from ..database import SQLYandex
 from ..jwt import JWTCreate
 from ..rest import YandexApi
 from ..schemas import (
