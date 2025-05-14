@@ -1,4 +1,4 @@
-from ..database import SQLAuthorization
+from ..database.crud import SQLAuthorization
 from ..exeptions import BadRequestHTTPError
 from ..jwt import JWTCreate
 from ..schemas import AdminSchema, GetUserEmailSchema, GetUserPhoneNumberSchema, UserSchema

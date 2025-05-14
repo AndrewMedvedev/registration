@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from ..database import SQLAuthorization
+from ..database.crud import SQLAuthorization
 
 
 class GetUserDataControl:

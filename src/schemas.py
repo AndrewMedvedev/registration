@@ -11,7 +11,7 @@ from pydantic import BaseModel, field_validator
 from config import Settings
 
 from .constants import CONST_10, CONST_11
-from .database import AdminModel, UserModel, UserVkModel, UserYandexModel
+from .database.models import AdminModel, UserModel, UserVkModel, UserYandexModel
 from .exeptions import BadRequestHTTPError
 from .utils import Hash, format_phone_number
 
