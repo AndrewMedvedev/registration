@@ -35,6 +35,6 @@ async def vk_login(access_token: str) -> JSONResponse:
     return JSONResponse(status_code=status.HTTP_200_OK, content=content)
 
 
-@vk.get("/check/return")
+@vk.get("/check/return", response_model=None)
 async def check_return(request: Request) -> Request:
     return request
