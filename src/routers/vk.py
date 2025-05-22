@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Response, status
+from fastapi import APIRouter, Response, status
 from fastapi.responses import JSONResponse, RedirectResponse
 
 from ..constants import PATH_ENDPOINT
@@ -35,7 +35,7 @@ async def vk_login(access_token: str) -> JSONResponse:
     return JSONResponse(status_code=status.HTTP_200_OK, content=content)
 
 
-@vk.get("/check/return", response_model=None)
-async def check_return(request: Request) -> Request:
-    print(request)
-    return request
+@vk.get("/check/return")
+async def check_return(code: str, state: str, device_id: str) -> tuple:
+    print(code, state, device_id)
+    return (code, state, device_id)
