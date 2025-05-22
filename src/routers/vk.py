@@ -37,4 +37,5 @@ async def vk_login(access_token: str) -> JSONResponse:
 
 @vk.get("/check/return", response_model=None)
 async def check_return(request: Request) -> Request:
+    print(request)
     return request
