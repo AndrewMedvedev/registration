@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Response, status
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, Request, Response, status
+from fastapi.responses import JSONResponse, RedirectResponse
 
 from ..constants import PATH_ENDPOINT
 from ..controllers import VKControl
@@ -11,7 +11,8 @@ vk = APIRouter(prefix=f"{PATH_ENDPOINT}vk", tags=["vk"])
 @vk.get("/link")
 async def vk_link() -> JSONResponse:
     content = await VKControl().link()
-    return JSONResponse(status_code=status.HTTP_200_OK, content=content)
+    return RedirectResponse(url=content)
+    # return JSONResponse(status_code=status.HTTP_200_OK, content=content)
 
 
 @vk.get("/get/token/{code}/{device_id}/{code_verifier}")
@@ -32,3 +33,8 @@ async def vk_registration(model: RegistrationVKSchema) -> Response:
 async def vk_login(access_token: str) -> JSONResponse:
     content = await VKControl().login(access_token=access_token)
     return JSONResponse(status_code=status.HTTP_200_OK, content=content)
+
+
+@vk.get("/check/return")
+async def check_return(request: Request) -> Request:
+    return request

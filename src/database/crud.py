@@ -1,10 +1,15 @@
+from typing import cast
+
 from uuid import UUID
 
+from redis.asyncio import Redis
 from sqlalchemy import select
 from sqlalchemy.exc import DataError, IntegrityError, NoResultFound
 
+from config import settings
+
 from ..exeptions import BadRequestHTTPError, ExistsHTTPError, NotFoundHTTPError
-from ..schemas import GetAdminResponse, GetUserResponse, UserDataResponse
+from ..schemas import Codes, GetAdminResponse, GetUserResponse, Tokens, UserDataResponse
 from .models import AdminModel, UserModel, UserVkModel, UserYandexModel
 from .session import DatabaseSessionService
 
@@ -165,3 +170,34 @@ class SQLYandex(DatabaseSessionService):
             raise NotFoundHTTPError from None
         except DataError:
             raise BadRequestHTTPError from None
+
+
+class RedisOtherAuth:
+    @staticmethod
+    async def get_redis_connect() -> Redis:
+        return await Redis(
+            host=settings.REDIS_HOST,
+            port=settings.REDIS_PORT,
+            password=settings.REDIS_PASSWORD,
+            decode_responses=True,
+        )
+
+    async def add_code(self, schema: Codes) -> None:
+        redis = await self.get_redis_connect()
+        redis.set(schema.state, schema.code_verifier)
+
+    async def get_code(self, state: str) -> str:
+        redis = await self.get_redis_connect()
+        result = await redis.get(state)
+        await redis.delete(state)
+        return cast(str, result)
+
+    async def add_tokens(self, schema: Tokens) -> None:
+        redis = await self.get_redis_connect()
+        redis.hset(schema.state, mapping=schema.to_dict())
+
+    async def get_tokens(self, state: str) -> dict:
+        redis = await self.get_redis_connect()
+        result = redis.hgetall(state)
+        await redis.delete(state)
+        return cast(dict, result)

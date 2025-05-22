@@ -22,6 +22,10 @@ class Settings:
     POSTGRES_USER: str = config["POSTGRES_USER"]
     POSTGRES_DB: str = config["POSTGRES_DB"]
 
+    REDIS_HOST: str = config["REDIS_HOST"]
+    REDIS_PORT: str = config["REDIS_PORT"]
+    REDIS_PASSWORD: str = config["REDIS_PASSWORD"]
+
     SECRET_KEY: str = config["SECRET_KEY"]
     ALGORITHM: str = config["ALGORITHM"]
 
@@ -35,16 +39,6 @@ class Settings:
     VK_API_URL: str = config["VK_API_URL"]
     STATE_VK: str = config["STATE_VK"]
     CLIENT_SECRET: str = config["CLIENT_SECRET"]
-
-    MAIL_RU_APP_ID: str = config["MAIL_RU_APP_ID"]
-    MAIL_RU_APP_SECRET: str = config["MAIL_RU_APP_SECRET"]
-    MAIL_RU_REDIRECT_URI: str = config["MAIL_RU_REDIRECT_URI"]
-    MAIL_RU_AUTH_URL: str = config["MAIL_RU_AUTH_URL"]
-    MAIL_RU_TOKEN_URL: str = config["MAIL_RU_TOKEN_URL"]
-    MAIL_RU_API_URL: str = config["MAIL_RU_API_URL"]
-    SCOPE: str = config["SCOPE"]
-    STATE_MAIL_RU: str = config["STATE_MAIL_RU"]
-    PROMPT_FORCE: int = config["PROMPT_FORCE"]
 
     YANDEX_APP_ID: str = config["YANDEX_APP_ID"]
     YANDEX_APP_SECRET: str = config["YANDEX_APP_SECRET"]

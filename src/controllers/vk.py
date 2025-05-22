@@ -1,6 +1,6 @@
 from config import settings
 
-from ..database.crud import SQLVK
+from ..database.crud import SQLVK, RedisOtherAuth
 from ..jwt import JWTCreate
 from ..rest import VKApi
 from ..schemas import (
@@ -15,20 +15,19 @@ from ..utils import create_codes
 class VKControl:
     def __init__(self):
         self.sql_vk = SQLVK()
+        self.redis = RedisOtherAuth()
         self.jwt_create = JWTCreate()
         self.vk_api = VKApi()
 
-    @staticmethod
-    async def link() -> dict:
+    async def link(self) -> str:
         codes = create_codes()
-        dict_link = DictLinkVK(code_challenge=codes["code_challenge"]).model_dump().items()
-        url = f"{settings.VK_AUTH_URL}?{'&'.join([f'{k}={v}' for k, v in dict_link])}"
-        return {
-            "link": url,
-            "code_verifier": codes["code_verifier"],
-        }
+        await self.redis.add_code(schema=codes)
+        dict_link = (
+            DictLinkVK(state=codes.state, code_challenge=codes.code_challenge).model_dump().items()
+        )
+        return f"{settings.VK_AUTH_URL}?{'&'.join([f'{k}={v}' for k, v in dict_link])}"
 
-    async def get_token(self, code: str, device_id: str, code_verifier: str) -> dict:
+    async def get_token(self, code: str, device_id: str) -> dict:
         params = DictGetDataVK(
             code=code,
             device_id=device_id,
