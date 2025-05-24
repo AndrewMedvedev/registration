@@ -27,6 +27,7 @@ pytest = "^8.3.5"
 pytest-asyncio = "^0.26.0"
 pytest-mock = "^3.14.0"
 mypy = "^1.15.0"
+redis = {extras = ["asyncio"], version = "^6.1.0"}
 
 
 [build-system]

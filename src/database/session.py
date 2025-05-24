@@ -14,7 +14,7 @@ from sqlalchemy.ext.asyncio import (
 from config import get_db_url
 
 
-class DatabaseSessionService:
+class SQLSessionService:
     def __init__(self) -> None:
         self._engine: Optional[AsyncEngine] = None
         self._sessionmaker: Optional[async_sessionmaker[AsyncSession]] = None
@@ -49,11 +49,3 @@ class DatabaseSessionService:
             except Exception as _ex:
                 await connection.rollback()
                 raise _ex
-
-
-db_session = DatabaseSessionService()
-
-
-async def get_session():
-    async with db_session.session() as session:
-        yield session
