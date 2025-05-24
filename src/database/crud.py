@@ -180,7 +180,7 @@ class RedisOtherAuth:
         )
 
     async def add_code(self, schema: Codes) -> None:
-        await self.session.set(name=schema.state, value=schema.code_verifier)
+        await self.session.setex(name=schema.state, value=schema.code_verifier, time=120)
 
     async def get_code(self, key: str) -> str:
         result = await self.session.get(key)
