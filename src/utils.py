@@ -1,4 +1,4 @@
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import base64
 import hashlib
@@ -9,12 +9,14 @@ import re
 from uuid import uuid4
 
 import bcrypt
-from src 
 
 from .constants import BYTES_SECRET_KEY_HASH, CONST_10, CONST_11, STATUS_OK
 from .exeptions import NotFoundHTTPError
 
 log = logging.getLogger(__name__)
+
+if TYPE_CHECKING:
+    from .schemas import Codes
 
 
 class Hash:
@@ -35,8 +37,8 @@ class Hash:
         return bcrypt.checkpw(peppered_password, hashed_password.encode("utf-8"))
 
 
-def create_codes() -> Codes:
-    from .schemas import Codes
+def create_codes() -> "Codes":
+    from .schemas import Codes  # noqa: PLC0415
 
     code_verifier = base64.urlsafe_b64encode(os.urandom(64)).rstrip(b"=").decode("utf-8")
     code_challenge = (

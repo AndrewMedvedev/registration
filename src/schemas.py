@@ -210,6 +210,7 @@ class DictGetDataTokenVK(BaseModel):
 class DictLinkYandex(BaseModel):
     response_type: Literal["code"] = "code"
     client_id: str = settings.YANDEX_APP_ID
+    state: str
     code_challenge: str
     code_challenge_method: str = "S256"
 

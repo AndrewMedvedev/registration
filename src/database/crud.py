@@ -1,5 +1,3 @@
-from typing import cast
-
 from uuid import UUID
 
 from redis.asyncio import Redis
@@ -9,12 +7,12 @@ from sqlalchemy.exc import DataError, IntegrityError, NoResultFound
 from config import settings
 
 from ..exeptions import BadRequestHTTPError, ExistsHTTPError, NotFoundHTTPError
-from ..schemas import Codes, GetAdminResponse, GetUserResponse, Tokens, UserDataResponse
+from ..schemas import Codes, GetAdminResponse, GetUserResponse, UserDataResponse
 from .models import AdminModel, UserModel, UserVkModel, UserYandexModel
-from .session import DatabaseSessionService
+from .session import SQLSessionService
 
 
-class SQLAuthorization(DatabaseSessionService):
+class SQLAuthorization(SQLSessionService):
     def __init__(self) -> None:
         super().__init__()
         self.init()
@@ -114,7 +112,7 @@ class SQLAuthorization(DatabaseSessionService):
             raise BadRequestHTTPError from None
 
 
-class SQLVK(DatabaseSessionService):
+class SQLVK(SQLSessionService):
     def __init__(self) -> None:
         super().__init__()
         self.init()
@@ -143,7 +141,7 @@ class SQLVK(DatabaseSessionService):
             raise BadRequestHTTPError from None
 
 
-class SQLYandex(DatabaseSessionService):
+class SQLYandex(SQLSessionService):
     def __init__(self) -> None:
         super().__init__()
         self.init()
@@ -173,9 +171,8 @@ class SQLYandex(DatabaseSessionService):
 
 
 class RedisOtherAuth:
-    @staticmethod
-    async def get_redis_connect() -> Redis:
-        return await Redis(
+    def __init__(self):
+        self.session = Redis(
             host=settings.REDIS_HOST,
             port=settings.REDIS_PORT,
             password=settings.REDIS_PASSWORD,
@@ -183,21 +180,9 @@ class RedisOtherAuth:
         )
 
     async def add_code(self, schema: Codes) -> None:
-        redis = await self.get_redis_connect()
-        await redis.set(schema.state, schema.code_verifier)
+        await self.session.set(name=schema.state, value=schema.code_verifier)
 
-    async def get_code(self, state: str) -> str:
-        redis = await self.get_redis_connect()
-        result = await redis.get(state)
-        await redis.delete(state)
-        return cast(str, result)
-
-    async def add_tokens(self, schema: Tokens) -> None:
-        redis = await self.get_redis_connect()
-        redis.hset(schema.state, mapping=schema.to_dict())
-
-    async def get_tokens(self, state: str) -> dict:
-        redis = await self.get_redis_connect()
-        result = redis.hgetall(state)
-        await redis.delete(state)
-        return cast(dict, result)
+    async def get_code(self, key: str) -> str:
+        result = await self.session.get(key)
+        await self.session.delete(key)
+        return result
