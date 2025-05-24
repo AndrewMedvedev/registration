@@ -27,11 +27,9 @@ class VKControl:
         )
         return f"{settings.VK_AUTH_URL}?{'&'.join([f'{k}={v}' for k, v in dict_link])}"
 
-    async def get_token(self, code: str, device_id: str) -> dict:
+    async def get_token(self, code: str, device_id: str, state: str) -> dict:
         params = DictGetDataVK(
-            code=code,
-            device_id=device_id,
-            code_verifier=code_verifier,
+            code=code, device_id=device_id, code_verifier=code_verifier, state=state
         ).model_dump()
         return await self.vk_api.get_token(params=params)
 

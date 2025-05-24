@@ -9,7 +9,7 @@ import re
 from uuid import uuid4
 
 import bcrypt
-from pydantic import BaseModel
+from src 
 
 from .constants import BYTES_SECRET_KEY_HASH, CONST_10, CONST_11, STATUS_OK
 from .exeptions import NotFoundHTTPError
@@ -35,7 +35,7 @@ class Hash:
         return bcrypt.checkpw(peppered_password, hashed_password.encode("utf-8"))
 
 
-def create_codes() -> BaseModel:
+def create_codes() -> Codes:
     from .schemas import Codes
 
     code_verifier = base64.urlsafe_b64encode(os.urandom(64)).rstrip(b"=").decode("utf-8")

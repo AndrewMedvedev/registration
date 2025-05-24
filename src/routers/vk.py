@@ -11,6 +11,7 @@ vk = APIRouter(prefix=f"{PATH_ENDPOINT}vk", tags=["vk"])
 @vk.get("/link")
 async def vk_link() -> JSONResponse:
     content = await VKControl().link()
+    print(content)
     return RedirectResponse(url=content)
     # return JSONResponse(status_code=status.HTTP_200_OK, content=content)
 

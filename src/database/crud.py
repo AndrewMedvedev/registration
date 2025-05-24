@@ -184,7 +184,7 @@ class RedisOtherAuth:
 
     async def add_code(self, schema: Codes) -> None:
         redis = await self.get_redis_connect()
-        redis.set(schema.state, schema.code_verifier)
+        await redis.set(schema.state, schema.code_verifier)
 
     async def get_code(self, state: str) -> str:
         redis = await self.get_redis_connect()
