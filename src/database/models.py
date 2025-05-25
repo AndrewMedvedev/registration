@@ -3,7 +3,7 @@ from uuid import UUID
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .database_configs import Base, created_at, int_null, int_pk, str_nullable, str_uniq, uuid_pk
+from .database_configs import Base, created_at, int_null, str_nullable, str_uniq, uuid_pk
 
 
 class AdminModel(Base):
@@ -39,7 +39,7 @@ class UserModel(Base):
 
 class UserVkModel(Base):
     __tablename__ = "users_vk"
-    id: Mapped[int_pk]
+    id: Mapped[uuid_pk]
     created_at: Mapped[created_at]
     user_id: Mapped[UUID] = mapped_column(
         ForeignKey("users.id"),
@@ -58,7 +58,7 @@ class UserVkModel(Base):
 
 class UserYandexModel(Base):
     __tablename__ = "users_yandex"
-    id: Mapped[int_pk]
+    id: Mapped[uuid_pk]
     created_at: Mapped[created_at]
     user_id: Mapped[UUID] = mapped_column(
         ForeignKey("users.id"),
