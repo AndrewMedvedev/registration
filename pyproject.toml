@@ -28,6 +28,7 @@ pytest-asyncio = "^0.26.0"
 pytest-mock = "^3.14.0"
 mypy = "^1.15.0"
 redis = {extras = ["asyncio"], version = "^6.1.0"}
+autopep8 = "^2.3.2"
 
 
 [build-system]
@@ -40,6 +41,13 @@ ignore_missing_imports = true
 exclude = [
     "__samples__",
     ".venv",
-    "src/migration"
+    "src/migration",
+    "alembic.ini"
 ]
 
+# -- Autopep8 --
+[tool.autopep8]
+exclude = "__samples__, .venv, src/migration"
+max-line-length = 99
+aggressive = 1
+select = "E,W"   
