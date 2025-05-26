@@ -17,8 +17,8 @@ jobs:
         name: Build Docker
         run: docker build -t linters -f Dockerfile . 
       -
-        name: Run autopep8
-        run: docker run --rm -v $PWD:/app linters autopep8 --recursive --diff src/
+        name: Run flake8
+        run: docker run --rm -v $PWD:/app linters flake8 src/
       - 
         name: Run mypy
         run:
