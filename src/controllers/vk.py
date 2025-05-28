@@ -1,5 +1,6 @@
 from config import settings
 
+from ..baseclasses import BaseControl
 from ..database.crud import SQLVK, RedisOtherAuth
 from ..jwt import JWTCreate
 from ..rest import VKApi
@@ -12,7 +13,7 @@ from ..schemas import (
 from ..utils import create_codes
 
 
-class VKControl:
+class VKControl(BaseControl):
     def __init__(self) -> None:
         self.sql_vk = SQLVK()
         self.redis = RedisOtherAuth()
@@ -25,7 +26,9 @@ class VKControl:
         dict_link = (
             DictLinkVK(state=codes.state, code_challenge=codes.code_challenge).model_dump().items()
         )
-        return f"{settings.VK_AUTH_URL}?{'&'.join([f'{k}={v}' for k, v in dict_link])}"
+        url = f"{settings.VK_AUTH_URL}?{'&'.join([f'{k}={v}' for k, v in dict_link])}"
+        self.logger.warning(url)
+        return url
 
     async def get_token(self, code: str, device_id: str, state: str) -> str:
         data_state = await self.redis.get_code(key=state)
@@ -33,6 +36,7 @@ class VKControl:
             code=code, device_id=device_id, code_verifier=data_state, state=state
         ).model_dump()
         result = await self.vk_api.get_token(params=params)
+        self.logger.warning(result)
         return result["access_token"]
 
     async def registration(self, model: RegistrationVKSchema) -> None:
@@ -40,7 +44,9 @@ class VKControl:
 
     async def login(self, code: str, device_id: str, state: str) -> dict:
         token = await self.get_token(code=code, device_id=device_id, state=state)
+        self.logger.warning(token)
         params = DictGetDataTokenVK(access_token=token).model_dump()
         user = await self.vk_api.get_data(params=params)
+        self.logger.warning(user)
         user_id = await self.sql_vk.get_user_email(email=user["email"].lower())
         return await self.jwt_create.create_tokens(user_id=user_id)

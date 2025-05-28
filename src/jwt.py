@@ -1,6 +1,5 @@
 from typing import Any
 
-import logging
 import uuid
 from abc import ABC, abstractmethod
 from datetime import UTC, datetime, timedelta
@@ -12,8 +11,6 @@ from passlib.context import CryptContext
 from config import settings
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-log = logging.getLogger(__name__)
 
 
 class JWTCreate:
@@ -58,10 +55,9 @@ class BaseJWT(ABC):
         raise NotImplementedError
 
     async def valid_tokens(self, access: str, refresh: str) -> dict[Any, Any] | bool:
-        v_refresh = await self.validate_refresh(refresh)
         v_access = await self.validate_access(access)
         if isinstance(v_access, bool):
-            return v_refresh
+            return await self.validate_refresh(refresh)
         return v_access
 
 

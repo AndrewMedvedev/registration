@@ -3,7 +3,6 @@ from typing import TYPE_CHECKING, Any
 import base64
 import hashlib
 import hmac
-import logging
 import os
 import re
 from uuid import uuid4
@@ -12,8 +11,6 @@ import bcrypt
 
 from .constants import BYTES_SECRET_KEY_HASH, CONST_10, CONST_11, STATUS_OK
 from .exeptions import NotFoundHTTPError
-
-log = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     from .schemas import Codes
@@ -62,11 +59,3 @@ def format_phone_number(phone_number: str) -> str:
     elif len(digits) == CONST_10 and digits.startswith("9"):
         digits = "7" + digits
     return f"+{digits[0]}({digits[1:4]}){digits[4:7]}-{digits[7:9]}-{digits[9:11]}"
-
-
-def config_logging(level=logging.INFO):
-    logging.basicConfig(
-        level=level,
-        datefmt="%Y-%m-%d %H:%M:%S",
-        format="[%(asctime)s] %(module)10s:%(lineno)-3d %(levelname)-7s - %(message)s",
-    )
