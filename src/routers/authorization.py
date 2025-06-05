@@ -1,9 +1,15 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Response, status
 from fastapi.responses import JSONResponse
 
 from ..constants import PATH_ENDPOINT
-from ..controllers import AuthorizationControl, RegistrationControl
-from ..schemas import AdminSchema, GetUserEmailSchema, GetUserPhoneNumberSchema, UserSchema
+from ..controllers import AuthorizationControl, RegistrationControl, ReplacePasswordControl
+from ..schemas import (
+    AdminSchema,
+    GetUserEmailSchema,
+    GetUserPhoneNumberSchema,
+    ReplacePasswordSchema,
+    UserSchema,
+)
 
 authorization = APIRouter(prefix=f"{PATH_ENDPOINT}authorizations", tags=["authorization"])
 
@@ -36,3 +42,9 @@ async def login_admin(model: AdminSchema) -> JSONResponse:
 async def login_phone(model: GetUserPhoneNumberSchema) -> JSONResponse:
     content = await AuthorizationControl().login_phone(model=model)
     return JSONResponse(status_code=status.HTTP_200_OK, content=content)
+
+
+@authorization.patch("/replace/password")
+async def replace_password(model: ReplacePasswordSchema) -> Response:
+    await ReplacePasswordControl().replace_password(schema=model)
+    return Response(status_code=status.HTTP_200_OK)

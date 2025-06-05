@@ -111,6 +111,17 @@ class SQLAuthorization(SQLSessionService):
         except DataError:
             raise BadRequestHTTPError from None
 
+    async def replace_password(self, user_id: UUID, new_password: str) -> None:
+        try:
+            async with self.session() as session:
+                obj = (
+                    await session.execute(select(UserModel).where(UserModel.id == user_id))
+                ).scalar()
+                obj.hash_password = new_password
+                await session.commit()
+        except NoResultFound:
+            raise NotFoundHTTPError from None
+
 
 class SQLVK(SQLSessionService):
     def __init__(self) -> None:

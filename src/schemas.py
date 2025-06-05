@@ -128,6 +128,11 @@ class GetUserResponse(BaseModel):
         }
 
 
+class ReplacePasswordSchema(BaseModel):
+    user_id: UUID
+    new_password: str
+
+
 class Codes(BaseModel):
     state: str
     code_verifier: str

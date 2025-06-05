@@ -2,7 +2,13 @@ from ..baseclasses import BaseControl
 from ..database.crud import SQLAuthorization
 from ..exeptions import BadRequestHTTPError
 from ..jwt import JWTCreate
-from ..schemas import AdminSchema, GetUserEmailSchema, GetUserPhoneNumberSchema, UserSchema
+from ..schemas import (
+    AdminSchema,
+    GetUserEmailSchema,
+    GetUserPhoneNumberSchema,
+    ReplacePasswordSchema,
+    UserSchema,
+)
 from ..utils import Hash
 
 
@@ -48,3 +54,15 @@ class AuthorizationControl(BaseControl):
         if self.hash.verify_password(model.hash_password, stmt["hash_password"]):
             return await self.jwt_create.create_tokens(stmt["id"], role="admin")
         raise BadRequestHTTPError(message="wrong password")
+
+
+class ReplacePasswordControl:
+    def __init__(self):
+        self.sql_authorization = SQLAuthorization()
+
+    async def replace_password(self, schema: ReplacePasswordSchema) -> None:
+        await self.sql_authorization.replace_password(
+            user_id=schema.user_id, new_password=schema.new_password
+        )
+
+    async def send_a_request_to_change_password(self, phone_number: str) -> None: ...
